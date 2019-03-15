@@ -12,6 +12,27 @@ getInfoNodeManga = $ => {
   };
 };
 
+let crawlerDetailChapter = new Crawler({
+  maxConnections: 10,
+  callback: (error, res, done) => {
+    if (error) {
+      console.log(error);
+    } else {
+      let $ = res.$;
+      let parent = $('#ctl00_divCenter > div > div.reading-detail.box_doc');
+      let allNodeImage = $(parent).find('.page-chapter');
+      console.log('==================', allNodeImage.length);
+      allNodeImage.map((index, item) => {
+        let image = $(item)
+          .find('img')
+          .attr('src');
+        console.log('==================', image);
+      });
+    }
+    done();
+  }
+});
+
 let crawlerDetailInfoManga = new Crawler({
   maxConnections: 10,
   callback: (error, res, done) => {
@@ -78,7 +99,8 @@ let crawlerDetailInfoManga = new Crawler({
       console.log('#### flower', flower);
       console.log('#### thumbnail', thumbnail);
       console.log('#### latest chapter', latestChapter);
-      console.log('#### listChapter', listChapter);
+      latestChapter && latestChapter.link ? crawlerDetailChapter.queue(latestChapter.link) : undefined;
+      //console.log('#### listChapter', listChapter);
     }
     done();
   }
