@@ -20,11 +20,12 @@ module.exports = {
   },
   addNewManga: async (req, res) => {
     try {
-      const newManga = new Manga(this.validManga(req.body));
+      console.log('Add new manga',req.body)
+      const newManga = new Manga(req.body);
       const result = await newManga.save();
       res.status(200).json({ result });
     } catch (error) {
-      res.status(200).json({ error });
+      res.status(404).json({ error });
     }
   },
   getMangaByCategory: async (req, res) => {

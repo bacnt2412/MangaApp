@@ -3,30 +3,32 @@ const mongoose = require('mongoose');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const settings = require('./src/config/settings.js');
-mongoose.connect(
-    'mongodb+srv://admin:'+ 
-    settings.mongoDB_Password +
-    '@nodejs-gypfg.mongodb.net/test?retryWrites=true',
-    {
-      useNewUrlParser: true,
-    }
-);
+const CrawlerData = require('./src/modules/Crawler.js');
+
+mongoose
+  .connect('mongodb://localhost/Manga', { useNewUrlParser: true })
+  .then(() => {
+    console.log('Mongo connected');
+    CrawlerData.start();
+  });
 
 const app = express();
 const CategoryRoute = require('./src/routes/CategoryRoute.js');
 const Mangaroute = require('./src/routes/MangaRoute.js');
+const ChapterRoute = require('./src/routes/ChapterRoute.js');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
-
-app.use('/api/Category',CategoryRoute);
-app.use('/api/Manga',Mangaroute);
+app.use('/api/category', CategoryRoute);
+app.use('/api/manga', Mangaroute);
+app.use('/api/chapter', ChapterRoute);
 
 app.use((req, res, next) => {
   res.status(404).json({
     message: 'Not found!'
   });
 });
+
 module.exports = app;

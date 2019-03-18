@@ -9,10 +9,12 @@ const mangaSchema = new Schema({
   category: String,
   author: String,
   status: String,
-  viewers: Number,
-  folowers: Number,
-  rating: Number,
-  thumbnail: String
+  viewers: String,
+  folowers: String,
+  rating: String,
+  thumbnail: String,
+  link: String,
+  latestChapter: String
 });
 const Manga = mongoose.model('manga', mangaSchema);
 module.exports = Manga;

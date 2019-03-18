@@ -8,10 +8,6 @@ const categorySchema = new Schema({
     maxlength: 100,
     required: [true, 'Name is not null']
   },
-  description: {
-    type: String,
-    required: [true, 'Description is not null']
-  },
   link: {
     type: String,
     minlength: 3,
