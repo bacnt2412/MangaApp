@@ -77,7 +77,7 @@ var crawlerListChapterFromManga = new Crawler({
               let result = await newChapter.save();
               console.log('##################### add success chapter', name);
               crawlerAllImageFromChapter.queue({ uri: link, idchapter: result._id });
-            }else {
+            } else {
               crawlerAllImageFromChapter.queue({ uri: link, idchapter: checkExist._id });
             }
           } catch (error) {
@@ -145,28 +145,28 @@ let crawlerDetailInfoManga = new Crawler({
         try {
           let link = res.options.uri;
           if (name && name.trim() != '') {
-
             let existManga = await Manga.findOne({ link });
             if (existManga === null) {
-              let newManga = await new Manga({
-                name,
-                category,
-                author,
-                status,
-                viewers,
-                flower,
-                rating,
-                thumbnail,
-                link,
-                latestChapter
-              });
-              const result = await newManga.save();
-              console.log('################### result Add new manga', result.name);
-              crawlerListChapterFromManga.queue({ uri: link, idmanga: result._id });
-            }else {
+              if (name) {
+                let newManga = await new Manga({
+                  name,
+                  category,
+                  author,
+                  status,
+                  viewers,
+                  flower,
+                  rating,
+                  thumbnail,
+                  link,
+                  latestChapter
+                });
+                const result = await newManga.save();
+                console.log('################### result Add new manga', result.name);
+                crawlerListChapterFromManga.queue({ uri: link, idmanga: result._id });
+              }
+            } else {
               crawlerListChapterFromManga.queue({ uri: link, idmanga: existManga._id });
             }
-            
           }
         } catch (error) {}
       } catch (error) {}
@@ -271,13 +271,15 @@ var crawlerAllImageFromChapter = new Crawler({
             return data == null;
           });
           if (checkExist) {
-            let newImage = await new ImageChapter({
-              name,
-              link,
-              idchapter
-            });
-            let result = await newImage.save();
-            console.log('image', name);
+            if (name && link && idchapter) {
+              let newImage = await new ImageChapter({
+                name,
+                link,
+                idchapter
+              });
+              let result = await newImage.save();
+              console.log('image', name);
+            }
           }
         } catch (error) {
           console.log('######### error add image', error);
