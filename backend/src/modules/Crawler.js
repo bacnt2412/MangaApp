@@ -7,12 +7,16 @@ getAllNodeManga = $ => {
   return $('.items').find('.item');
 };
 getInfoNodeManga = $ => {
-  let name = $.find('figure > figcaption > h3 > a').text();
-  let link = $.find('figure > figcaption > h3 > a').prop('href');
-  return {
-    name,
-    link
-  };
+  try {
+    let name = $.find('figure > figcaption > h3 > a').text();
+    let link = $.find('figure > figcaption > h3 > a').prop('href');
+    return {
+      name,
+      link
+    };
+  } catch (error) {
+    console.log('################ getInfoNodeManga Error', error);
+  }
 };
 
 let crawlerDetailChapter = new Crawler({
@@ -61,10 +65,8 @@ var crawlerListChapterFromManga = new Crawler({
 
         if (name && link) {
           try {
-            let checkExist = await Chapter.findOne({ link }).then(data => {
-              return data === null;
-            });
-            if (checkExist) {
+            let checkExist = await Chapter.findOne({ link });
+            if (checkExist === null) {
               let newChapter = new Chapter({
                 idmanga,
                 name,
@@ -74,7 +76,9 @@ var crawlerListChapterFromManga = new Crawler({
               });
               let result = await newChapter.save();
               console.log('##################### add success chapter', name);
-              crawlerAllImageFromChapter.queue({uri: link, idchapter: result._id});
+              crawlerAllImageFromChapter.queue({ uri: link, idchapter: result._id });
+            }else {
+              crawlerAllImageFromChapter.queue({ uri: link, idchapter: checkExist._id });
             }
           } catch (error) {
             console.log('##################### error', error);
@@ -88,6 +92,7 @@ var crawlerListChapterFromManga = new Crawler({
 
 let crawlerDetailInfoManga = new Crawler({
   maxConnections: 10,
+  skipEventRequest: false,
   callback: async (error, res, done) => {
     if (error) {
       console.log(error);
@@ -120,10 +125,8 @@ let crawlerDetailInfoManga = new Crawler({
           .find('.col-xs-4.col-image')
           .find('img')
           .attr('src');
-
         let listNodeChapter = $('#nt_listchapter > nav > ul > li');
-        let latestChapter;
-
+        let latestChapter = '';
         for (let index = 0; index < listNodeChapter.length; index++) {
           const item = listNodeChapter[index];
           let chapter = $(item)
@@ -135,31 +138,38 @@ let crawlerDetailInfoManga = new Crawler({
           if (chapter && link) {
             if (!latestChapter) {
               latestChapter = chapter;
-              return;
+              break;
             }
           }
         }
+        try {
+          let link = res.options.uri;
+          if (name && name.trim() != '') {
 
-        let link = res.options.uri;
-        let newManga = new Manga({
-          name,
-          category,
-          author,
-          status,
-          viewers,
-          flower,
-          rating,
-          thumbnail,
-          link,
-          latestChapter
-        });
-        const result = await newManga.save();
-        console.log('################### add success manga', name);
-        crawlerListChapterFromManga.queue({ uri: link, idmanga: result._id });
-      } catch (error) {
-        console.log('################### Error crawlerDetailInfoManga', name);
-
-      }
+            let existManga = await Manga.findOne({ link });
+            if (existManga === null) {
+              let newManga = await new Manga({
+                name,
+                category,
+                author,
+                status,
+                viewers,
+                flower,
+                rating,
+                thumbnail,
+                link,
+                latestChapter
+              });
+              const result = await newManga.save();
+              console.log('################### result Add new manga', result.name);
+              crawlerListChapterFromManga.queue({ uri: link, idmanga: result._id });
+            }else {
+              crawlerListChapterFromManga.queue({ uri: link, idmanga: existManga._id });
+            }
+            
+          }
+        } catch (error) {}
+      } catch (error) {}
     }
     done();
   }
@@ -177,18 +187,10 @@ var crawlerMangaFromCategory = new Crawler({
       for (let index = 0; index < allMangaOfPage.length; index++) {
         const item = allMangaOfPage[index];
         let category = await getInfoNodeManga($(item));
-
-        //Check exist manga ?
-        // let checkExistManga = await Manga.find({ link: category.link }).then(data => {
-        //   return data.length > 0;
-        // });
-
-        //if (!checkExistManga) {
-          await crawlerDetailInfoManga.queue({
-            uri: category.link,
-            category
-          });
-       // }
+        await crawlerDetailInfoManga.queue({
+          uri: category.link,
+          category
+        });
       }
     }
     done();
@@ -212,22 +214,20 @@ var crawlerAllCategory = new Crawler({
           .find('a')
           .attr('href');
 
-        let checkExist = await Category.findOne({ link }).then(data => {
-          return data != null;
-        });
-        if (!checkExist) {
+        let checkExist = await Category.findOne({ link });
+        if (checkExist === null) {
           let newCate = new Category({ name, link });
           let result = await newCate.save();
           console.log('Add success Category: ', newCate.name);
         }
       }
 
-      //Get all categoty from mongoDB
-      let listCategory = await Category.find({});
+      // //Get all categoty from mongoDB
+      // let listCategory = await Category.find({});
 
-      listCategory.map((item, index) => {
-        crawlerMangaFromCategory.queue(item.link);
-      });
+      // listCategory.map((item, index) => {
+      //   crawlerMangaFromCategory.queue(item.link);
+      // });
     }
     done();
   }
@@ -244,7 +244,6 @@ var crawlerTotalPage = new Crawler({
       //Trang 1 / 423
       totalPage = totalPage.replace('Trang 1 /', '').trim();
       for (let index = 0; index < totalPage; index++) {
-        console.log('http://www.nettruyen.com/tim-truyen?page=' + index)
         crawlerMangaFromCategory.queue('http://www.nettruyen.com/tim-truyen?page=' + index);
       }
     }
@@ -268,14 +267,20 @@ var crawlerAllImageFromChapter = new Crawler({
             .find('img')
             .attr('src');
           let idchapter = res.options.idchapter;
-          let newImage = await new ImageChapter({
-            name,
-            link,
-            idchapter
+          let checkExist = await ImageChapter.findOne({ link }).then(data => {
+            return data == null;
           });
-          console.log('######### Add success image',newImage)
+          if (checkExist) {
+            let newImage = await new ImageChapter({
+              name,
+              link,
+              idchapter
+            });
+            let result = await newImage.save();
+            console.log('image', name);
+          }
         } catch (error) {
-          console.log('######### error add image',error)
+          console.log('######### error add image', error);
         }
       }
     }
@@ -291,11 +296,11 @@ start = async () => {
 
     //crawlerAllCategory.queue('http://www.nettruyen.com/tim-truyen');
 
-    // crawlerAllCategory.queue([
-    //   {
-    //     uri: 'http://www.nettruyen.com/tim-truyen'
-    //   }
-    // ]);
+    crawlerAllCategory.queue([
+      {
+        uri: 'http://www.nettruyen.com/tim-truyen'
+      }
+    ]);
     // //Get all categoty from mongoDB
     // let listCategory = await Category.find({});
     // listCategory.map((item, index) => {
