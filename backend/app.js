@@ -5,8 +5,10 @@ const bodyParser = require('body-parser');
 const settings = require('./src/config/settings.js');
 const CrawlerData = require('./src/modules/Crawler.js');
 
+var mongoOptions = { keepAlive: 1, connectTimeoutMS: 30000, reconnectTries: 30, reconnectInterval: 2000,useNewUrlParser: true }
+
 mongoose
-  .connect('mongodb://localhost/Manga', { useNewUrlParser: true })
+  .connect('mongodb://localhost/Manga', mongoOptions)
   .then(() => {
     console.log('Mongo connected');
     CrawlerData.start();

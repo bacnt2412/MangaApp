@@ -1,5 +1,6 @@
 const Manga = require('../models/MangaModel.js');
 const Category = require('../models/CategoryModel.js');
+const settings = require('../config/settings.js');
 
 validManga = manga => {
   manga.category = manga.category ? manga.category : 'Đang update';
@@ -46,7 +47,7 @@ module.exports = {
             _id: { $gt: lastIdManga }
           };
         }
-        const listManga = await Manga.find(filter).limit(10);
+        const listManga = await Manga.find(filter).limit(settings.PAGE_LIMIT);
         res.status(200).json({ listManga });
       } else {
         res.status(200).json({ error: 'not found cate' });
