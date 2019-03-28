@@ -20,7 +20,7 @@ getInfoNodeManga = $ => {
 };
 
 let crawlerDetailChapter = new Crawler({
-  maxConnections: 10,
+  maxConnections: 1,
   callback: (error, res, done) => {
     if (error) {
       console.log(error);
@@ -41,7 +41,7 @@ let crawlerDetailChapter = new Crawler({
 });
 
 var crawlerListChapterFromManga = new Crawler({
-  maxConnections: 10,
+  maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
       console.log(error);
@@ -91,7 +91,7 @@ var crawlerListChapterFromManga = new Crawler({
 });
 
 let crawlerDetailInfoManga = new Crawler({
-  maxConnections: 10,
+  maxConnections: 1,
   skipEventRequest: false,
   callback: async (error, res, done) => {
     if (error) {
@@ -176,7 +176,7 @@ let crawlerDetailInfoManga = new Crawler({
 });
 
 var crawlerMangaFromCategory = new Crawler({
-  maxConnections: 10,
+  maxConnections: 1,
   // This will be called for each crawled page
   callback: async function(error, res, done) {
     if (error) {
@@ -198,7 +198,7 @@ var crawlerMangaFromCategory = new Crawler({
 });
 
 var crawlerAllCategory = new Crawler({
-  maxConnections: 10,
+  maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
       console.log(error);
@@ -234,7 +234,7 @@ var crawlerAllCategory = new Crawler({
 });
 
 var crawlerTotalPage = new Crawler({
-  maxConnections: 10,
+  maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
       console.log(error);
@@ -252,7 +252,7 @@ var crawlerTotalPage = new Crawler({
 });
 
 var crawlerAllImageFromChapter = new Crawler({
-  maxConnections: 10,
+  maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
       console.log(error);
