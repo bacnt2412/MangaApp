@@ -190,7 +190,7 @@ var crawlerMangaFromCategory = new Crawler({
         let existManga = await Manga.findOne({ link: manga.link });
         if (existManga === null) {
           crawlerDetailInfoManga.queue({
-            uri: category.link
+            uri: manga.link
           });
         }
       }
