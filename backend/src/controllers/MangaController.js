@@ -1,14 +1,15 @@
 const Manga = require('../models/MangaModel.js');
+const Category = require('../models/CategoryModel.js');
 
-validManga = (manga)=> {
-    manga.category = manga.category ? manga.category : "Đang update";
-    manga.author= manga.author ?manga.author : "Đang update",
-    manga.status= manga.status ?manga.status : "Đang update",
-    manga.viewers= manga.viewers ?manga.viewers :0,
-    manga.folowers= manga.folowers ? manga.folowers : 0,
-    manga.rating=manga.rating ? manga.rating : 0
-    return manga;
-}
+validManga = manga => {
+  manga.category = manga.category ? manga.category : 'Đang update';
+  (manga.author = manga.author ? manga.author : 'Đang update'),
+    (manga.status = manga.status ? manga.status : 'Đang update'),
+    (manga.viewers = manga.viewers ? manga.viewers : 0),
+    (manga.folowers = manga.folowers ? manga.folowers : 0),
+    (manga.rating = manga.rating ? manga.rating : 0);
+  return manga;
+};
 module.exports = {
   getAllManga: async (req, res) => {
     try {
@@ -20,7 +21,7 @@ module.exports = {
   },
   addNewManga: async (req, res) => {
     try {
-      console.log('Add new manga',req.body)
+      console.log('Add new manga', req.body);
       const newManga = new Manga(req.body);
       const result = await newManga.save();
       res.status(200).json({ result });
@@ -28,12 +29,30 @@ module.exports = {
       res.status(404).json({ error });
     }
   },
-  getMangaByCategory: async (req, res) => {
+  getMangaByIdCategory: async (req, res) => {
     try {
-      const result = await Manga.find({});
-      res.status(200).json({ result });
+      const _id = req.body.idCate;
+      const lastIdManga = req.body.lastIdManga;
+      const cate = await Category.findById({ _id });
+      if (cate) {
+        const regex = '\\b' + cate.name + '\\b';
+        //const listManga = await Manga.find({"category": { $regex: regex }});
+        let filter = {
+          category: { $regex: regex }
+        };
+        if (lastIdManga) {
+          filter = {
+            category: { $regex: regex },
+            _id: { $gt: lastIdManga }
+          };
+        }
+        const listManga = await Manga.find(filter).limit(10);
+        res.status(200).json({ listManga });
+      } else {
+        res.status(200).json({ error: 'not found cate' });
+      }
     } catch (error) {
-      res.status(404).json({ result });
+      res.status(404).json({ error });
     }
   }
 };
