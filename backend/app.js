@@ -8,7 +8,7 @@ const CrawlerData = require('./src/modules/Crawler.js');
 var mongoOptions = { keepAlive: 1, connectTimeoutMS: 30000, reconnectTries: 30, reconnectInterval: 2000,useNewUrlParser: true }
 
 mongoose
-  .connect('mongodb://localhost/Manga', mongoOptions)
+  .connect('mongodb://127.0.0.1:27017/Manga', mongoOptions)
   .then(() => {
     console.log('Mongo connected');
     CrawlerData.start();

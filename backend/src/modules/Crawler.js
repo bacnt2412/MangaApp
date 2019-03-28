@@ -147,7 +147,7 @@ let crawlerDetailInfoManga = new Crawler({
           if (name && name.trim() != '') {
             let existManga = await Manga.findOne({ link });
             if (existManga === null) {
-              if (name) {
+              if (name && link) {
                 let newManga = await new Manga({
                   name,
                   category,
@@ -186,11 +186,13 @@ var crawlerMangaFromCategory = new Crawler({
       let allMangaOfPage = await getAllNodeManga($);
       for (let index = 0; index < allMangaOfPage.length; index++) {
         const item = allMangaOfPage[index];
-        let category = await getInfoNodeManga($(item));
-        await crawlerDetailInfoManga.queue({
-          uri: category.link,
-          category
-        });
+        let manga = await getInfoNodeManga($(item));
+        let existManga = await Manga.findOne({ link: manga.link });
+        if (existManga === null) {
+          crawlerDetailInfoManga.queue({
+            uri: category.link
+          });
+        }
       }
     }
     done();
@@ -222,12 +224,6 @@ var crawlerAllCategory = new Crawler({
         }
       }
 
-      // //Get all categoty from mongoDB
-      // let listCategory = await Category.find({});
-
-      // listCategory.map((item, index) => {
-      //   crawlerMangaFromCategory.queue(item.link);
-      // });
     }
     done();
   }
@@ -292,17 +288,15 @@ var crawlerAllImageFromChapter = new Crawler({
 
 start = async () => {
   try {
-    //crawlerAllImageFromChapter.queue({ uri: 'http://www.nettruyen.com/truyen-tranh/thon-phe-linh-vuc/chap-1/453092', idchapter: 10 });
-    //Crawler all category from net truyen
-    crawlerTotalPage.queue('http://www.nettruyen.com/tim-truyen');
 
-    //crawlerAllCategory.queue('http://www.nettruyen.com/tim-truyen');
-
+    //Lần đầu crawler
     crawlerAllCategory.queue([
       {
         uri: 'http://www.nettruyen.com/tim-truyen'
       }
     ]);
+    crawlerTotalPage.queue('http://www.nettruyen.com/tim-truyen');
+    
     // //Get all categoty from mongoDB
     // let listCategory = await Category.find({});
     // listCategory.map((item, index) => {
