@@ -100,7 +100,7 @@ let crawlerDetailInfoManga = new Crawler({
   callback: async (error, res, done) => {
     if (error) {
       getRandomProxy();
-      crawlerListChapterFromManga.queue(res.options.uri);
+      crawlerDetailInfoManga.queue(res.options.uri);
       console.log(error);
     } else {
       try {
@@ -224,7 +224,7 @@ var crawlerAllCategory = new Crawler({
   callback: async (error, res, done) => {
     if (error) {
       getRandomProxy();
-      crawlerListChapterFromManga.queue(res.options.uri);
+      crawlerAllCategory.queue(res.options.uri);
       console.log(error);
     } else {
       let $ = res.$;
@@ -273,7 +273,7 @@ var crawlerAllImageFromChapter = new Crawler({
   callback: async (error, res, done) => {
     if (error) {
       getRandomProxy();
-      crawlerListChapterFromManga.queue(res.options.uri);
+      crawlerAllImageFromChapter.queue(res.options.uri);
       console.log(error);
     } else {
       let $ = res.$;
