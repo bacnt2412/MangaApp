@@ -29,7 +29,7 @@ module.exports = {
       if (lastIdChapter) {
         filter = {
           idmanga: req.body.idChaprer,
-          lastIdChapter
+          _id: { $gt: lastIdManga }
         };
       }
       const listChapter = await Chapter.find(filter).limit(settings.PAGE_LIMIT);

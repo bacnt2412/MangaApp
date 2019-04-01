@@ -3,6 +3,8 @@ const Category = require('../models/CategoryModel.js');
 const Manga = require('../models/MangaModel.js');
 const Chapter = require('../models/ChapterModel');
 const ImageChapter = require('../models/ImageChapterModel.js');
+var Proxy = '';
+
 getAllNodeManga = $ => {
   return $('.items').find('.item');
 };
@@ -44,6 +46,8 @@ var crawlerListChapterFromManga = new Crawler({
   maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
+      getRandomProxy();
+      crawlerListChapterFromManga.queue(res.options.uri);
       console.log(error);
     } else {
       let $ = res.$;
@@ -95,6 +99,8 @@ let crawlerDetailInfoManga = new Crawler({
   skipEventRequest: false,
   callback: async (error, res, done) => {
     if (error) {
+      getRandomProxy();
+      crawlerListChapterFromManga.queue(res.options.uri);
       console.log(error);
     } else {
       try {
@@ -180,19 +186,33 @@ var crawlerMangaFromCategory = new Crawler({
   // This will be called for each crawled page
   callback: async function(error, res, done) {
     if (error) {
+      getRandomProxy();
+      crawlerListChapterFromManga.queue(res.options.uri);
       console.log(error);
     } else {
-      let $ = res.$;
-      let allMangaOfPage = await getAllNodeManga($);
-      for (let index = 0; index < allMangaOfPage.length; index++) {
-        const item = allMangaOfPage[index];
-        let manga = await getInfoNodeManga($(item));
-        let existManga = await Manga.findOne({ link: manga.link });
-        if (existManga === null) {
-          crawlerDetailInfoManga.queue({
-            uri: manga.link
-          });
-        }
+      if (res.statusCode != 200) {
+        console.log('Failse Load Page');
+        console.log('Change proxy...');
+        crawlerMangaFromCategory.queue({ uri: res.options.uri, proxy: Proxy });
+      } else {
+        try {
+          console.log('#######################', res.$);
+          let $ = res.$;
+          let allMangaOfPage = await getAllNodeManga($);
+          for (let index = 0; index < allMangaOfPage.length; index++) {
+            const item = allMangaOfPage[index];
+            let manga = await getInfoNodeManga($(item));
+            let existManga = await Manga.findOne({ link: manga.link });
+            console.log('########################## Manga', manga);
+            if (existManga === null) {
+              crawlerDetailInfoManga.queue({
+                uri: manga.link
+              });
+            } else {
+              crawlerListChapterFromManga.queue({ uri: manga.link, idmanga: existManga._id });
+            }
+          }
+        } catch (error) {}
       }
     }
     done();
@@ -203,6 +223,8 @@ var crawlerAllCategory = new Crawler({
   maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
+      getRandomProxy();
+      crawlerListChapterFromManga.queue(res.options.uri);
       console.log(error);
     } else {
       let $ = res.$;
@@ -223,7 +245,6 @@ var crawlerAllCategory = new Crawler({
           console.log('Add success Category: ', newCate.name);
         }
       }
-
     }
     done();
   }
@@ -251,6 +272,8 @@ var crawlerAllImageFromChapter = new Crawler({
   maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
+      getRandomProxy();
+      crawlerListChapterFromManga.queue(res.options.uri);
       console.log(error);
     } else {
       let $ = res.$;
@@ -286,8 +309,71 @@ var crawlerAllImageFromChapter = new Crawler({
   }
 });
 
+alwayCrawlerData = () => {
+  console.log('Start crawler data');
+  for (let index = 1; index <= 5; index++) {
+    crawlerMangaFromCategory.queue('http://www.nettruyen.com/tim-truyen?page=' + index);
+  }
+  setInterval(() => {
+    console.log('Start again crawler data');
+    getRandomProxy();
+
+    for (let index = 1; index <= 5; index++) {
+      crawlerMangaFromCategory.queue('http://www.nettruyen.com/tim-truyen?page=' + index);
+    }
+  }, 30 * 60 * 1000);
+};
+
+var getListProxy = new Crawler({
+  maxConnections: 1,
+  callback: async (error, res, done) => {
+    if (error) {
+      console.log(error);
+    } else {
+      let $ = res.$;
+      let listNodeProxy = $('#proxylisttable > tbody > tr');
+      let listProxy = [];
+      //Trang 1 / 423
+      for (let index = 0; index < listNodeProxy.length; index++) {
+        if (index > 10) {
+          break;
+        }
+        let item = listNodeProxy[index];
+
+        listProxy.push('http://' + $(item).find('td')[0].children[0].data + ':' + $(item).find('td')[1].children[0].data);
+      }
+      console.log('################ listProxy', listProxy);
+
+      Proxy = listProxy[Math.floor(Math.random() * (listProxy.length - 0)) + 0];
+      console.log('################ Proxy', Proxy);
+    }
+    done();
+  }
+});
+
+getRandomProxy = () => {
+  getListProxy.queue('https://free-proxy-list.net/');
+};
+
 start = async () => {
   try {
+    getRandomProxy();
+    crawlerMangaFromCategory.on('schedule', function(options) {
+      options.proxy = Proxy;
+    });
+    crawlerListChapterFromManga.on('schedule', function(options) {
+      options.proxy = Proxy;
+    });
+    crawlerDetailInfoManga.on('schedule', function(options) {
+      options.proxy = Proxy;
+    });
+    
+    crawlerAllCategory.on('schedule', function(options) {
+      options.proxy = Proxy;
+    });
+    crawlerAllImageFromChapter.on('schedule', function(options) {
+      options.proxy = Proxy;
+    });
 
     //Lần đầu crawler
     crawlerAllCategory.queue([
@@ -295,31 +381,7 @@ start = async () => {
         uri: 'http://www.nettruyen.com/tim-truyen'
       }
     ]);
-    crawlerTotalPage.queue('http://www.nettruyen.com/tim-truyen');
-    
-    // //Get all categoty from mongoDB
-    // let listCategory = await Category.find({});
-    // listCategory.map((item, index) => {
-    //   crawlerMangaFromCategory.queue(item.link);
-    // });
-    //Crawler all manga
-    // crawlerMangaFromCategory.queue('http://www.nettruyen.com/tim-truyen');
-
-    // for (let index = 2; index <= 423; index++) {
-    //   crawlerMangaFromCategory.queue('http://www.nettruyen.com/tim-truyen?page=' + index);
-    // }
-
-    // let allManga = await Manga.find({});
-    // allManga.map( async (item,index) => {
-    //   await crawlerListChapterFromManga.queue({
-    //     uri: item.link,
-    //     idmanga: item._id
-    //   });
-    // })
-    // crawlerMangaFromCategory.queue('http://www.nettruyen.com/tim-truyen');
-    // for (let index = 2; index <= 423; index++) {
-    // crawlerMangaFromCategory.queue('http://www.nettruyen.com/tim-truyen?page='+index);
-    // }
+    alwayCrawlerData();
   } catch (error) {
     console.log('############################ ERROR: ', error);
   }

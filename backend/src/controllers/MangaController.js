@@ -25,7 +25,7 @@ module.exports = {
       console.log('Add new manga', req.body);
       const newManga = new Manga(req.body);
       const result = await newManga.save();
-      res.status(200).json({ result });
+      res.status(200).json({ result }); 
     } catch (error) {
       res.status(404).json({ error });
     }
