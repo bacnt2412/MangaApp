@@ -187,7 +187,7 @@ var crawlerMangaFromCategory = new Crawler({
   callback: async function(error, res, done) {
     if (error) {
       getRandomProxy();
-      crawlerListChapterFromManga.queue(res.options.uri);
+      crawlerMangaFromCategory.queue(res.options.uri);
       console.log(error);
     } else {
       if (res.statusCode != 200) {
