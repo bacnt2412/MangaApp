@@ -2,9 +2,8 @@ const Image = require('../models/ImageChapterModel.js');
 const settings = require('../config/settings.js');
 
 module.exports = {
-    getImageByIdChapter = async (req,res) => {
+    getImageByIdChapter: async (req,res) => {
         try {
-            console.log('#################', req.body);
             let filter = {
                 idChapter: req.body.idChapter
             };
