@@ -4,6 +4,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const settings = require('./src/config/settings.js');
 const CrawlerData = require('./src/modules/Crawler.js');
+const ImageRoute = require('./src/routes/ImageRoute.js');
 
 var mongoOptions = { keepAlive: 1, connectTimeoutMS: 30000, reconnectTries: 30, reconnectInterval: 2000,useNewUrlParser: true }
 
@@ -26,6 +27,8 @@ app.use(logger('dev'));
 app.use('/api/category', CategoryRoute);
 app.use('/api/manga', Mangaroute);
 app.use('/api/chapter', ChapterRoute);
+app.use('/api/image', ImageRoute);
+
 
 app.use((req, res, next) => {
   res.status(404).json({

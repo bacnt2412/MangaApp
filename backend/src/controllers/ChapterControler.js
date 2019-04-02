@@ -23,12 +23,12 @@ module.exports = {
     try {
       console.log('#################', req.body);
       let filter = {
-        idmanga: req.body.idChaprer
+        idmanga: req.body.idManga
       };
       const lastIdChapter = req.body.lastIdChapter;
       if (lastIdChapter) {
         filter = {
-          idmanga: req.body.idChaprer,
+          idmanga: req.body.idManga,
           _id: { $gt: lastIdManga }
         };
       }
