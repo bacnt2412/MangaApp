@@ -15,7 +15,7 @@ module.exports = {
               };
             }
             const listImage = await Image.find(filter).limit(settings.PAGE_LIMIT);
-            res.status(200).json({ listChapter });
+            res.status(200).json({ listImage });
           } catch (error) {
             console.log('#################', req.body);
             res.status(400).json({ error });
