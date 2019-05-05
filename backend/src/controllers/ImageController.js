@@ -14,10 +14,15 @@ module.exports = {
                 _id: { $gt: lastIdImage }
               };
             }
+            console.log('################# filter: ', filter);
             const listImage = await Image.find(filter).limit(settings.PAGE_LIMIT);
+            console.log('################# listImage: ', listImage);
+
             res.status(200).json({ listImage });
           } catch (error) {
-            console.log('#################', req.body);
+            console.log('################# Data: ', req.body);
+            console.log('################# Error: ', error);
+
             res.status(400).json({ error });
           }
     }
