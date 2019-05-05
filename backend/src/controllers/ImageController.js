@@ -14,6 +14,7 @@ module.exports = {
                 _id: { $gt: lastIdImage }
               };
             }
+            console.log('################# settings.PAGE_LIMIT: ', settings.PAGE_LIMIT);
             console.log('################# filter: ', filter);
             const listImage = await Image.find(filter).limit(settings.PAGE_LIMIT);
             console.log('################# listImage: ', listImage);

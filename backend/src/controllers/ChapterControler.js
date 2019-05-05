@@ -22,6 +22,8 @@ module.exports = {
   getChapterByIdManga: async (req, res) => {
     try {
       console.log('#################', req.body);
+      console.log('################# settings.PAGE_LIMIT: ', settings.PAGE_LIMIT);
+
       let filter = {
         idmanga: req.body.idManga
       };
