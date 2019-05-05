@@ -12,7 +12,7 @@ module.exports = {
   },getImageByIdChapter: async (req,res) => {
         try {
             let filter = {
-                idChapter: req.body.idChapter
+                idchapter: req.body.idChapter
             };
             const lastIdImage = req.body.lastIdImage;
             if (lastIdImage) {
@@ -21,16 +21,11 @@ module.exports = {
                 _id: { $gt: lastIdImage }
               };
             }
-            console.log('################# settings.PAGE_LIMIT: ', settings.PAGE_LIMIT);
-            console.log('################# filter: ', filter);
             const listImage = await Image.find(filter).limit(settings.PAGE_LIMIT);
-            console.log('################# listImage: ', listImage);
-
             res.status(200).json({ listImage });
           } catch (error) {
             console.log('################# Data: ', req.body);
             console.log('################# Error: ', error);
-
             res.status(400).json({ error });
           }
     }

@@ -21,23 +21,15 @@ module.exports = {
   },
   getChapterByIdManga: async (req, res) => {
     try {
-      console.log('#################', req.body);
-      console.log('################# settings.PAGE_LIMIT: ', settings.PAGE_LIMIT);
+ 
 
       let filter = {
         idmanga: req.body.idManga
       };
-      const lastIdChapter = req.body.lastIdChapter;
-      if (lastIdChapter) {
-        filter = {
-          idmanga: req.body.idManga,
-          _id: { $gt: lastIdManga }
-        };
-      }
-      const listChapter = await Chapter.find(filter).limit(settings.PAGE_LIMIT);
+      const listChapter = await Chapter.find(filter);
       res.status(200).json({ listChapter });
     } catch (error) {
-      console.log('#################', req.body);
+      console.log('#################', error);
       res.status(400).json({ error });
     }
   }
