@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 
-class componentName extends React.PureComponent {
+class MyProfile extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {};
@@ -10,10 +10,10 @@ class componentName extends React.PureComponent {
   render() {
     return (
       <View>
-        <Text> componentText </Text>
+        <Text> MyProfile </Text>
       </View>
     );
   }
 }
 
-export default componentName;
+export default MyProfile;

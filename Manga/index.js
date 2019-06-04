@@ -1,7 +1,12 @@
-/** @format */
+import { Navigation } from 'react-native-navigation';
+import { Screens, StartApplication } from './src/screens';
+Screens.forEach((ScreenComponent,key) => {
+console.log('############## ScreenComponent',ScreenComponent)
+console.log('############## key',key)
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+    Navigation.registerComponent(key,()=> ScreenComponent);
+})
 
-AppRegistry.registerComponent(appName, () => App);
+Navigation.events().registerAppLaunchedListener(()=> {
+    StartApplication();
+});
