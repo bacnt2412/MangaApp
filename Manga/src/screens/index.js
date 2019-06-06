@@ -11,7 +11,6 @@ Screens.set(NAME_MAIN_SCREEN.MYPROFILE, MyProfile);
 Screens.set(NAME_MAIN_SCREEN.COMMUNITY, Community);
 
 export const StartApplication = async () => {
-  console.log('@@@@@@@@@@@@@@@');
   const HomeScreen = {
     stack: {
       id: ID_MAIN_SCREEN.HOME,
@@ -21,7 +20,13 @@ export const StartApplication = async () => {
             name: NAME_MAIN_SCREEN.HOME
           }
         }
-      ]
+      ],
+      options: {
+        bottomTab: {
+          text: 'Tab 2',
+          icon: require('../../one.png')
+        }
+      }
     }
   };
 
@@ -34,7 +39,13 @@ export const StartApplication = async () => {
             name: NAME_MAIN_SCREEN.MYPROFILE
           }
         }
-      ]
+      ],
+      options: {
+        bottomTab: {
+          text: 'Tab 2',
+          icon: require('../../one.png')
+        }
+      }
     }
   };
 
@@ -47,7 +58,13 @@ export const StartApplication = async () => {
             name: NAME_MAIN_SCREEN.COMMUNITY
           }
         }
-      ]
+      ],
+      options: {
+        bottomTab: {
+          text: 'Tab 2',
+          icon: require('../../one.png')
+        }
+      }
     }
   };
   return Navigation.setRoot({

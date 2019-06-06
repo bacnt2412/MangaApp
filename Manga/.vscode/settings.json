@@ -1,7 +1,0 @@
-{
-    "prettier.jsxBracketSameLine": true,
-    "breadcrumbs.enabled": true,
-    "prettier.printWidth": 80,
-    "prettier.singleQuote": true,
-    "prettier.parser": "flow",
-}

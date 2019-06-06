@@ -1,12 +1,38 @@
-import { Navigation } from 'react-native-navigation';
-import { Screens, StartApplication } from './src/screens';
-Screens.forEach((ScreenComponent,key) => {
-console.log('############## ScreenComponent',ScreenComponent)
-console.log('############## key',key)
+/**
+ * @format
+ */
 
-    Navigation.registerComponent(key,()=> ScreenComponent);
-})
+// import {AppRegistry} from 'react-native';
+// import App from './App';
+// // import {name as appName} from './app.json';
 
-Navigation.events().registerAppLaunchedListener(()=> {
-    StartApplication();
-});
+// // AppRegistry.registerComponent(appName, () => App);
+
+// import { Navigation } from 'react-native-navigation';
+// Navigation.registerComponent(`navigation.playground.WelcomeScreen`, () => App);
+
+// const bottomTabs = {
+//   children: [
+//     {
+//       component: {
+//         name: 'navigation.playground.WelcomeScreen',
+//         options: {
+//           bottomTab: {
+//             text: 'Tab 2',
+//             icon: require('./one.png')
+//           }
+//         }
+//       }
+//     }
+//   ],
+//   options: {}
+// };
+
+// Navigation.events().registerAppLaunchedListener(() => {
+//   Navigation.setRoot({
+//     root: {
+//       bottomTabs: bottomTabs
+//     }
+//   });
+// });
+require('./src/index.js');
