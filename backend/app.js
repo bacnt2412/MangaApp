@@ -16,6 +16,7 @@ mongoose
   });
 
 const app = express();
+// INIT ROUTER
 const CategoryRoute = require('./src/routes/CategoryRoute.js');
 const Mangaroute = require('./src/routes/MangaRoute.js');
 const ChapterRoute = require('./src/routes/ChapterRoute.js');
@@ -24,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+// SET ROUTER
 app.use('/api/category', CategoryRoute);
 app.use('/api/manga', Mangaroute);
 app.use('/api/chapter', ChapterRoute);

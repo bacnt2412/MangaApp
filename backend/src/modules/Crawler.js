@@ -219,16 +219,15 @@ var crawlerMangaFromCategory = new Crawler({
   }
 });
 
-var crawlerAllCategory = new Crawler({
+var NET_TRUYEN_get_all_category = new Crawler({
   maxConnections: 1,
   callback: async (error, res, done) => {
     if (error) {
-      getRandomProxy();
-      crawlerAllCategory.queue(res.options.uri);
       console.log(error);
     } else {
       let $ = res.$;
       let listNodeCategory = $('#ctl00_divRight > div.box.darkBox.genres.hidden-sm.hidden-xs.Module.Module-179 > div > ul > li');
+
       for (let index = 0; index < listNodeCategory.length; index++) {
         const item = listNodeCategory[index];
         let name = $(item)
@@ -239,6 +238,8 @@ var crawlerAllCategory = new Crawler({
           .attr('href');
 
         let checkExist = await Category.findOne({ link });
+        console.log('############################', name);
+
         if (checkExist === null) {
           let newCate = new Category({ name, link });
           let result = await newCate.save();
@@ -246,7 +247,7 @@ var crawlerAllCategory = new Crawler({
         }
       }
     }
-    done();
+    res.options.done(error, res, done);
   }
 });
 
@@ -351,37 +352,79 @@ var getListProxy = new Crawler({
   }
 });
 
-getRandomProxy = () => {
-  getListProxy.queue('https://free-proxy-list.net/');
+getRandomProxy = async () => {
+  await getListProxy.queue({
+    uri: 'https://free-proxy-list.net/'
+  });
+
+  await getListProxy.on('drain', function() {
+    console.log('crawling is done');
+    return true;
+  });
 };
+
+function getPageAsync(urls) {
+  return new Promise((resolve, reject) => {
+    const loop = urls.map(url => {
+      return new Promise((resolve, reject) => {
+        NET_TRUYEN_get_all_category.queue([
+          {
+            uri: url,
+            /* userAgent: userAgent,
+					referer: referer, */
+            done: async function(err, res, done) {
+              if (err || res.statusCode !== 200) {
+                reject('err');
+                throw new Error(err);
+              }
+              console.log('2222');
+              const $ = res.$;
+              resolve($);
+              done();
+            }
+          }
+        ]);
+      });
+    });
+    NET_TRUYEN_get_all_category.once('error', error => reject(error));
+    NET_TRUYEN_get_all_category.once('drain', () => {
+      Promise.all(loop).then(results => {
+
+        resolve(results);
+      });
+    });
+  });
+}
 
 start = async () => {
   try {
-    getRandomProxy();
-    crawlerMangaFromCategory.on('schedule', function(options) {
-      options.proxy = Proxy;
-    });
-    crawlerListChapterFromManga.on('schedule', function(options) {
-      options.proxy = Proxy;
-    });
-    crawlerDetailInfoManga.on('schedule', function(options) {
-      options.proxy = Proxy;
-    });
-    
-    crawlerAllCategory.on('schedule', function(options) {
-      options.proxy = Proxy;
-    });
-    crawlerAllImageFromChapter.on('schedule', function(options) {
-      options.proxy = Proxy;
-    });
+    // crawlerMangaFromCategory.on('schedule', function(options) {
+    //   options.proxy = Proxy;
+    // });
+    // crawlerListChapterFromManga.on('schedule', function(options) {
+    //   options.proxy = Proxy;
+    // });
+    // crawlerDetailInfoManga.on('schedule', function(options) {
+    //   options.proxy = Proxy;
+    // });
 
+    // crawlerAllCategory.on('schedule', function(options) {
+    //   options.proxy = Proxy;
+    // });
+    // crawlerAllImageFromChapter.on('schedule', function(options) {
+    //   options.proxy = Proxy;
+    // });
+
+   let res =  await getPageAsync(['http://www.nettruyen.com/tim-truyen']);
     //Lần đầu crawler
-    crawlerAllCategory.queue([
-      {
-        uri: 'http://www.nettruyen.com/tim-truyen'
-      }
-    ]);
-    alwayCrawlerData();
+    // NET_TRUYEN_get_all_category.queue([
+    //   {
+    //     uri: 'http://www.nettruyen.com/tim-truyen',
+    //   }
+    // ]);
+    // NET_TRUYEN_get_all_category.on('drain',()=> {
+    //   console.log('###### done')
+    // })
   } catch (error) {
     console.log('############################ ERROR: ', error);
   }
