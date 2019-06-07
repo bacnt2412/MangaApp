@@ -219,37 +219,6 @@ var crawlerMangaFromCategory = new Crawler({
   }
 });
 
-var NET_TRUYEN_get_all_category = new Crawler({
-  maxConnections: 1,
-  callback: async (error, res, done) => {
-    if (error) {
-      console.log(error);
-    } else {
-      let $ = res.$;
-      let listNodeCategory = $('#ctl00_divRight > div.box.darkBox.genres.hidden-sm.hidden-xs.Module.Module-179 > div > ul > li');
-
-      for (let index = 0; index < listNodeCategory.length; index++) {
-        const item = listNodeCategory[index];
-        let name = $(item)
-          .find('a')
-          .text();
-        let link = $(item)
-          .find('a')
-          .attr('href');
-
-        let checkExist = await Category.findOne({ link });
-        console.log('############################', name);
-
-        if (checkExist === null) {
-          let newCate = new Category({ name, link });
-          let result = await newCate.save();
-          console.log('Add success Category: ', newCate.name);
-        }
-      }
-    }
-    res.options.done(error, res, done);
-  }
-});
 
 var crawlerTotalPage = new Crawler({
   maxConnections: 1,
@@ -363,7 +332,35 @@ getRandomProxy = async () => {
   });
 };
 
-function getPageAsync(urls) {
+
+var crawlerListMangaByCategory = new Crawler({
+  maxConnections: 1,
+  // This will be called for each crawled page
+  callback: async function(error, res, done) {
+    if (error) {
+      console.log(error);
+    } else {
+      let listManga = [];
+      if (res.statusCode != 200) {
+        console.log('Failse Load Page');
+      } else {
+        try {
+          let $ = res.$;
+          let allMangaOfPage = await getAllNodeManga($);
+
+          for (let index = 0; index < allMangaOfPage.length; index++) {
+            const item = allMangaOfPage[index];
+            let manga = await getInfoNodeManga($(item));
+            listManga
+          }
+        } catch (error) {}
+      }
+    }
+    done();
+  }
+});
+
+function getListMangaByCategory_NET_TRUYEN(urls) {
   return new Promise((resolve, reject) => {
     const loop = urls.map(url => {
       return new Promise((resolve, reject) => {
@@ -372,14 +369,13 @@ function getPageAsync(urls) {
             uri: url,
             /* userAgent: userAgent,
 					referer: referer, */
-            done: async function(err, res, done) {
+            done: async function(err, res, done,listCate) {
               if (err || res.statusCode !== 200) {
                 reject('err');
                 throw new Error(err);
               }
-              console.log('2222');
               const $ = res.$;
-              resolve($);
+              resolve(listCate);
               done();
             }
           }
@@ -389,15 +385,82 @@ function getPageAsync(urls) {
     NET_TRUYEN_get_all_category.once('error', error => reject(error));
     NET_TRUYEN_get_all_category.once('drain', () => {
       Promise.all(loop).then(results => {
-
         resolve(results);
       });
     });
   });
 }
 
+function getAllCategory_NET_TRUYEN(urls) {
+  return new Promise((resolve, reject) => {
+    const loop = urls.map(url => {
+      return new Promise((resolve, reject) => {
+        NET_TRUYEN_get_all_category.queue([
+          {
+            uri: url,
+            /* userAgent: userAgent,
+					referer: referer, */
+            done: async function(err, res, done,listCate) {
+              if (err || res.statusCode !== 200) {
+                reject('err');
+                throw new Error(err);
+              }
+              const $ = res.$;
+              resolve(listCate);
+              done();
+            }
+          }
+        ]);
+      });
+    });
+    NET_TRUYEN_get_all_category.once('error', error => reject(error));
+    NET_TRUYEN_get_all_category.once('drain', () => {
+      Promise.all(loop).then(results => {
+        resolve(results);
+      });
+    });
+  });
+}
+
+var NET_TRUYEN_get_all_category = new Crawler({
+  maxConnections: 1,
+  callback: async (error, res, done) => {
+    let listCate = [];
+    if (error) {
+      console.log(error);
+    } else {
+      let $ = res.$;
+      let listNodeCategory = $('#ctl00_divRight > div.box.darkBox.genres.hidden-sm.hidden-xs.Module.Module-179 > div > ul > li');
+      for (let index = 0; index < listNodeCategory.length; index++) {
+        const item = listNodeCategory[index];
+        let name = $(item)
+          .find('a')
+          .text();
+        let link = $(item)
+          .find('a')
+          .attr('href');
+        listCate.push(name);
+        let checkExist = await Category.findOne({ link });
+        if (checkExist === null) {
+          let newCate = new Category({ name, link });
+          let result = await newCate.save();
+          console.log('Add success Category: ', newCate.name);
+        }
+      }
+    }
+    res.options.done(error, res, done,listCate);
+  }
+});
+
+
 start = async () => {
   try {
+    // Lấy tất cả danh mục của net truyện
+    let res = await getAllCategory_NET_TRUYEN(['http://www.nettruyen.com/tim-truyen']);
+    console.log(' Get ALl Danh Muc Net Truyen res: ', res);
+
+    // Lần đầu chạy Server Lấy truyện của 10 trang đầu tiên.
+
     // crawlerMangaFromCategory.on('schedule', function(options) {
     //   options.proxy = Proxy;
     // });
@@ -415,7 +478,8 @@ start = async () => {
     //   options.proxy = Proxy;
     // });
 
-   let res =  await getPageAsync(['http://www.nettruyen.com/tim-truyen']);
+  
+
     //Lần đầu crawler
     // NET_TRUYEN_get_all_category.queue([
     //   {
