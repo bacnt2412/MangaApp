@@ -40,7 +40,7 @@ addListImage = async (listImage, idChapter) => {
       link: image.link,
       idchapter: idChapter
     });
-    let result =  newImage.save();
+    let result = newImage.save();
   }
 };
 
@@ -61,9 +61,22 @@ addNewManga = async (manga, idCate) => {
   return await addListChapter(manga.listChapter, result._id);
 };
 
+addNewCategory = async listCategory => {
+  for (let i = 0; i < listCategory.length; i++) {
+    const cate = listCategory[i];
+    if (cate.name) {
+      let checkExist = await CategoryModel.findOne({ name: cate.name });
+      if (!checkExist) {
+        let newCate = await new CategoryModel(cate);
+        console.log('###### Add new category: ', cate.name);
+      }
+    }
+  }
+};
 module.exports = {
   checkExistMangaByName,
   addListChapter,
   addListImage,
-  addNewManga
+  addNewManga,
+  addNewCategory
 };
