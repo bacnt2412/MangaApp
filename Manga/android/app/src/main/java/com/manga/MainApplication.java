@@ -3,6 +3,8 @@ package com.manga;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.dylanvann.fastimage.FastImageViewPackage;
+import com.airbnb.android.react.lottie.LottiePackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
 import com.facebook.react.ReactNativeHost;
@@ -40,7 +42,9 @@ public class MainApplication extends NavigationApplication {
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
           new RNGestureHandlerPackage(),
-          new ReanimatedPackage()
+          new ReanimatedPackage(),
+          new LottiePackage(),
+          new FastImageViewPackage()
             // eg. new VectorIconsPackage()
         );
     }

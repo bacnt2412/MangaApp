@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
-import { BackHandler, Keyboard, StatusBar, View, SafeAreaView } from 'react-native';
-import { SafeView } from '../SafeView';
+import { BackHandler, Keyboard, StatusBar, SafeAreaView } from 'react-native';
 
 export default class BaseScreen extends PureComponent {
   constructor(props) {
@@ -43,10 +42,10 @@ export default class BaseScreen extends PureComponent {
 
   render() {
     return (
-      <SafeView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1 }}>
         {this.renderStatusBar()}
         {this.renderContent()}
-      </SafeView>
+      </SafeAreaView>
     );
   }
 

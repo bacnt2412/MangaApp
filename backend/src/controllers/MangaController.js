@@ -14,10 +14,10 @@ validManga = manga => {
 
 getAllManga = async (req, res) => {
   try {
-    const result = await Manga.find({});
-    res.status(200).json({ data: result });
+    const listManga = await Manga.find({});
+    res.status(200).json({ listManga });
   } catch (error) {
-    res.status(404).json({ result });
+    res.status(404).json({ error });
   }
 };
 
@@ -26,7 +26,7 @@ addNewManga = async (req, res) => {
     console.log('Add new manga', req.body);
     const newManga = new Manga(req.body);
     const result = await newManga.save();
-    res.status(200).json({ data: result });
+    res.status(200).json({ result });
   } catch (error) {
     res.status(404).json({ error });
   }
@@ -50,7 +50,7 @@ getMangaByIdCategory = async (req, res) => {
         };
       }
       const listManga = await Manga.find(filter).limit(settings.PAGE_LIMIT);
-      res.status(200).json({ data: listManga });
+      res.status(200).json({ listManga });
     } else {
       res.status(200).json({ error: 'not found cate' });
     }
@@ -66,7 +66,7 @@ getLatestManga = async (req, res) => {
       .sort({ updated: -1 })
       .skip((page - 1) * settings.PAGE_LIMIT)
       .limit(settings.PAGE_LIMIT);
-    res.status(200).json({ data: listManga });
+    res.status(200).json({ listManga });
   } catch (error) {
     res.status(404).json({ error });
   }
