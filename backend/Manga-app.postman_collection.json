@@ -1,0 +1,447 @@
+{
+	"info": {
+		"_postman_id": "e1b04332-42c9-4ebf-9f9c-09adb6f2893c",
+		"name": "Manga-app",
+		"description": "asd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "localhost:3000/login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"bacnt\",\n\t\"password\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/login",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:3000/register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"bacnt\",\n\t\"password\": \"1\",\n\t\"email\":\"bacnt\",\n\t\"name\":\"Tuan Bac\"\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/register",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "get-all-category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwMjE1NTUyLCJleHAiOjE1NjAzMDE5NTJ9.7zljFbDI5IOUzWeqcJyihyQV_oI7qYCj0xe5COecVLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{server_ip}}/api/Category/get-all-category",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Category",
+								"get-all-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add-new-category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Xuyên Không\",\n\t\"description\":\"Xuyên Không, Xuyên Việt là thể loại nhân vật chính vì một lý do nào đó mà bị đưa đến sinh sống ở một không gian hay một khoảng thời gian khác. Nhân vật chính có thể trực tiếp xuyên qua bằng thân xác mình hoặc sống lại bằng thân xác người khác.\",\n\t\"link\":\"http://www.nettruyen.com/tim-truyen/xuyen-khong\"\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/api/Category/add-new-category",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Category",
+								"add-new-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete-category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"1\"\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/api/Category/delete-category",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Category",
+								"delete-category"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Manga",
+			"item": [
+				{
+					"name": "get-all-manga",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{server_ip}}/api/Manga/get-all-manga",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Manga",
+								"get-all-manga"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-manga-by-id-category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwMjE1NTUyLCJleHAiOjE1NjAzMDE5NTJ9.7zljFbDI5IOUzWeqcJyihyQV_oI7qYCj0xe5COecVLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idCate\": \"5cff5a0bd74330490be59ea7\"\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/api/Manga/get-manga-by-id-category",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Manga",
+								"get-manga-by-id-category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-latest-manga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwMjE1NTUyLCJleHAiOjE1NjAzMDE5NTJ9.7zljFbDI5IOUzWeqcJyihyQV_oI7qYCj0xe5COecVLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"page\":1\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/api/Manga/get-latest-manga",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Manga",
+								"get-latest-manga"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-most-view-manga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwMjE1NTUyLCJleHAiOjE1NjAzMDE5NTJ9.7zljFbDI5IOUzWeqcJyihyQV_oI7qYCj0xe5COecVLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"page\":1\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/api/Manga/get-most-view-manga",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Manga",
+								"get-most-view-manga"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get-most-favorite-manga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwMjE1NTUyLCJleHAiOjE1NjAzMDE5NTJ9.7zljFbDI5IOUzWeqcJyihyQV_oI7qYCj0xe5COecVLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://{{server_ip}}/api/Manga/get-most-favorite-manga",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"Manga",
+								"get-most-favorite-manga"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chapter",
+			"item": [
+				{
+					"name": "get-chapter-by-id-manga",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwMjE1NTUyLCJleHAiOjE1NjAzMDE5NTJ9.7zljFbDI5IOUzWeqcJyihyQV_oI7qYCj0xe5COecVLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"idManga\":\"5cff5aead74330490be5ef6c\"\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/api/chapter/get-chapter-by-id-manga",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"chapter",
+								"get-chapter-by-id-manga"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "get-image-by-id-chapter",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwMjE1NTUyLCJleHAiOjE1NjAzMDE5NTJ9.7zljFbDI5IOUzWeqcJyihyQV_oI7qYCj0xe5COecVLM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"idChapter\":\"5cff5aead74330490be5ef73\"\n}"
+						},
+						"url": {
+							"raw": "http://{{server_ip}}/api/image/get-image-by-id-chapter",
+							"protocol": "http",
+							"host": [
+								"{{server_ip}}"
+							],
+							"path": [
+								"api",
+								"image",
+								"get-image-by-id-chapter"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

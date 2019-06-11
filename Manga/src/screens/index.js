@@ -5,22 +5,22 @@ import Home from './Home/index';
 import MyProfile from './MyProfile/index';
 import Library from './Library/index';
 
-import { ID_SCREEN, NAME_SCREEN } from '../utils/const';
+import Const from '../utils/const';
 
 export const Screens = new Map();
-Screens.set(NAME_SCREEN.HOME, Home);
-Screens.set(NAME_SCREEN.LIBRARY, Library);
-Screens.set(NAME_SCREEN.MYPROFILE, MyProfile);
-Screens.set(NAME_SCREEN.COMMUNITY, Community);
+Screens.set(Const.NAME_SCREEN.HOME, Home);
+Screens.set(Const.NAME_SCREEN.LIBRARY, Library);
+Screens.set(Const.NAME_SCREEN.MYPROFILE, MyProfile);
+Screens.set(Const.NAME_SCREEN.COMMUNITY, Community);
 
 export const StartApplication = async () => {
   const HomeScreen = {
     stack: {
-      id: ID_SCREEN.HOME,
+      id: Const.ID_SCREEN.HOME,
       children: [
         {
           component: {
-            name: NAME_SCREEN.HOME
+            name: Const.NAME_SCREEN.HOME
           }
         }
       ],
@@ -35,11 +35,11 @@ export const StartApplication = async () => {
 
   const LibraryScreen = {
     stack: {
-      id: ID_SCREEN.LIBRARY,
+      id: Const.ID_SCREEN.LIBRARY,
       children: [
         {
           component: {
-            name: NAME_SCREEN.LIBRARY
+            name: Const.NAME_SCREEN.LIBRARY
           }
         }
       ],
@@ -54,11 +54,11 @@ export const StartApplication = async () => {
 
   const MyProFileScreen = {
     stack: {
-      id: ID_SCREEN.MYPROFILE,
+      id: Const.ID_SCREEN.MYPROFILE,
       children: [
         {
           component: {
-            name: NAME_SCREEN.MYPROFILE
+            name: Const.NAME_SCREEN.MYPROFILE
           }
         }
       ],
@@ -73,11 +73,11 @@ export const StartApplication = async () => {
 
   const CommunityScreen = {
     stack: {
-      id: ID_SCREEN.COMMUNITY,
+      id: Const.ID_SCREEN.COMMUNITY,
       children: [
         {
           component: {
-            name: NAME_SCREEN.COMMUNITY
+            name: Const.NAME_SCREEN.COMMUNITY
           }
         }
       ],
@@ -93,7 +93,7 @@ export const StartApplication = async () => {
     root: {
       id: 'ROOT',
       bottomTabs: {
-        id: ID_SCREEN.BOTTOM_TAB,
+        id: Const.ID_SCREEN.BOTTOM_TAB,
         children: [HomeScreen, LibraryScreen, MyProFileScreen, CommunityScreen]
       }
     }

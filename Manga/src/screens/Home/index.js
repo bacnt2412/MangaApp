@@ -1,36 +1,29 @@
 import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Dimensions } from 'react-native';
 import { TabView, SceneMap } from 'react-native-tab-view';
+import BaseScreen from '../../components/BaseScreen';
+const FirstRoute = () => <View style={[styles.scene]} />;
 
-const FirstRoute = () => <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />;
-
-const SecondRoute = () => <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />;
+const SecondRoute = () => <View style={[styles.scene]} />;
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
   android: 'Double tap R on your keyboard to reload,\n' + 'Shake or press menu button for dev menu'
 });
 
-export default class Home extends Component {
+export default class Home extends BaseScreen {
   static options = {
     topBar: {
       visible: true,
       animate: false, // Controls whether TopBar visibility changes should be animated
       hideOnScroll: true,
-      leftButtonColor: 'black',
-      rightButtonColor: 'black',
       drawBehind: false,
       testID: 'topBar',
       title: {
         text: 'Home',
         fontSize: 20,
       },
-      backButton: {
-        visible: true
-      },
-      background: {
-        color: '#00ff00',
-      }
+     
     }
   };
   constructor(props) {
