@@ -359,7 +359,7 @@ async function startCrawNewData() {
 
 start = async () => {
   try {
-    console.log('Start Crawler Data');
+    console.log('********************** Start Crawler Data ************************');
     startGetAllCategory();
     setTimeout(async () => {
       while (true) {

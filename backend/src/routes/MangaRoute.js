@@ -5,5 +5,8 @@ const MangaController = require('../controllers/MangaController');
 MangaRoute.route('/get-all-manga').get(MangaController.getAllManga);
 MangaRoute.route('/add-new-manga').post(MangaController.addNewManga);
 MangaRoute.route('/get-manga-by-id-category').post(MangaController.getMangaByIdCategory);
+MangaRoute.route('/get-latest-manga').post(MangaController.getLatestManga);
+MangaRoute.route('/get-most-view-manga').post(MangaController.getMostViewManga);
+MangaRoute.route('/get-most-favorite-manga').post(MangaController.getMostFavoriteManga);
 
 module.exports = MangaRoute;

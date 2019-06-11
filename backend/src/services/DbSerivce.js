@@ -2,7 +2,6 @@ const CategoryModel = require('../models/CategoryModel');
 const MangaModel = require('../models/MangaModel');
 const ChapterModel = require('../models/ChapterModel');
 const ImageChapterModel = require('../models/ImageChapterModel');
-const Crawler = require('./Crawler');
 
 checkExistMangaByName = async name => {
   return await MangaModel.findOne({ name });
@@ -10,6 +9,13 @@ checkExistMangaByName = async name => {
 
 checkExistChapterByLink = async link => {
   return await ChapterModel.findOne({ link });
+};
+
+updateManga = async idManga => {
+  try {
+    let manga = await ChapterModel.find({ _id: idManga });
+    manga.updated = Date.now;
+  } catch (error) {}
 };
 
 addListChapter = async (listChapter, idManga) => {
@@ -26,6 +32,7 @@ addListChapter = async (listChapter, idManga) => {
       });
       let result = await newChapter.save();
       listChapterNews.push(result);
+      await updateManga(idManga);
       console.log('############ add New Chapter', result);
     }
   }
@@ -73,6 +80,9 @@ addNewCategory = async listCategory => {
     }
   }
 };
+
+
+
 module.exports = {
   checkExistMangaByName,
   addListChapter,

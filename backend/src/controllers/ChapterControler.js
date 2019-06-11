@@ -5,7 +5,7 @@ module.exports = {
   getAllChapter: async (req, res, next) => {
     try {
       const data = await Chapter.find({});
-      res.status(200).json({ data });
+      res.status(200).json({ data: data });
     } catch (error) {
       res.status(404).json({ error });
     }
@@ -14,7 +14,7 @@ module.exports = {
     try {
       const chapter = new Chapter(req.body);
       const result = await chapter.save();
-      res.status(200).json({ result });
+      res.status(200).json({ data: result });
     } catch (error) {
       res.status(404).json({ error });
     }
@@ -27,7 +27,7 @@ module.exports = {
         idmanga: req.body.idManga
       };
       const listChapter = await Chapter.find(filter);
-      res.status(200).json({ listChapter });
+      res.status(200).json({ data: listChapter });
     } catch (error) {
       console.log('#################', error);
       res.status(400).json({ error });

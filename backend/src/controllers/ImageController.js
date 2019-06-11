@@ -5,7 +5,7 @@ module.exports = {
   getAllImage: async (req,res) => {
     try {
       const listImage = await Image.find({});
-      res.status(200).json({listImage});
+      res.status(200).json({ data: listImage});
     } catch (error) {
       res.status(400).json({ error });
     }
@@ -22,7 +22,7 @@ module.exports = {
               };
             }
             const listImage = await Image.find(filter).limit(settings.PAGE_LIMIT);
-            res.status(200).json({ listImage });
+            res.status(200).json({ data: listImage });
           } catch (error) {
             console.log('################# Data: ', req.body);
             console.log('################# Error: ', error);

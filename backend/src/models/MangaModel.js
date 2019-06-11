@@ -8,13 +8,33 @@ const mangaSchema = new Schema({
   },
   category: String,
   author: String,
-  status: String,
-  viewers: String,
-  folowers: String,
-  rating: String,
+  status: {
+    type: String,
+    default: '0'
+  },
+  viewers: {
+    type: Number,
+    default: 0
+  },
+  folowers: {
+    type: Number,
+    default: 0
+  },
+  rating: {
+    type: Number,
+    default: 0
+  },
   thumbnail: String,
   link: String,
-  latestChapter: String
+  latestChapter: String,
+  created:{
+    type: Date,
+    default: Date.now
+  },
+  updated: {
+    type: Date,
+    default: Date.now
+  }
 });
 const Manga = mongoose.model('manga', mangaSchema);
 module.exports = Manga;
