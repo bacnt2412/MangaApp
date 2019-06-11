@@ -11,7 +11,28 @@ const instructions = Platform.select({
   android: 'Double tap R on your keyboard to reload,\n' + 'Shake or press menu button for dev menu'
 });
 
-export default class Home extends Component{
+export default class Home extends Component {
+  static options = {
+    topBar: {
+      visible: true,
+      animate: false, // Controls whether TopBar visibility changes should be animated
+      hideOnScroll: true,
+      leftButtonColor: 'black',
+      rightButtonColor: 'black',
+      drawBehind: false,
+      testID: 'topBar',
+      title: {
+        text: 'Home',
+        fontSize: 20,
+      },
+      backButton: {
+        visible: true
+      },
+      background: {
+        color: '#00ff00',
+      }
+    }
+  };
   constructor(props) {
     super(props);
     this.state = {

@@ -21,7 +21,7 @@ module.exports = {
                 _id: { $gt: lastIdImage }
               };
             }
-            const listImage = await Image.find(filter).limit(settings.PAGE_LIMIT);
+            const listImage = await Image.find(filter).sort({_id: 1}).limit(settings.PAGE_LIMIT);
             res.status(200).json({ data: listImage });
           } catch (error) {
             console.log('################# Data: ', req.body);

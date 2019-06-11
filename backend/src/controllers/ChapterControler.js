@@ -21,12 +21,10 @@ module.exports = {
   },
   getChapterByIdManga: async (req, res) => {
     try {
- 
-
       let filter = {
         idmanga: req.body.idManga
       };
-      const listChapter = await Chapter.find(filter);
+      const listChapter = await Chapter.find(filter).sort({_id: 1});
       res.status(200).json({ data: listChapter });
     } catch (error) {
       console.log('#################', error);

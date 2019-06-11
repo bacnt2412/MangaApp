@@ -3,7 +3,7 @@ const Category = require('../models/CategoryModel.js');
 const CategoryController = {
   getAllCategory: async (req, res, next) => {
     try {
-      const result = await Category.find({});
+      const result = await Category.find({}).sort({_id: 1});
       res.status(200).json({ data: result });
     } catch (error) {
       res.status(404).json({ error: error.message });
