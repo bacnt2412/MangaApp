@@ -12,8 +12,22 @@ export default class ListManga extends PureComponent {
   keyExtractor = item => {
     return item._id.toString();
   };
+
   renderItem = ({ index, item }) => {
     return <MangaItem index={index} item={item} />;
+  };
+
+  onMomentumScrollBegin = () => {
+    this.onEndReachedCalledDuringMomentum = false;
+  };
+
+  onEndReached = () => {
+    console.log('################ onEndReached');
+
+    if (!this.onEndReachedCalledDuringMomentum) {
+      this.props.getMoreData ? this.props.getMoreData() : null;
+      this.onEndReachedCalledDuringMomentum = true;
+    }
   };
   render() {
     return (
@@ -23,6 +37,9 @@ export default class ListManga extends PureComponent {
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           extraData={this.state}
+          onEndReachedThreshold={0.5}
+          onMomentumScrollBegin={this.onMomentumScrollBegin}
+          onEndReached={this.onEndReached}
         />
       </View>
     );
