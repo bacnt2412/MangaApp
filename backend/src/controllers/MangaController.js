@@ -79,7 +79,7 @@ getMostViewManga = async (req, res) => {
       .sort({ viewers: -1 })
       .skip((page - 1) * settings.PAGE_LIMIT)
       .limit(settings.PAGE_LIMIT);
-    res.status(200).json({ data: listManga });
+    res.status(200).json({ listManga });
   } catch (error) {
     res.status(404).json({ error });
   }
@@ -92,7 +92,7 @@ getMostFavoriteManga = async (req, res) => {
       .sort({ folowers: -1 })
       .skip((page - 1) * settings.PAGE_LIMIT)
       .limit(settings.PAGE_LIMIT);
-    res.status(200).json({ data: listManga });
+    res.status(200).json({ listManga });
   } catch (error) {
     res.status(404).json({ error });
   }

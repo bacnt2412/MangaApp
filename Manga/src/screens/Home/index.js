@@ -23,11 +23,7 @@ export default class Home extends BaseScreen {
     super(props);
     this.state = {
       index: 0,
-      routes: [
-        { key: 'new', title: 'Latest New' },
-        { key: 'favorite', title: 'Most Favorite' },
-        { key: 'view', title: 'Most View' }
-      ],
+      routes: [{ key: 'new', title: 'Latest New' }, { key: 'favorite', title: 'Most Favorite' }, { key: 'view', title: 'Most View' }],
       listLatestManga: [],
       listMostFavoriteManga: [],
       listMostViewManga: [],
@@ -48,16 +44,14 @@ export default class Home extends BaseScreen {
     if (res && res.status === 200) {
       console.log('############################ res', res.data.data);
       this.setState({ listLatestManga: res.data.data });
+    } else if (res && res.error && res.error.response.status === 403) {
+      alert('Token is not valid');
     }
     this.setState({ isLatestMangaFirstLoading: false });
   };
 
   renderContenOfTabView = (listData, isLoading) => {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {isLoading ? <Loading /> : <ListManga listManga={listData} />}
-      </View>
-    );
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>{isLoading ? <Loading /> : <ListManga listManga={listData} />}</View>;
   };
 
   onChangeTab = index => {
@@ -81,20 +75,11 @@ export default class Home extends BaseScreen {
         renderScene={({ route, jumpTo }) => {
           switch (route.key) {
             case 'new':
-              return this.renderContenOfTabView(
-                this.state.listLatestManga,
-                this.state.isLatestMangaFirstLoading
-              );
+              return this.renderContenOfTabView(this.state.listLatestManga, this.state.isLatestMangaFirstLoading);
             case 'favorite':
-              return this.renderContenOfTabView(
-                this.state.listMostFavoriteManga,
-                this.state.isMostFavoriteFirstLoading
-              );
+              return this.renderContenOfTabView(this.state.listMostFavoriteManga, this.state.isMostFavoriteFirstLoading);
             case 'view':
-              return this.renderContenOfTabView(
-                this.state.listMostViewManga,
-                this.state.isMostViewFirstLoading
-              );
+              return this.renderContenOfTabView(this.state.listMostViewManga, this.state.isMostViewFirstLoading);
           }
         }}
         onIndexChange={this.onChangeTab}
@@ -103,25 +88,3 @@ export default class Home extends BaseScreen {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  scene: {
-    flex: 1
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
-  }
-});
