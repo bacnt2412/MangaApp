@@ -345,7 +345,7 @@ async function startCrawNewData() {
       listChapterNew = await DbService.addNewManga(detailMangaOnSite);
       //Not Exist
     }
-    console.log('################# list Chapter New', listChapterNew);
+    console.log('################# list Chapter New ',Date.now + ' : ', listChapterNew);
     if (listChapterNew) {
       listChapterNew.map(async item => {
         let listImage = await NET_TRUYEN_Image_get_list(item.link);
@@ -363,9 +363,9 @@ start = async () => {
     startGetAllCategory();
     setTimeout(async () => {
       while (true) {
-        startCrawNewData();
+         await startCrawNewData();
         //sleep 3h.
-        await sleep(3600 * 2 * 1000);
+        await sleep(3600 * 1000 * 2 );
       }
     }, 1000);
   } catch (error) {
