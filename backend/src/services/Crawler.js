@@ -91,7 +91,6 @@ async function NET_TRUYEN_Image_get_list(url) {
         done: async function(err, res, done, data) {
           if (err || res.statusCode !== 200) {
             reject('err');
-            throw new Error(err);
           }
           resolve(data);
           done();
@@ -183,7 +182,6 @@ function NET_TRUYEN_Manga_get_info(url) {
         done: async function(err, res, done, data) {
           if (err || res.statusCode !== 200) {
             reject('err');
-            throw new Error(err);
           }
           resolve(data);
           done();
@@ -230,7 +228,6 @@ function NET_TRUYEN_Manga_get_list(url) {
         done: async function(err, res, done, listManga) {
           if (err || res.statusCode !== 200) {
             reject('err');
-            throw new Error(err);
           }
           resolve(listManga);
           done();
@@ -280,7 +277,6 @@ function NET_TRUYEN_Category_get_list(url) {
         done: async function(err, res, done, listCate) {
           if (err || res.statusCode !== 200) {
             reject('err');
-            throw new Error(err);
           }
           resolve(listCate);
           done();
@@ -297,8 +293,10 @@ function sleep(ms) {
 }
 
 async function startGetAllCategory() {
-  let listCate = await NET_TRUYEN_Category_get_list('http://www.nettruyen.com/tim-truyen');
-  DbService.addNewCategory(listCate);
+  try {
+    let listCate = await NET_TRUYEN_Category_get_list('http://www.nettruyen.com/tim-truyen');
+    DbService.addNewCategory(listCate);
+  } catch (error) {}
 }
 async function startCrawNewData() {
   console.log('============================================================= Start =============================================================');
@@ -336,7 +334,7 @@ async function startCrawNewData() {
   } catch (error) {
     console.log('####################### Error: ', error);
   }
-  console.log('======================================= End ' + new Date().getHours + ' ====================================');
+  console.log('======================================= End ' + new Date().getHours() + ' ====================================');
 }
 
 start = async () => {
