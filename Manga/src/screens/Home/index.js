@@ -1,11 +1,20 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ActivityIndicator
+} from 'react-native';
+import { TabView, PagerScroll, TabBar } from 'react-native-tab-view';
 import BaseScreen from '../../components/BaseScreen';
 import ListManga from '../../components/ListManga';
 import Loading from '../../components/Loading';
 import Api from '../../services/api.js';
 import Lang from '../../Language';
+import styles from './styles';
+import Const from '../../utils/const';
 
 export default class Home extends BaseScreen {
   static options = {
@@ -26,7 +35,10 @@ export default class Home extends BaseScreen {
       index: 0,
       routes: [
         { key: 'new', title: Lang.getByKey('home_latest_title_tab') },
-        { key: 'favorite', title: Lang.getByKey('home_most_favorite_title_tab') },
+        {
+          key: 'favorite',
+          title: Lang.getByKey('home_most_favorite_title_tab')
+        },
         { key: 'view', title: Lang.getByKey('home_most_view_title_tab') }
       ],
       listLatestManga: [],
@@ -100,7 +112,11 @@ export default class Home extends BaseScreen {
     } else if (res && res.error && res.error.response.status === 403) {
       alert('Token is not valid');
     }
-    this.setState({ isLoadMoreFavorite: false, pageMostFavorite, listMostFavoriteManga });
+    this.setState({
+      isLoadMoreFavorite: false,
+      pageMostFavorite,
+      listMostFavoriteManga
+    });
   };
 
   getMostViewManga = async () => {
@@ -127,27 +143,39 @@ export default class Home extends BaseScreen {
     } else if (res && res.error && res.error.response.status === 403) {
       alert('Token is not valid');
     }
-    this.setState({ isLoadMoreMostView: false, pageMostView, listMostViewManga });
+    this.setState({
+      isLoadMoreMostView: false,
+      pageMostView,
+      listMostViewManga
+    });
   };
 
   renderListManga(listData, isLoadMore, fucGetMoreData) {
     return (
-      <ScrollView style={{ flex: 1 }}>
-        <ListManga listManga={listData} getMoreData={fucGetMoreData} />
-        {isLoadMore ? <ActivityIndicator size={'small'} color={'#4286f4'} style={{ paddingTop: 5 }} /> : null}
-      </ScrollView>
+      <ListManga
+        listManga={listData}
+        getMoreData={fucGetMoreData}
+        isLoadMore={isLoadMore}
+        componentId={Const.ID_SCREEN.HOME}
+      />
     );
   }
+
   renderContenOfTabView = (listData, isLoading, isLoadMore, fucGetMoreData) => {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {isLoading ? <Loading /> : this.renderListManga(listData, isLoadMore, fucGetMoreData)}
+        {isLoading ? (
+          <Loading />
+        ) : (
+          this.renderListManga(listData, isLoadMore, fucGetMoreData)
+        )}
       </View>
     );
   };
 
   onChangeTab = index => {
     this.setState({ index });
+    console.log('################ onChangeTab', this.props);
     switch (index) {
       case 0: {
         if (this.state.listLatestManga.length === 0) {
@@ -169,10 +197,24 @@ export default class Home extends BaseScreen {
       }
     }
   };
+
+  renderTabBar = props => (
+    <TabBar
+      {...props}
+      indicatorStyle={styles.indicator}
+      style={styles.tabbar}
+      tabStyle={styles.tab}
+      labelStyle={styles.label}
+      scrollEnabled={false}
+    />
+  );
+
   renderContent() {
     return (
       <TabView
+        renderTabBar={this.renderTabBar}
         navigationState={this.state}
+        renderPager={props => <PagerScroll {...props} />}
         renderScene={({ route, jumpTo }) => {
           switch (route.key) {
             case 'new':

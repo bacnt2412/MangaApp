@@ -14,7 +14,7 @@ export default class ListManga extends PureComponent {
   };
 
   renderItem = ({ index, item }) => {
-    return <MangaItem index={index} item={item} />;
+    return <MangaItem componentId={this.props.componentId} index={index} item={item} />;
   };
 
   onMomentumScrollBegin = () => {
@@ -22,8 +22,6 @@ export default class ListManga extends PureComponent {
   };
 
   onEndReached = () => {
-    console.log('################ onEndReached');
-
     if (!this.onEndReachedCalledDuringMomentum) {
       this.props.getMoreData ? this.props.getMoreData() : null;
       this.onEndReachedCalledDuringMomentum = true;

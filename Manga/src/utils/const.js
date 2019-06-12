@@ -6,7 +6,8 @@ export default class Const {
     HOME: 'bacnt.Home',
     MYPROFILE: 'bacnt.MyProfile',
     COMMUNITY: 'bacnt.Comunity',
-    LIBRARY: 'bacnt.Library'
+    LIBRARY: 'bacnt.Library',
+    MANGA_DETAIL: 'bacnt.MangaDetail'
   };
 
   static ID_SCREEN = {
@@ -14,8 +15,10 @@ export default class Const {
     HOME: 'HOME_SCREEN',
     MYPROFILE: 'MYPROFILE_SCREEN',
     COMMUNITY: 'COMMUNITY_SCREEN',
-    LIBRARY: 'LIBRARY_SCREEN'
+    LIBRARY: 'LIBRARY_SCREEN',
+    MANGA_DETAIL: 'MANGA_DETAIL_SCREEN'
   };
+  
   static UI = {
     PADDING_TOP: Funcs.isIphoneX() ? 50 : Platform.OS === 'android' ? 0 : 20,
     BORDER_WIDTH_ICON_FLAG: Platform.OS === 'android' ? 0.4 : 0.5

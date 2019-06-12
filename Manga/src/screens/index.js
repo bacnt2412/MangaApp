@@ -4,7 +4,7 @@ import Community from './Community/index';
 import Home from './Home/index';
 import MyProfile from './MyProfile/index';
 import Library from './Library/index';
-
+import MangaDetail from './Home/MangaDetail';
 import Const from '../utils/const';
 
 export const Screens = new Map();
@@ -12,6 +12,7 @@ Screens.set(Const.NAME_SCREEN.HOME, Home);
 Screens.set(Const.NAME_SCREEN.LIBRARY, Library);
 Screens.set(Const.NAME_SCREEN.MYPROFILE, MyProfile);
 Screens.set(Const.NAME_SCREEN.COMMUNITY, Community);
+Screens.set(Const.NAME_SCREEN.MANGA_DETAIL, MangaDetail);
 
 export const StartApplication = async () => {
   const HomeScreen = {
@@ -95,6 +96,47 @@ export const StartApplication = async () => {
       bottomTabs: {
         id: Const.ID_SCREEN.BOTTOM_TAB,
         children: [HomeScreen, LibraryScreen, MyProFileScreen, CommunityScreen]
+      }
+    }
+  });
+};
+
+export const pushDetailScreen = (componentId, manga) => {
+  Navigation.push(componentId, {
+    component: {
+      name: Const.NAME_SCREEN.MANGA_DETAIL,
+      passProps: {
+        manga
+      },
+      options: {
+        animations: {
+          push: {
+            waitForRender: true,
+            enabled: true,
+            content: {
+              alpha: {
+                from: 0,
+                to: 1,
+                duration: 250
+              }
+            }
+          }
+        }
+
+        // customTransition: {
+        //   animations: [
+        //     {
+        //       type: 'sharedElement',
+        //       fromId: elementId,
+        //       toId: 'MOVIE_POSTER',
+        //       startDelay: 0,
+        //       springVelocity: 0.9,
+        //       springDamping: 0.9,
+        //       duration: 500 * Platform.select({ ios: 0.001, android: 1 }),
+        //       interactivePop: true
+        //     }
+        //   ]
+        // }
       }
     }
   });

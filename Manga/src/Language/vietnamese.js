@@ -10,8 +10,8 @@ export default {
   manga_item_view: 'Lượt xem',
   manga_item_flower: 'Theo dõi',
   manga_item_rating: 'Đánh giá',
-  manga_item_chapter: 'Chapter'
-
+  manga_item_chapter: 'Chapter',
+  detail_manga_titile: 'Chi tiết'
   //================================== Category ====================================
   //================================== MyProfile ====================================
   //================================== Community ====================================
