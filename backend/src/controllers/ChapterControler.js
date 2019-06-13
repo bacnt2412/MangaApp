@@ -1,15 +1,6 @@
 const Chapter = require('../models/ChapterModel.js');
-const settings = require('../config/settings.js');
-
+const DbServices = require('../services/DbSerivce');
 module.exports = {
-  getAllChapter: async (req, res, next) => {
-    try {
-      const data = await Chapter.find({});
-      res.status(200).json({ data: data });
-    } catch (error) {
-      res.status(404).json({ error });
-    }
-  },
   addNewChapter: async (req, res, next) => {
     try {
       const chapter = new Chapter(req.body);
@@ -21,10 +12,10 @@ module.exports = {
   },
   getChapterByIdManga: async (req, res) => {
     try {
-      let filter = {
-        idmanga: req.body.idManga
-      };
-      const listChapter = await Chapter.find(filter).sort({_id: 1});
+      let idManga = req.body.idManga;
+      let page = req.body.page ? req.body.page : 1;
+
+      const listChapter = await DbServices.getListChapterByIdManga(idManga, page);
       res.status(200).json({ data: listChapter });
     } catch (error) {
       console.log('#################', error);

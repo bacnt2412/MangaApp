@@ -2,6 +2,7 @@ const CategoryModel = require('../models/CategoryModel');
 const MangaModel = require('../models/MangaModel');
 const ChapterModel = require('../models/ChapterModel');
 const ImageChapterModel = require('../models/ImageChapterModel');
+const Settings = require('../config/settings');
 
 checkExistMangaByName = async name => {
   return await MangaModel.findOne({ name });
@@ -11,11 +12,17 @@ checkExistChapterByLink = async link => {
   return await ChapterModel.findOne({ link });
 };
 
-updateManga = async idManga => {
+updateManga = async (idManga, chapter) => {
   try {
-    let manga = await ChapterModel.find({ _id: idManga });
-    manga.updated = Date.now;
-  } catch (error) {}
+    let manga = await MangaModel.findByIdAndUpdate({ _id: idManga }, { $set: { updated: Date.now(), latestChapter: chapter } }, { new: true }, (err, doc) => {
+      if (err) {
+        return false;
+      }
+      return true;
+    });
+  } catch (error) {
+    console.log('########## error', error);
+  }
 };
 
 addListChapter = async (listChapter, idManga) => {
@@ -32,7 +39,7 @@ addListChapter = async (listChapter, idManga) => {
       });
       let result = await newChapter.save();
       listChapterNews.push(result);
-      await updateManga(idManga);
+      await updateManga(idManga, chapter.chapter);
       console.log('############ add New Chapter', result);
     }
   }
@@ -81,12 +88,19 @@ addNewCategory = async listCategory => {
   }
 };
 
-
+getListChapterByIdManga = async (idManga, page) => {
+  return await ChapterModel.find({ idmanga: idManga })
+    .sort({ _id: 1 })
+    .skip((page - 1) * Settings.PAGE_LIMIT)
+    .limit(Settings.PAGE_LIMIT);
+};
 
 module.exports = {
   checkExistMangaByName,
   addListChapter,
   addListImage,
   addNewManga,
-  addNewCategory
+  addNewCategory,
+  getListChapterByIdManga,
+  updateManga
 };

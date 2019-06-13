@@ -26,8 +26,11 @@ const mangaSchema = new Schema({
   },
   thumbnail: String,
   link: String,
-  latestChapter: String,
-  created:{
+  latestChapter: {
+    type: String,
+    default: 'Updating'
+  },
+  created: {
     type: Date,
     default: Date.now
   },

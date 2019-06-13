@@ -1,6 +1,7 @@
 const Manga = require('../models/MangaModel.js');
 const Category = require('../models/CategoryModel.js');
 const settings = require('../config/settings.js');
+const DbServices = require('../services/DbSerivce');
 
 validManga = manga => {
   manga.category = manga.category ? manga.category : 'Đang update';
@@ -32,6 +33,16 @@ addNewManga = async (req, res) => {
   }
 };
 
+function addValueInObject(object, key, value) {
+  var res = {};
+  var textObject = JSON.stringify(object);
+  if (textObject === '{}') {
+    res = JSON.parse('{"' + key + '":"' + value + '"}');
+  } else {
+    res = JSON.parse('{' + textObject.substring(1, textObject.length - 1) + ',"' + key + '":"' + value + '"}');
+  }
+  return res;
+}
 getMangaByIdCategory = async (req, res) => {
   try {
     const _id = req.body.idCate;
@@ -49,10 +60,10 @@ getMangaByIdCategory = async (req, res) => {
           _id: { $gt: lastIdManga }
         };
       }
-      const listManga = await Manga.find(filter).limit(settings.PAGE_LIMIT);
+      let listManga = await Manga.find(filter).limit(settings.PAGE_LIMIT);
       res.status(200).json({ listManga });
     } else {
-      res.status(200).json({ error: 'not found cate' });
+      res.status(404).json({ error: 'not found cate' });
     }
   } catch (error) {
     res.status(404).json({ error });
@@ -98,11 +109,21 @@ getMostFavoriteManga = async (req, res) => {
   }
 };
 
+getListChapterToManga = async manga => {
+  try {
+    let listChapter = await DbServices.getListChapterByIdManga(manga._id);
+    let newManga = Object.assign({}, manga, listChapter);
+    return listChapter;
+  } catch (error) {}
+  return manga;
+};
+
 module.exports = {
   getAllManga,
   addNewManga,
   getMangaByIdCategory,
   getLatestManga,
   getMostViewManga,
-  getMostFavoriteManga
+  getMostFavoriteManga,
+  getListChapterToManga
 };
