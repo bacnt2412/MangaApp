@@ -11,7 +11,9 @@ export default {
   manga_item_flower: 'Theo dõi',
   manga_item_rating: 'Đánh giá',
   manga_item_chapter: 'Chapter',
-  detail_manga_titile: 'Chi tiết'
+  manga_item_latest_chapter: 'Chapter mới',
+  detail_manga_title: 'Chi tiết',
+
   //================================== Category ====================================
   //================================== MyProfile ====================================
   //================================== Community ====================================

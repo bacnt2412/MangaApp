@@ -16,7 +16,7 @@ class MangaItem extends PureComponent {
       <TouchableOpacity
         onPress={() => {
           console.log('############', this.props.componentId);
-          pushDetailScreen(this.props.componentId,item);
+          pushDetailScreen(this.props.componentId, item);
         }}
         style={{
           flex: 1,
@@ -33,35 +33,22 @@ class MangaItem extends PureComponent {
           resizeMode={FastImage.resizeMode.cover}
         />
         <View style={{ flex: 1, paddingTop: 5, paddingLeft: 10 }}>
-          <Text
-            style={{ fontSize: 14, fontWeight: 'bold', paddingBottom: 5 }}
-            numberOfLines={1}>
+          <Text style={{ flex: 1,fontSize: 14, fontWeight: 'bold', paddingBottom: 5 }} numberOfLines={1}>
             {item.name}
           </Text>
-          <Text style={{ fontSize: 14, paddingBottom: 5 }} numberOfLines={1}>
-            <Text style={{ fontWeight: '600' }}>
-              {Lang.getByKey('manga_item_author')}
-            </Text>
+          <Text style={{flex: 1, fontSize: 14, paddingBottom: 5 }} numberOfLines={1}>
+            <Text style={{ fontWeight: '600' }}>{Lang.getByKey('manga_item_author')}</Text>
             {':  ' + item.author}
           </Text>
-          <Text style={{ fontSize: 14, paddingBottom: 5 }} numberOfLines={1}>
-            <Text style={{ fontWeight: '600' }}>
-              {Lang.getByKey('manga_item_category')}
-            </Text>
+          <Text style={{ flex: 1,fontSize: 14, paddingBottom: 5 }} numberOfLines={1}>
+            <Text style={{ fontWeight: '600' }}>{Lang.getByKey('manga_item_category')}</Text>
             {':  ' + item.category}
           </Text>
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <Text style={{ fontSize: 14 }} numberOfLines={1}>
-              <Text style={{ fontWeight: '600' }}>
-                {Lang.getByKey('manga_item_chapter')}
-              </Text>
-              {':  '}
+              <Text style={{ fontWeight: '600' }}>{Lang.getByKey('manga_item_latest_chapter')}</Text>
+              {':  ' + item.latestChapter}
             </Text>
-            <View>
-              <Text style={{ fontSize: 13 }}>Chap 3</Text>
-              <Text style={{ fontSize: 13 }}>Chap 2</Text>
-              <Text style={{ fontSize: 13 }}>Chap 1</Text>
-            </View>
           </View>
         </View>
       </TouchableOpacity>

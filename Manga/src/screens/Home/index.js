@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ActivityIndicator
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
 import { TabView, PagerScroll, TabBar } from 'react-native-tab-view';
 import BaseScreen from '../../components/BaseScreen';
 import ListManga from '../../components/ListManga';
@@ -151,24 +144,13 @@ export default class Home extends BaseScreen {
   };
 
   renderListManga(listData, isLoadMore, fucGetMoreData) {
-    return (
-      <ListManga
-        listManga={listData}
-        getMoreData={fucGetMoreData}
-        isLoadMore={isLoadMore}
-        componentId={Const.ID_SCREEN.HOME}
-      />
-    );
+    return <ListManga listManga={listData} getMoreData={fucGetMoreData} isLoadMore={isLoadMore} componentId={Const.ID_SCREEN.HOME} />;
   }
 
   renderContenOfTabView = (listData, isLoading, isLoadMore, fucGetMoreData) => {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          this.renderListManga(listData, isLoadMore, fucGetMoreData)
-        )}
+        {isLoading ? <Loading /> : this.renderListManga(listData, isLoadMore, fucGetMoreData)}
       </View>
     );
   };
@@ -199,50 +181,45 @@ export default class Home extends BaseScreen {
   };
 
   renderTabBar = props => (
-    <TabBar
-      {...props}
-      indicatorStyle={styles.indicator}
-      style={styles.tabbar}
-      tabStyle={styles.tab}
-      labelStyle={styles.label}
-      scrollEnabled={false}
-    />
+    <TabBar {...props} indicatorStyle={styles.indicator} style={styles.tabbar} tabStyle={styles.tab} labelStyle={styles.label} scrollEnabled={false} />
   );
 
   renderContent() {
     return (
-      <TabView
-        renderTabBar={this.renderTabBar}
-        navigationState={this.state}
-        renderPager={props => <PagerScroll {...props} />}
-        renderScene={({ route, jumpTo }) => {
-          switch (route.key) {
-            case 'new':
-              return this.renderContenOfTabView(
-                this.state.listLatestManga,
-                this.state.isLatestMangaFirstLoading,
-                this.state.isLoadMoreLatest,
-                this.getMoreLatestmanga
-              );
-            case 'favorite':
-              return this.renderContenOfTabView(
-                this.state.listMostFavoriteManga,
-                this.state.isMostFavoriteFirstLoading,
-                this.state.isLoadMoreFavorite,
-                this.getMoreMostFavoriteManga
-              );
-            case 'view':
-              return this.renderContenOfTabView(
-                this.state.listMostViewManga,
-                this.state.isMostViewFirstLoading,
-                this.state.isLoadMoreMostView,
-                this.getMoreMostView
-              );
-          }
-        }}
-        onIndexChange={this.onChangeTab}
-        initialLayout={{ width: Dimensions.get('window').width }}
-      />
+      <View style={{flex:1}}>
+        <TabView
+          renderTabBar={this.renderTabBar}
+          navigationState={this.state}
+          renderPager={props => <PagerScroll {...props} />}
+          renderScene={({ route, jumpTo }) => {
+            switch (route.key) {
+              case 'new':
+                return this.renderContenOfTabView(
+                  this.state.listLatestManga,
+                  this.state.isLatestMangaFirstLoading,
+                  this.state.isLoadMoreLatest,
+                  this.getMoreLatestmanga
+                );
+              case 'favorite':
+                return this.renderContenOfTabView(
+                  this.state.listMostFavoriteManga,
+                  this.state.isMostFavoriteFirstLoading,
+                  this.state.isLoadMoreFavorite,
+                  this.getMoreMostFavoriteManga
+                );
+              case 'view':
+                return this.renderContenOfTabView(
+                  this.state.listMostViewManga,
+                  this.state.isMostViewFirstLoading,
+                  this.state.isLoadMoreMostView,
+                  this.getMoreMostView
+                );
+            }
+          }}
+          onIndexChange={this.onChangeTab}
+          initialLayout={{ width: Dimensions.get('window').width }}
+        />
+      </View>
     );
   }
 }
