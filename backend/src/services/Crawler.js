@@ -321,7 +321,7 @@ async function startCrawNewData() {
         //Not Exist
       }
       console.log('################# list Chapter New ', listChapterNew);
-      if (listChapterNew) {
+      if (listChapterNew && listChapterNew.length > 0) {
         listChapterNew.map(async item => {
           let listImage = await NET_TRUYEN_Image_get_list(item.link);
           await DbService.addListImage(listImage, item._id);

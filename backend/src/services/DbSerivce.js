@@ -27,6 +27,7 @@ updateManga = async (idManga, chapter) => {
 
 addListChapter = async (listChapter, idManga) => {
   let listChapterNews = [];
+  let checkUpdate = false;
   for (let i = 0; i < listChapter.length; i++) {
     const chapter = listChapter[i];
     let checkExist = await checkExistChapterByLink(chapter.link);
@@ -39,7 +40,10 @@ addListChapter = async (listChapter, idManga) => {
       });
       let result = await newChapter.save();
       listChapterNews.push(result);
-      await updateManga(idManga, chapter.chapter);
+      if (!checkUpdate) {
+        await updateManga(idManga, chapter.chapter);
+        checkUpdate = true;
+      }
       console.log('############ add New Chapter', result);
     }
   }
