@@ -1,7 +1,20 @@
 import React, { PureComponent } from 'react';
-import { View, Text, SafeAreaView, Dimensions, ScrollView, ImageBackground, Animated } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Dimensions,
+  ScrollView,
+  ImageBackground,
+  Animated,
+  TouchableWithoutFeedback,
+  StyleSheet
+} from 'react-native';
 import Lang from '../../../Language';
 import FastImage from 'react-native-fast-image';
+import { Navigation } from 'react-native-navigation';
+// import LinearGradient from 'react-native-linear-gradient';
+
 const { width } = Dimensions.get('window');
 
 const GUTTER = 8 * 2;
@@ -30,27 +43,31 @@ class MangaDetail extends PureComponent {
     super(props);
     this.state = {};
     console.log('########### this.props', this.props);
+    this.scrollY = new Animated.Value(0);
+    this.animatedHeroStyles = {
+      transform: [
+        {
+          translateY: this.scrollY.interpolate({
+            inputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT), 0, BACKDROP_HEIGHT],
+            outputRange: [
+              -(BACKDROP_HEIGHT + TOOLBAR_HEIGHT) / 2,
+              0,
+              TOOLBAR_HEIGHT
+            ]
+          })
+        },
+        {
+          scale: this.scrollY.interpolate({
+            extrapolate: 'clamp',
+            inputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT), 0],
+            outputRange: [2.5, 1]
+          })
+        }
+      ]
+    };
   }
 
-  animatedHeroStyles = {
-    transform: [
-      {
-        translateY: this.scrollY.interpolate({
-          inputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT), 0, BACKDROP_HEIGHT],
-          outputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT) / 2, 0, TOOLBAR_HEIGHT]
-        })
-      },
-      {
-        scale: this.scrollY.interpolate({
-          extrapolate: 'clamp',
-          inputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT), 0],
-          outputRange: [2.5, 1]
-        })
-      }
-    ]
-  };
 
-  scrollY = new Animated.Value(0);
 
   render() {
     const { manga } = this.props;
@@ -62,13 +79,24 @@ class MangaDetail extends PureComponent {
           contentInsetAdjustmentBehavior="never"
           scrollEventThrottle={1}
           overScrollMode="always"
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: this.scrollY } } }], { useNativeDriver: true })}>
-          <Animated.View style={[{ position: relative, marginBottom: 48 }, this.animatedHeroStyles]}>
-            <FastImage resizeMode="cover" source={{ uri: manga && manga.thumbnail }} style={{ height: 240, opacity: 0.875 }} />
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+            { useNativeDriver: true }
+          )}>
+          <Animated.View
+            style={[
+              { position: 'relative', marginBottom: 48 },
+              this.animatedHeroStyles
+            ]}>
+            <FastImage
+              resizeMode="cover"
+              source={{ uri: manga && manga.thumbnail }}
+              style={{ height: 240, opacity: 0.875 }}
+            />
             {/* <LinearGradient
               colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
-              style={StyleSheet.absoluteFill}
-            /> */}
+              style={StyleSheet.absoluteFill} */}
+            />
           </Animated.View>
 
           {/* <PhotoView
@@ -86,7 +114,16 @@ class MangaDetail extends PureComponent {
           /> */}
 
           {manga && (
-            <View style={[{ position: 'absolute', right: 0, marginLeft: 16, marginRight: 16 }, { top: POSTER_X, left: POSTER_WIDTH + GUTTER }]}>
+            <View
+              style={[
+                {
+                  position: 'absolute',
+                  right: 0,
+                  marginLeft: 16,
+                  marginRight: 16
+                },
+                { top: POSTER_X, left: POSTER_WIDTH + GUTTER }
+              ]}>
               <Text
                 style={{
                   fontWeight: '300',
