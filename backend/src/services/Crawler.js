@@ -218,22 +218,32 @@ var NET_TRUYEN_Manga_get_list_Crawler = new Crawler({
   }
 });
 
-function NET_TRUYEN_Manga_get_list(url) {
+function NET_TRUYEN_Manga_get_list(urls) {
   return new Promise((resolve, reject) => {
-    NET_TRUYEN_Manga_get_list_Crawler.queue([
-      {
-        uri: url,
-        /* userAgent: userAgent,
-					referer: referer, */
-        done: async function(err, res, done, listManga) {
-          if (err || res.statusCode !== 200) {
-            reject('err');
+    const loop = urls.map(url => {
+      return new Promise((resolve, reject) => {
+        NET_TRUYEN_Manga_get_list_Crawler.queue([
+          {
+            uri: url,
+            /* userAgent: userAgent,
+          referer: referer, */
+            done: async function(err, res, done, listManga) {
+              if (err || res.statusCode !== 200) {
+                reject('err');
+              }
+              resolve(listManga);
+              done();
+            }
           }
-          resolve(listManga);
-          done();
-        }
-      }
-    ]);
+        ]);
+      });
+    });
+    NET_TRUYEN_Manga_get_list_Crawler.once('error', error => reject(error));
+    NET_TRUYEN_Manga_get_list_Crawler.once('drain', () => {
+      Promise.all(loop).then(results => {
+        resolve(results);
+      });
+    });
   });
 }
 
@@ -301,7 +311,13 @@ async function startGetAllCategory() {
 async function startCrawNewData() {
   console.log('============================================================= Start =============================================================');
   try {
-    let listManga = await NET_TRUYEN_Manga_get_list('http://www.nettruyen.com/');
+    let list = await NET_TRUYEN_Manga_get_list(['http://www.nettruyen.com/', 'http://www.nettruyen.com/?page=2']);
+    let listManga = [];
+    list.map(item => {
+      item.map(items => {
+        listManga.push(items);
+      });
+    });
     for (let i = 0; i < listManga.length; i++) {
       const manga = listManga[i];
 
