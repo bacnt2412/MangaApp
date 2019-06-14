@@ -1,19 +1,9 @@
 import React, { PureComponent } from 'react';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Dimensions,
-  ScrollView,
-  ImageBackground,
-  Animated,
-  TouchableWithoutFeedback,
-  StyleSheet
-} from 'react-native';
+import { View, Text, SafeAreaView, Dimensions, ScrollView, ImageBackground, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
 import Lang from '../../../Language';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
-// import LinearGradient from 'react-native-linear-gradient';
+import LinearGradient from 'react-native-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
@@ -49,11 +39,7 @@ class MangaDetail extends PureComponent {
         {
           translateY: this.scrollY.interpolate({
             inputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT), 0, BACKDROP_HEIGHT],
-            outputRange: [
-              -(BACKDROP_HEIGHT + TOOLBAR_HEIGHT) / 2,
-              0,
-              TOOLBAR_HEIGHT
-            ]
+            outputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT) / 2, 0, TOOLBAR_HEIGHT]
           })
         },
         {
@@ -67,8 +53,6 @@ class MangaDetail extends PureComponent {
     };
   }
 
-
-
   render() {
     const { manga } = this.props;
     return (
@@ -79,24 +63,13 @@ class MangaDetail extends PureComponent {
           contentInsetAdjustmentBehavior="never"
           scrollEventThrottle={1}
           overScrollMode="always"
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
-            { useNativeDriver: true }
-          )}>
-          <Animated.View
-            style={[
-              { position: 'relative', marginBottom: 48 },
-              this.animatedHeroStyles
-            ]}>
-            <FastImage
-              resizeMode="cover"
-              source={{ uri: manga && manga.thumbnail }}
-              style={{ height: 240, opacity: 0.875 }}
-            />
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: this.scrollY } } }], { useNativeDriver: true })}>
+          <Animated.View style={[{ position: 'relative', marginBottom: 48 }, this.animatedHeroStyles]}>
+            <FastImage resizeMode="cover" source={{ uri: manga && manga.thumbnail }} style={{ height: 240, opacity: 0.875 }} />
             {/* <LinearGradient
               colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
-              style={StyleSheet.absoluteFill} */}
-            />
+              style={StyleSheet.absoluteFill} 
+            />*/}
           </Animated.View>
 
           {/* <PhotoView
@@ -174,11 +147,7 @@ class MangaDetail extends PureComponent {
                     elevation: 5,
                     backgroundColor: 'rgba(32, 32, 32, 0.66)'
                   }}>
-                  {/* {movie!.posterUrl && <FastImage
-                    resizeMode="cover"
-                    style={styles.poster__image}
-                    source={{ uri: movie!.posterUrlNormal }}
-                  />} */}
+                  {manga && manga.thumbnail && <FastImage resizeMode="cover" style={{ width: 100, height: 160 }} source={{ uri: manga.thumbnail }} />}
                 </View>
               </TouchableWithoutFeedback>
             </Navigation.Element>

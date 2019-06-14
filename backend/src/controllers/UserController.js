@@ -2,7 +2,6 @@ var UserModel = require('../models/UserModel');
 var settings = require('../config/settings');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-var jwt = require('jsonwebtoken');
 
 async function register(req, res) {
   if (req.body.username && req.body.password) {
@@ -42,7 +41,7 @@ async function login(req, res) {
       let checkPassword = userLogin.comparePassword(password);
       if (checkPassword) {
         let token = jwt.sign({ username: username }, settings.SECRET_KEY, {
-          expiresIn: '24h' // expires in 24 hours
+          expiresIn: '30d' // expires in 24 hours
         });
         // return the JWT token for the future API calls
         res.json({
