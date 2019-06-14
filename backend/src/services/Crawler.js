@@ -136,6 +136,7 @@ let NET_TRUYEN_Manga_get_info_Crawler = new Crawler({
           .find('.col-xs-4.col-image')
           .find('img')
           .attr('src');
+        let description = $(parent).find('#item-detail > div.detail-content > p').text();
         let listNodeChapter = $('#nt_listchapter > nav > ul > li');
         let laestChapter = '';
         let listChapter = [];
@@ -159,6 +160,7 @@ let NET_TRUYEN_Manga_get_info_Crawler = new Crawler({
           name,
           category,
           author,
+          description,
           status,
           viewers,
           flower,

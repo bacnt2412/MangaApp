@@ -1,9 +1,21 @@
 import React, { PureComponent } from 'react';
-import { View, Text, SafeAreaView, Dimensions, ScrollView, ImageBackground, Animated, TouchableWithoutFeedback, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Dimensions,
+  ScrollView,
+  ImageBackground,
+  Animated,
+  TouchableWithoutFeedback,
+  StyleSheet
+} from 'react-native';
 import Lang from '../../../Language';
 import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
+import PhotoView from '@merryjs/photo-viewer';
+import CountView from '../../../components/CountView';
 
 const { width } = Dimensions.get('window');
 
@@ -31,15 +43,26 @@ class MangaDetail extends PureComponent {
   };
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      initial: 0,
+      visible: false
+    };
     console.log('########### this.props', this.props);
     this.scrollY = new Animated.Value(0);
     this.animatedHeroStyles = {
       transform: [
         {
           translateY: this.scrollY.interpolate({
-            inputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT), 0, BACKDROP_HEIGHT],
-            outputRange: [-(BACKDROP_HEIGHT + TOOLBAR_HEIGHT) / 2, 0, TOOLBAR_HEIGHT]
+            inputRange: [
+              -(BACKDROP_HEIGHT + TOOLBAR_HEIGHT),
+              0,
+              BACKDROP_HEIGHT
+            ],
+            outputRange: [
+              -(BACKDROP_HEIGHT + TOOLBAR_HEIGHT) / 2,
+              0,
+              TOOLBAR_HEIGHT
+            ]
           })
         },
         {
@@ -51,41 +74,97 @@ class MangaDetail extends PureComponent {
         }
       ]
     };
+    this.animatedTopBarStyles = {
+      opacity: this.scrollY.interpolate({
+        inputRange: [0, TOOLBAR_HEIGHT],
+        outputRange: [0, 1],
+        extrapolate: 'clamp'
+      })
+    };
   }
+
+  onPressAvatar = () => {
+    this.setState({ visible: true });
+  };
 
   render() {
     const { manga } = this.props;
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
         <Animated.ScrollView
           style={{ flex: 1 }}
           testID="MOVIE_SCREEN"
           contentInsetAdjustmentBehavior="never"
           scrollEventThrottle={1}
           overScrollMode="always"
-          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: this.scrollY } } }], { useNativeDriver: true })}>
-          <Animated.View style={[{ position: 'relative', marginBottom: 48 }, this.animatedHeroStyles]}>
-            <FastImage resizeMode="cover" source={{ uri: manga && manga.thumbnail }} style={{ height: 240, opacity: 0.875 }} />
-            {/* <LinearGradient
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
+            { useNativeDriver: true }
+          )}>
+          {/* Cover */}
+          <Animated.View
+            style={[
+              { position: 'relative', marginBottom: 48 },
+              this.animatedHeroStyles
+            ]}>
+            <FastImage
+              resizeMode="cover"
+              source={{ uri: manga && manga.thumbnail }}
+              style={{ height: 240, opacity: 0.875 }}
+            />
+            <LinearGradient
               colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
-              style={StyleSheet.absoluteFill} 
-            />*/}
+              style={StyleSheet.absoluteFill}
+            />
           </Animated.View>
-
-          {/* <PhotoView
+          {/* Avatar */}
+          <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
+            <Navigation.Element resizeMode="cover" elementId="MOVIE_POSTER">
+              <TouchableWithoutFeedback onPress={this.onPressAvatar}>
+                <View
+                  style={{
+                    width: 100,
+                    height: 160,
+                    borderRadius: 3,
+                    aspectRatio: 0.6,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 2
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                    backgroundColor: 'rgba(32, 32, 32, 0.66)'
+                  }}>
+                  {manga && manga.thumbnail && (
+                    <FastImage
+                      resizeMode="cover"
+                      style={{ width: 100, height: 160, borderRadius: 3 }}
+                      source={{ uri: manga.thumbnail }}
+                    />
+                  )}
+                </View>
+              </TouchableWithoutFeedback>
+            </Navigation.Element>
+          </View>
+          {/* Photo view zoom */}
+          <PhotoView
             visible={this.state.visible}
-            data={[{
-              source: {
-                uri: movie!.posterUrlOriginal,
-              },
-            }]}
+            data={[
+              {
+                source: {
+                  uri: manga ? manga.thumbnail : null
+                }
+              }
+            ]}
             hideCloseButton={true}
             hideShareButton={true}
             hideStatusBar={false}
             initial={this.state.initial}
             onDismiss={() => this.setState({ visible: false })}
-          /> */}
-
+          />
+          {/* info manga Detail */}
           {manga && (
             <View
               style={[
@@ -103,57 +182,62 @@ class MangaDetail extends PureComponent {
                   fontSize: 25,
                   color: '#FFFFFF',
                   marginBottom: 3
-                }}>
-                title
+                }}
+                numberOfLines={2}>
+                {manga && manga.name}
               </Text>
               <Text
                 style={{
                   fontWeight: '100',
                   fontSize: 17,
                   color: '#B5B5B5',
-                  paddingBottom: 5
+                  paddingBottom: 5,
+                  marginTop: 5
                 }}
-                numberOfLines={2}>
-                name
+                numberOfLines={1}>
+                {manga && manga.author}
               </Text>
               <Text
                 style={{
                   fontWeight: '100',
                   fontSize: 16,
                   color: '#B5B5B5',
-                  paddingBottom: 4
-                }}>
-                formatRuntime
+                  paddingBottom: 4,
+                  marginTop: 5
+                }}
+                numberOfLines={1}>
+                {manga && manga.category}
               </Text>
+              <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                <CountView count={manga.viewers} type={'view'} />
+                <CountView
+                  count={manga.folowers}
+                  type={'red'}
+                  style={{ marginLeft: 30 }}
+                />
+              </View>
             </View>
           )}
-
-          <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
-            <Navigation.Element resizeMode="cover" elementId="MOVIE_POSTER">
-              <TouchableWithoutFeedback onPress={this.onPosterPress}>
-                <View
-                  style={{
-                    width: 100,
-                    height: 160,
-                    borderRadius: 3,
-                    aspectRatio: 0.6,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 2
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-                    elevation: 5,
-                    backgroundColor: 'rgba(32, 32, 32, 0.66)'
-                  }}>
-                  {manga && manga.thumbnail && <FastImage resizeMode="cover" style={{ width: 100, height: 160 }} source={{ uri: manga.thumbnail }} />}
-                </View>
-              </TouchableWithoutFeedback>
-            </Navigation.Element>
-          </View>
-
-          <View style={{ height: 100 }} />
+          <Animated.View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              ...this.animatedTopBarStyles
+            }}>
+            <View
+              style={{
+                height: TOOLBAR_HEIGHT,
+                width: '100%',
+                backgroundColor: 'black'
+              }}
+            />
+            <LinearGradient
+              colors={['rgba(0, 0, 0, 1)', 'rgba(0, 0, 0, 0)']}
+              style={{ height: TOOLBAR_HEIGHT * 2, width: '100%' }}
+            />
+          </Animated.View>
         </Animated.ScrollView>
       </SafeAreaView>
     );

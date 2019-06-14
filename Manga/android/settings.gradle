@@ -1,4 +1,11 @@
 rootProject.name = 'Manga'
+include ':react-native-vector-icons'
+project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
+
+include ':react-native-linear-gradient'
+project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-linear-gradient/android')
+include ':merryjs-photo-viewer'
+project(':merryjs-photo-viewer').projectDir = new File(rootProject.projectDir, '../node_modules/@merryjs/photo-viewer/android')
 include ':react-native-fast-image'
 project(':react-native-fast-image').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fast-image/android')
 include ':lottie-react-native'

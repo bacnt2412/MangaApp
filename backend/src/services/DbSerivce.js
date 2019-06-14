@@ -67,6 +67,7 @@ addNewManga = async (manga, idCate) => {
     name: manga.name,
     category: manga.category,
     author: manga.author,
+    description: manga.description,
     status: manga.status,
     viewers: 0,
     folowers: 0,

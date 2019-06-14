@@ -10,7 +10,11 @@ const mangaSchema = new Schema({
   author: String,
   status: {
     type: String,
-    default: '0'
+    default: 'Updating'
+  },
+  description: {
+    type: String,
+    default: ''
   },
   viewers: {
     type: Number,
