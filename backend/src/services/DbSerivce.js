@@ -30,6 +30,27 @@ updateManga = async (idManga, chapter) => {
   }
 };
 
+updateViewManga = async (idManga, view) => {
+  try {
+    let manga = await MangaModel.findOne({ _id: idManga });
+    if (manga) {
+      let result = await MangaModel.findByIdAndUpdate(
+        { _id: idManga },
+        { $set: { viewers: manga.viewers + 1 } },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+          }
+        }
+      );
+      return result;
+    }
+  } catch (error) {
+    console.log('########## error', error);
+  }
+  return null;
+};
+
 addListChapter = async (listChapter, idManga) => {
   let listChapterNews = [];
   for (let i = listChapter.length - 1; i >= 0; i--) {
@@ -117,5 +138,6 @@ module.exports = {
   addNewCategory,
   getListChapterByIdManga,
   updateManga,
-  getListAllChapterByIdManga
+  getListAllChapterByIdManga,
+  updateViewManga
 };

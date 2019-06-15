@@ -15,7 +15,6 @@ class MangaItem extends PureComponent {
     return (
       <TouchableOpacity
         onPress={() => {
-          console.log('############', this.props.componentId);
           pushDetailScreen(this.props.componentId, item);
         }}
         style={{

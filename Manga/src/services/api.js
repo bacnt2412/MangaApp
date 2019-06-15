@@ -20,6 +20,14 @@ export default class Api {
       res.error = err;
     }
     console.log('Response data', res);
+    let type = typeof res.data;
+    if (type === 'string') {
+      console.log('## Response Error');
+      let data = res.data + `"}]}`;
+      data = JSON.parse(data);
+      res.data = data;
+    }
+
     // Check status token expired
     if (res && res.data && res.data.status === 440) {
       // Reupdate status
@@ -98,4 +106,15 @@ export default class Api {
     let url = Settings.SERVER_API + 'chapter/get-chapter-by-id-manga';
     return await this.post(url, data);
   };
+
+  static getListImageByIdChapter = async data => {
+    let url = Settings.SERVER_API + 'image/get-image-by-id-chapter';
+    return await this.post(url, data);
+  };
+
+  static updateViewManga = async data => {
+    let url = Settings.SERVER_API + 'manga/update-view-manga';
+    return await this.post(url, data);
+  };
+
 }

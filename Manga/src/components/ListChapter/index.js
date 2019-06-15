@@ -1,7 +1,16 @@
 import React, { PureComponent } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions
+} from 'react-native';
 import Api from '../../services/api';
 import Const from '../../utils/const';
+import Lang from '../../Language';
+import styles from './styles';
+import { Navigation } from 'react-native-navigation';
 
 class ListChapter extends PureComponent {
   constructor(props) {
@@ -69,6 +78,50 @@ class ListChapter extends PureComponent {
     });
   };
 
+  updateVieManga = async () => {
+    let res = await Api.updateViewManga({ idManga: this.state.idManga });
+    console.log(' ######################### ', res);
+  };
+
+  renderChapterItem = item => {
+    return (
+      <TouchableOpacity
+        key={item._id}
+        style={styles.item_container}
+        onPress={() => {
+          Navigation.push(this.props.componentId, {
+            component: {
+              name: Const.NAME_SCREEN.CHAPTER_DETAIL,
+              passProps: {
+                chapter: item
+              },
+              options: {
+                topBar: {
+                  title: {
+                    text: item.name
+                  }
+                }
+              }
+            }
+          });
+          this.updateVieManga();
+        }}>
+        <Text style={styles.item_name} numberOfLines={1}>
+          {item.name}
+        </Text>
+        {/* <Text
+          style={{
+            flex: 1,
+            fontSize: 16,
+            fontWeight: '500',
+            maxWidth: Dimensions.get('window').width / 2
+          }}
+          numberOfLines={1}>
+          {Utils.Time.getTimeNow()}
+        </Text> */}
+      </TouchableOpacity>
+    );
+  };
   render() {
     const { listChapter, isFirstLoad, isLast, isLoadMore } = this.state;
     const loadingView = (
@@ -77,19 +130,12 @@ class ListChapter extends PureComponent {
       </View>
     );
     return (
-      <View style={{ padding: 10, paddingTop: 0 }}>
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <Text
-            style={{
-              flex: 1,
-              fontSize: 16,
-              fontWeight: '500',
-              marginBottom: 5,
-              textAlign: 'center'
-            }}>
-            Danh sách chapter{' '}
+      <View style={styles.container}>
+        <View style={styles.title_container}>
+          <Text style={styles.title_text}>
+            {Lang.getByKey('manga_list_chapter')}
           </Text>
-          <Text
+          {/* <Text
             style={{
               flex: 1,
               fontSize: 16,
@@ -99,40 +145,14 @@ class ListChapter extends PureComponent {
               backgroundColor: 'red'
             }}>
             Thời gian{' '}
-          </Text>
+          </Text> */}
         </View>
-        <View >
+        <View>
           {isFirstLoad
             ? loadingView
             : listChapter &&
               listChapter.map(item => {
-                return (
-                  <View key={item._id} style={{ flex: 1, flexDirection:'row'}}>
-                    <Text
-                      style={{
-                        flex: 1,
-                        fontSize: 16,
-                        fontWeight: '500',
-                        marginBottom: 5,
-                        maxWidth: Dimensions.get('window').width /2
-                        ,marginRight: 10
-                      }} numberOfLines={1}>
-                      {item.name} asd asd asd sad asd asd asd asd asd asd asdasd
-                    </Text>
-                    <Text
-                      style={{
-                        flex: 1,
-                        fontSize: 16,
-                        fontWeight: '500',
-                        marginBottom: 5,
-                        backgroundColor: 'red',
-                        maxWidth: Dimensions.get('window').width /2
-
-                      }} numberOfLines={1}>
-                      {item.created}
-                    </Text>
-                  </View>
-                );
+                return this.renderChapterItem(item);
               })}
         </View>
         {isLast || isLoadMore ? null : (
@@ -140,14 +160,8 @@ class ListChapter extends PureComponent {
             onPress={() => {
               this.getMoreData();
             }}
-            style={{
-              color: Const.COLOR.LOADDING,
-              fontSize: 16,
-              fontWeight: '500',
-              marginBottom: 5,
-              alignSelf: 'center'
-            }}>
-            Xem thêm
+            style={styles.view_more}>
+            {Lang.getByKey('view_more')}
           </Text>
         )}
         {isLoadMore ? loadingView : null}

@@ -4,7 +4,9 @@ import Community from './Community/index';
 import Home from './Home/index';
 import MyProfile from './MyProfile/index';
 import Library from './Library/index';
-import MangaDetail from './Home/MangaDetail';
+import MangaDetail from './ShareScreen/MangaDetail';
+import ChapterDetail from './ShareScreen/ChapterDetail';
+import Lang from '../Language';
 import Const from '../utils/const';
 
 export const Screens = new Map();
@@ -13,6 +15,8 @@ Screens.set(Const.NAME_SCREEN.LIBRARY, Library);
 Screens.set(Const.NAME_SCREEN.MYPROFILE, MyProfile);
 Screens.set(Const.NAME_SCREEN.COMMUNITY, Community);
 Screens.set(Const.NAME_SCREEN.MANGA_DETAIL, MangaDetail);
+Screens.set(Const.NAME_SCREEN.CHAPTER_DETAIL, ChapterDetail);
+
 
 export const StartApplication = async () => {
   const HomeScreen = {
@@ -27,7 +31,7 @@ export const StartApplication = async () => {
       ],
       options: {
         bottomTab: {
-          text: 'Tab 2',
+          text: Lang.getByKey('home_title'),
           icon: require('../assets/icons/home.png')
         }
       }
@@ -46,7 +50,7 @@ export const StartApplication = async () => {
       ],
       options: {
         bottomTab: {
-          text: 'Tab 2',
+          text: Lang.getByKey('category_title'),
           icon: require('../assets/icons/library.png')
         }
       }
@@ -65,7 +69,7 @@ export const StartApplication = async () => {
       ],
       options: {
         bottomTab: {
-          text: 'Tab 2',
+          text: Lang.getByKey('profile_title'),
           icon: require('../assets/icons/my_profile.png')
         }
       }
@@ -84,7 +88,7 @@ export const StartApplication = async () => {
       ],
       options: {
         bottomTab: {
-          text: 'Tab 2',
+          text: Lang.getByKey('community_title'),
           icon: require('../assets/icons/community.png')
         }
       }
@@ -106,7 +110,8 @@ export const pushDetailScreen = (componentId, manga) => {
     component: {
       name: Const.NAME_SCREEN.MANGA_DETAIL,
       passProps: {
-        manga
+        manga,
+        componentId
       },
       options: {
         animations: {

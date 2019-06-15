@@ -19,6 +19,7 @@ import CountView from '../../../components/CountView';
 import TitleWithIcon from '../../../components/TitleWithIcon';
 import ViewMoreText from 'react-native-view-more-text';
 import ListChapter from '../../../components/ListChapter';
+import styles from './styles';
 
 const { width } = Dimensions.get('window');
 
@@ -44,13 +45,13 @@ class MangaDetail extends PureComponent {
       transparent: true
     }
   };
+
   constructor(props) {
     super(props);
     this.state = {
       initial: 0,
       visible: false
     };
-    console.log('########### this.props', this.props);
     this.scrollY = new Animated.Value(0);
     this.animatedHeroStyles = {
       transform: [
@@ -92,32 +93,27 @@ class MangaDetail extends PureComponent {
 
   renderViewMore(onPress) {
     return (
-      <Text onPress={onPress} style={{ color: '#4286f4' }}>
-        View more
+      <Text onPress={onPress} style={styles.viewMore}>
+        {Lang.getByKey('view_more')}
       </Text>
     );
   }
   renderViewLess(onPress) {
-    return <Text onPress={onPress}>View less</Text>;
+    return <Text />;
   }
 
   render() {
     const { manga } = this.props;
 
     const cover = (
-      <Animated.View
-        style={[
-          { position: 'relative', marginBottom: 20 },
-          this.animatedHeroStyles
-        ]}>
+      <Animated.View style={[styles.cover_container, this.animatedHeroStyles]}>
         <FastImage
           resizeMode="cover"
           source={{ uri: manga && manga.thumbnail }}
-          style={{ height: 240, opacity: 0.875 }}
+          style={styles.cover_image}
         />
-        
-          <View style={{ height: 23,  }} />
-          <LinearGradient
+        <View style={{ height: 23 }} />
+        <LinearGradient
           colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
           style={StyleSheet.absoluteFill}
         />
@@ -128,26 +124,11 @@ class MangaDetail extends PureComponent {
       <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
         <Navigation.Element resizeMode="cover" elementId="MOVIE_POSTER">
           <TouchableWithoutFeedback onPress={this.onPressAvatar}>
-            <View
-              style={{
-                width: 100,
-                height: 160,
-                borderRadius: 3,
-                aspectRatio: 0.6,
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 2
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
-                backgroundColor: 'rgba(32, 32, 32, 0.66)'
-              }}>
+            <View style={styles.avatar_container}>
               {manga && manga.thumbnail && (
                 <FastImage
                   resizeMode="cover"
-                  style={{ width: 100, height: 160, borderRadius: 3 }}
+                  style={styles.avatar_image}
                   source={{ uri: manga.thumbnail }}
                 />
               )}
@@ -160,27 +141,15 @@ class MangaDetail extends PureComponent {
     const detail = manga && (
       <View
         style={[
-          {
-            position: 'absolute',
-            right: 0,
-            marginLeft: 16,
-            marginRight: 16
-          },
+          styles.detail_container,
           { top: POSTER_X, left: POSTER_WIDTH + GUTTER }
         ]}>
-        <Text
-          style={{
-            fontWeight: '300',
-            fontSize: 25,
-            color: '#FFFFFF',
-            marginBottom: 3
-          }}
-          numberOfLines={2}>
-          {manga && manga.name + '\n'}
+        <Text style={styles.detail_name} numberOfLines={2}>
+          {manga && manga.name}
         </Text>
         <TitleWithIcon title={manga.author} type={'author'} size={22} />
         <TitleWithIcon title={manga.category} type={'category'} size={20} />
-        <View style={{ flexDirection: 'row', marginTop: 5 }}>
+        <View style={{ flexDirection: 'row' }}>
           <CountView count={manga.viewers} type={'view'} />
           <CountView
             count={manga.folowers}
@@ -192,14 +161,9 @@ class MangaDetail extends PureComponent {
     );
 
     const description = (
-      <View style={{ padding: 10 }}>
-        <Text
-          style={{
-            fontSize: 16,
-            fontWeight: '500',
-            marginBottom: 5
-          }}>
-          Nội dung:{' '}
+      <View style={styles.description_container}>
+        <Text style={styles.description_title}>
+          {Lang.getByKey('manga_description') + ' '}
         </Text>
         <TouchableWithoutFeedback
           onPress={() => {
@@ -213,7 +177,7 @@ class MangaDetail extends PureComponent {
               ref={'ViewMoreText'}>
               <Text>
                 {'   '}
-                {manga && manga.description ? manga.description : ''}
+                {manga && manga.description ? manga.description : 'Updating...'}
               </Text>
             </ViewMoreText>
           </View>
@@ -254,7 +218,10 @@ class MangaDetail extends PureComponent {
           {detail}
 
           {description}
-          <ListChapter idManga={manga ? manga._id : null} />
+          <ListChapter
+            idManga={manga ? manga._id : null}
+            componentId={this.props.componentId}
+          />
           <Animated.View
             style={{
               position: 'absolute',

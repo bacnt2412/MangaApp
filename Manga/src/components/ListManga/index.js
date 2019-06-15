@@ -10,11 +10,23 @@ export default class ListManga extends PureComponent {
   }
 
   keyExtractor = item => {
-    return item._id.toString();
+    return item._id && item._id.toString();
   };
 
   renderItem = ({ index, item }) => {
-    return <MangaItem componentId={this.props.componentId} index={index} item={item} />;
+    if (!item._id) {
+      return <View key={213} />;
+    }
+
+    return (
+      <View key={item._id}>
+        <MangaItem
+          componentId={this.props.componentId}
+          index={index}
+          item={item}
+        />
+      </View>
+    );
   };
 
   onMomentumScrollBegin = () => {
@@ -35,6 +47,7 @@ export default class ListManga extends PureComponent {
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           extraData={this.state}
+          scrollEventThrottle={160}
           onEndReachedThreshold={0.5}
           onMomentumScrollBegin={this.onMomentumScrollBegin}
           onEndReached={this.onEndReached}

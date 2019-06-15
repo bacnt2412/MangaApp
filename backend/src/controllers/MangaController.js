@@ -39,7 +39,15 @@ function addValueInObject(object, key, value) {
   if (textObject === '{}') {
     res = JSON.parse('{"' + key + '":"' + value + '"}');
   } else {
-    res = JSON.parse('{' + textObject.substring(1, textObject.length - 1) + ',"' + key + '":"' + value + '"}');
+    res = JSON.parse(
+      '{' +
+        textObject.substring(1, textObject.length - 1) +
+        ',"' +
+        key +
+        '":"' +
+        value +
+        '"}'
+    );
   }
   return res;
 }
@@ -109,15 +117,16 @@ getMostFavoriteManga = async (req, res) => {
   }
 };
 
-getListChapterToManga = async manga => {
-  try {
-    let listChapter = await DbServices.getListChapterByIdManga(manga._id);
-    let newManga = Object.assign({}, manga, listChapter);
-    return listChapter;
-  } catch (error) {}
-  return manga;
-};
 
+updateViewManga = async (req, res) => {
+  try {
+    let idManga = req.body.idManga;
+    let result = await DbServices.updateViewManga(idManga);
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
 module.exports = {
   getAllManga,
   addNewManga,
@@ -125,5 +134,5 @@ module.exports = {
   getLatestManga,
   getMostViewManga,
   getMostFavoriteManga,
-  getListChapterToManga
+  updateViewManga
 };

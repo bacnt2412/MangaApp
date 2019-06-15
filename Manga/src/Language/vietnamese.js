@@ -4,6 +4,8 @@ export default {
   home_latest_title_tab: 'Mới nhất',
   home_most_favorite_title_tab: 'Yêu thích',
   home_most_view_title_tab: 'Xem nhiều',
+  detail_manga_title: 'Chi tiết',
+  //================================== Manga =======================================
   manga_item_author: 'Tác giả',
   manga_item_status: 'Tình trạng',
   manga_item_category: 'Thể loại',
@@ -12,9 +14,17 @@ export default {
   manga_item_rating: 'Đánh giá',
   manga_item_chapter: 'Chapter',
   manga_item_latest_chapter: 'Chapter mới',
-  detail_manga_title: 'Chi tiết',
-
+  manga_description: 'Nội dung:',
+  manga_list_chapter: 'Danh sách chapter',
   //================================== Category ====================================
+  category_title: 'Thể loại',
+
   //================================== MyProfile ====================================
+  profile_title: 'Profile',
+
   //================================== Community ====================================
+  community_title: 'Cộng đồng',
+
+  //================================== Share ========================================
+  view_more: 'Xem thêm'
 };

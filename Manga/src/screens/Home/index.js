@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, Dimensions, ActivityIndicator } from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ActivityIndicator
+} from 'react-native';
 import { TabView, PagerScroll, TabBar } from 'react-native-tab-view';
 import BaseScreen from '../../components/BaseScreen';
 import ListManga from '../../components/ListManga';
@@ -56,7 +63,6 @@ export default class Home extends BaseScreen {
   getLatestManga = async () => {
     this.setState({ isLatestMangaFirstLoading: true });
     let res = await Api.getLatestManga();
-
     if (res && res.status === 200) {
       this.setState({ listLatestManga: res.data.listManga });
     } else if (res && res.error && res.error.response.status === 403) {
@@ -66,7 +72,6 @@ export default class Home extends BaseScreen {
   };
 
   getMoreLatestmanga = async () => {
-    console.log('################');
     this.setState({ isLoadMoreLatest: true });
     let { pageLatest, listLatestManga } = this.state;
     pageLatest++;
@@ -144,35 +149,48 @@ export default class Home extends BaseScreen {
   };
 
   renderListManga(listData, isLoadMore, fucGetMoreData) {
-    return <ListManga listManga={listData} getMoreData={fucGetMoreData} isLoadMore={isLoadMore} componentId={Const.ID_SCREEN.HOME} />;
+    return (
+      <ListManga
+        listManga={listData}
+        getMoreData={fucGetMoreData}
+        isLoadMore={isLoadMore}
+        componentId={Const.ID_SCREEN.HOME}
+      />
+    );
   }
 
   renderContenOfTabView = (listData, isLoading, isLoadMore, fucGetMoreData) => {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {isLoading ? <Loading /> : this.renderListManga(listData, isLoadMore, fucGetMoreData)}
+        {isLoading ? (
+          <Loading />
+        ) : (
+          this.renderListManga(listData, isLoadMore, fucGetMoreData)
+        )}
       </View>
     );
   };
 
   onChangeTab = index => {
     this.setState({ index });
-    console.log('################ onChangeTab', this.props);
     switch (index) {
       case 0: {
-        if (this.state.listLatestManga.length === 0) {
+        const { listLatestManga } = this.state;
+        if (listLatestManga && listLatestManga.length === 0) {
           this.getLatestManga();
         }
         break;
       }
       case 1: {
-        if (this.state.listMostFavoriteManga.length === 0) {
+        const { listMostFavoriteManga } = this.state;
+        if (listMostFavoriteManga && listMostFavoriteManga.length === 0) {
           this.getMostFavoriteManga();
         }
         break;
       }
       case 2: {
-        if (this.state.listMostViewManga.length === 0) {
+        const { listMostViewManga } = this.state;
+        if (listMostViewManga && listMostViewManga.length === 0) {
           this.getMostViewManga();
         }
         break;
@@ -181,12 +199,19 @@ export default class Home extends BaseScreen {
   };
 
   renderTabBar = props => (
-    <TabBar {...props} indicatorStyle={styles.indicator} style={styles.tabbar} tabStyle={styles.tab} labelStyle={styles.label} scrollEnabled={false} />
+    <TabBar
+      {...props}
+      indicatorStyle={styles.indicator}
+      style={styles.tabbar}
+      tabStyle={styles.tab}
+      labelStyle={styles.label}
+      scrollEnabled={false}
+    />
   );
 
   renderContent() {
     return (
-      <View style={{flex:1}}>
+      <View style={{ flex: 1 }}>
         <TabView
           renderTabBar={this.renderTabBar}
           navigationState={this.state}
