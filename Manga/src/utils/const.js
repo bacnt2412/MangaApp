@@ -21,6 +21,10 @@ export default class Const {
   
   static UI = {
     PADDING_TOP: Funcs.isIphoneX() ? 50 : Platform.OS === 'android' ? 0 : 20,
-    BORDER_WIDTH_ICON_FLAG: Platform.OS === 'android' ? 0.4 : 0.5
+    BORDER_WIDTH_ICON_FLAG: Platform.OS === 'android' ? 0.4 : 0.5,
   };
+  static COLOR = {
+    LOADDING: '#4286f4'
+  }
+  static PAGE_LIMIT = 10;
 }

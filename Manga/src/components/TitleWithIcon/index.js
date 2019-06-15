@@ -15,7 +15,7 @@ class TitleWithIcon extends PureComponent {
           <Icon
             name={'user'}
             size={20}
-            color={'white'}
+            color={'#B5B5B5'}
             size={size ? size : 20}
           />
         ) : (

@@ -100,13 +100,13 @@ addNewCategory = async listCategory => {
 
 getListChapterByIdManga = async (idManga, page) => {
   return await ChapterModel.find({ idmanga: idManga })
-    .sort({ _id: 1 })
+    .sort({ _id: -1 })
     .skip((page - 1) * Settings.PAGE_LIMIT)
     .limit(Settings.PAGE_LIMIT);
 };
 
 getListAllChapterByIdManga = async (idManga, page) => {
-  return await ChapterModel.find({ idmanga: idManga }).sort({ _id: 1 });
+  return await ChapterModel.find({ idmanga: idManga }).sort({ _id: -1 });
 };
 
 module.exports = {

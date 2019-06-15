@@ -103,8 +103,126 @@ class MangaDetail extends PureComponent {
 
   render() {
     const { manga } = this.props;
+
+    const cover = (
+      <Animated.View
+        style={[
+          { position: 'relative', marginBottom: 20 },
+          this.animatedHeroStyles
+        ]}>
+        <FastImage
+          resizeMode="cover"
+          source={{ uri: manga && manga.thumbnail }}
+          style={{ height: 240, opacity: 0.875 }}
+        />
+        
+          <View style={{ height: 23,  }} />
+          <LinearGradient
+          colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
+          style={StyleSheet.absoluteFill}
+        />
+      </Animated.View>
+    );
+
+    const avatar = (
+      <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
+        <Navigation.Element resizeMode="cover" elementId="MOVIE_POSTER">
+          <TouchableWithoutFeedback onPress={this.onPressAvatar}>
+            <View
+              style={{
+                width: 100,
+                height: 160,
+                borderRadius: 3,
+                aspectRatio: 0.6,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 2
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+                backgroundColor: 'rgba(32, 32, 32, 0.66)'
+              }}>
+              {manga && manga.thumbnail && (
+                <FastImage
+                  resizeMode="cover"
+                  style={{ width: 100, height: 160, borderRadius: 3 }}
+                  source={{ uri: manga.thumbnail }}
+                />
+              )}
+            </View>
+          </TouchableWithoutFeedback>
+        </Navigation.Element>
+      </View>
+    );
+
+    const detail = manga && (
+      <View
+        style={[
+          {
+            position: 'absolute',
+            right: 0,
+            marginLeft: 16,
+            marginRight: 16
+          },
+          { top: POSTER_X, left: POSTER_WIDTH + GUTTER }
+        ]}>
+        <Text
+          style={{
+            fontWeight: '300',
+            fontSize: 25,
+            color: '#FFFFFF',
+            marginBottom: 3
+          }}
+          numberOfLines={2}>
+          {manga && manga.name + '\n'}
+        </Text>
+        <TitleWithIcon title={manga.author} type={'author'} size={22} />
+        <TitleWithIcon title={manga.category} type={'category'} size={20} />
+        <View style={{ flexDirection: 'row', marginTop: 5 }}>
+          <CountView count={manga.viewers} type={'view'} />
+          <CountView
+            count={manga.folowers}
+            type={'red'}
+            style={{ marginLeft: 30 }}
+          />
+        </View>
+      </View>
+    );
+
+    const description = (
+      <View style={{ padding: 10 }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: '500',
+            marginBottom: 5
+          }}>
+          Nội dung:{' '}
+        </Text>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            this.refs.ViewMoreText.onPressLess();
+          }}>
+          <View>
+            <ViewMoreText
+              numberOfLines={4}
+              renderViewMore={this.renderViewMore}
+              renderViewLess={this.renderViewLess}
+              ref={'ViewMoreText'}>
+              <Text>
+                {'   '}
+                {manga && manga.description ? manga.description : ''}
+              </Text>
+            </ViewMoreText>
+          </View>
+        </TouchableWithoutFeedback>
+      </View>
+    );
+
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'black' }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Animated.ScrollView
           style={{ flex: 1 }}
           testID="MOVIE_SCREEN"
@@ -115,53 +233,8 @@ class MangaDetail extends PureComponent {
             [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
             { useNativeDriver: true }
           )}>
-          {/* Cover */}
-          <Animated.View
-            style={[
-              { position: 'relative', marginBottom: 48 },
-              this.animatedHeroStyles
-            ]}>
-            <FastImage
-              resizeMode="cover"
-              source={{ uri: manga && manga.thumbnail }}
-              style={{ height: 240, opacity: 0.875 }}
-            />
-            <LinearGradient
-              colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
-              style={StyleSheet.absoluteFill}
-            />
-          </Animated.View>
-          {/* Avatar */}
-          <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
-            <Navigation.Element resizeMode="cover" elementId="MOVIE_POSTER">
-              <TouchableWithoutFeedback onPress={this.onPressAvatar}>
-                <View
-                  style={{
-                    width: 100,
-                    height: 160,
-                    borderRadius: 3,
-                    aspectRatio: 0.6,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 2
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 3.84,
-                    elevation: 5,
-                    backgroundColor: 'rgba(32, 32, 32, 0.66)'
-                  }}>
-                  {manga && manga.thumbnail && (
-                    <FastImage
-                      resizeMode="cover"
-                      style={{ width: 100, height: 160, borderRadius: 3 }}
-                      source={{ uri: manga.thumbnail }}
-                    />
-                  )}
-                </View>
-              </TouchableWithoutFeedback>
-            </Navigation.Element>
-          </View>
+          {cover}
+          {avatar}
           {/* Photo view zoom */}
           <PhotoView
             visible={this.state.visible}
@@ -178,74 +251,10 @@ class MangaDetail extends PureComponent {
             initial={this.state.initial}
             onDismiss={() => this.setState({ visible: false })}
           />
-          {/* info manga Detail */}
-          {manga && (
-            <View
-              style={[
-                {
-                  position: 'absolute',
-                  right: 0,
-                  marginLeft: 16,
-                  marginRight: 16
-                },
-                { top: POSTER_X, left: POSTER_WIDTH + GUTTER }
-              ]}>
-              <Text
-                style={{
-                  fontWeight: '300',
-                  fontSize: 25,
-                  color: '#FFFFFF',
-                  marginBottom: 3
-                }}
-                numberOfLines={2}>
-                {manga && manga.name}
-              </Text>
-              <TitleWithIcon title={manga.author} type={'author'} size={22} />
-              <TitleWithIcon
-                title={manga.category}
-                type={'category'}
-                size={20}
-              />
-              <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                <CountView count={manga.viewers} type={'view'} />
-                <CountView
-                  count={manga.folowers}
-                  type={'red'}
-                  style={{ marginLeft: 30 }}
-                />
-              </View>
-            </View>
-          )}
-          <View style={{ padding: 10 }}>
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 16,
-                fontWeight: '500',
-                marginBottom: 5
-              }}>
-              Nội dung:{' '}
-            </Text>
-            <TouchableWithoutFeedback
-              onPress={() => {
-                this.refs.ViewMoreText.onPressLess();
-              }}>
-              <View>
-              <ViewMoreText
-                numberOfLines={4}
-                renderViewMore={this.renderViewMore}
-                renderViewLess={this.renderViewLess}
-                ref={'ViewMoreText'}>
-                <Text style={{ color: 'white' }}>
-                  {'   '}
-                  {manga && manga.description ? manga.description : ''}
-                </Text>
-              </ViewMoreText>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-          
-          <ListChapter idManga={manga._id}/>
+          {detail}
+
+          {description}
+          <ListChapter idManga={manga ? manga._id : null} />
           <Animated.View
             style={{
               position: 'absolute',
