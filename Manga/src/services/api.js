@@ -80,17 +80,22 @@ export default class Api {
   };
 
   static getLatestManga = async data => {
-    let url = Settings.SERVER_API + 'api/manga/get-latest-manga';
+    let url = Settings.SERVER_API + 'manga/get-latest-manga';
     return await this.post(url, data);
   };
 
   static getMostFavoriteManga = async data => {
-    let url = Settings.SERVER_API + 'api/manga/get-most-favorite-manga';
+    let url = Settings.SERVER_API + 'manga/get-most-favorite-manga';
     return await this.post(url, data);
   };
 
   static getMostViewManga = async data => {
-    let url = Settings.SERVER_API + 'api/manga/get-most-view-manga';
+    let url = Settings.SERVER_API + 'manga/get-most-view-manga';
+    return await this.post(url, data);
+  };
+
+  static getListChapterByIdManga = async data => {
+    let url = Settings.SERVER_API + 'chapter/get-chapter-by-id-manga';
     return await this.post(url, data);
   };
 }

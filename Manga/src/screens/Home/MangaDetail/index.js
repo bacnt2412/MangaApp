@@ -16,6 +16,9 @@ import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
 import CountView from '../../../components/CountView';
+import TitleWithIcon from '../../../components/TitleWithIcon';
+import ViewMoreText from 'react-native-view-more-text';
+import ListChapter from '../../../components/ListChapter';
 
 const { width } = Dimensions.get('window');
 
@@ -86,6 +89,17 @@ class MangaDetail extends PureComponent {
   onPressAvatar = () => {
     this.setState({ visible: true });
   };
+
+  renderViewMore(onPress) {
+    return (
+      <Text onPress={onPress} style={{ color: '#4286f4' }}>
+        View more
+      </Text>
+    );
+  }
+  renderViewLess(onPress) {
+    return <Text onPress={onPress}>View less</Text>;
+  }
 
   render() {
     const { manga } = this.props;
@@ -186,28 +200,12 @@ class MangaDetail extends PureComponent {
                 numberOfLines={2}>
                 {manga && manga.name}
               </Text>
-              <Text
-                style={{
-                  fontWeight: '100',
-                  fontSize: 17,
-                  color: '#B5B5B5',
-                  paddingBottom: 5,
-                  marginTop: 5
-                }}
-                numberOfLines={1}>
-                {manga && manga.author}
-              </Text>
-              <Text
-                style={{
-                  fontWeight: '100',
-                  fontSize: 16,
-                  color: '#B5B5B5',
-                  paddingBottom: 4,
-                  marginTop: 5
-                }}
-                numberOfLines={1}>
-                {manga && manga.category}
-              </Text>
+              <TitleWithIcon title={manga.author} type={'author'} size={22} />
+              <TitleWithIcon
+                title={manga.category}
+                type={'category'}
+                size={20}
+              />
               <View style={{ flexDirection: 'row', marginTop: 5 }}>
                 <CountView count={manga.viewers} type={'view'} />
                 <CountView
@@ -218,6 +216,36 @@ class MangaDetail extends PureComponent {
               </View>
             </View>
           )}
+          <View style={{ padding: 10 }}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 16,
+                fontWeight: '500',
+                marginBottom: 5
+              }}>
+              Nội dung:{' '}
+            </Text>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                this.refs.ViewMoreText.onPressLess();
+              }}>
+              <View>
+              <ViewMoreText
+                numberOfLines={4}
+                renderViewMore={this.renderViewMore}
+                renderViewLess={this.renderViewLess}
+                ref={'ViewMoreText'}>
+                <Text style={{ color: 'white' }}>
+                  {'   '}
+                  {manga && manga.description ? manga.description : ''}
+                </Text>
+              </ViewMoreText>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+          
+          <ListChapter idManga={manga._id}/>
           <Animated.View
             style={{
               position: 'absolute',

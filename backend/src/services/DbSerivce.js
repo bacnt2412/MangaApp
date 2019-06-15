@@ -14,12 +14,17 @@ checkExistChapterByLink = async link => {
 
 updateManga = async (idManga, chapter) => {
   try {
-    let manga = await MangaModel.findByIdAndUpdate({ _id: idManga }, { $set: { updated: Date.now(), latestChapter: chapter } }, { new: true }, (err, doc) => {
-      if (err) {
-        return false;
+    let manga = await MangaModel.findByIdAndUpdate(
+      { _id: idManga },
+      { $set: { updated: Date.now(), latestChapter: chapter } },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          return false;
+        }
+        return true;
       }
-      return true;
-    });
+    );
   } catch (error) {
     console.log('########## error', error);
   }
@@ -100,6 +105,10 @@ getListChapterByIdManga = async (idManga, page) => {
     .limit(Settings.PAGE_LIMIT);
 };
 
+getListAllChapterByIdManga = async (idManga, page) => {
+  return await ChapterModel.find({ idmanga: idManga }).sort({ _id: 1 });
+};
+
 module.exports = {
   checkExistMangaByName,
   addListChapter,
@@ -107,5 +116,6 @@ module.exports = {
   addNewManga,
   addNewCategory,
   getListChapterByIdManga,
-  updateManga
+  updateManga,
+  getListAllChapterByIdManga
 };
