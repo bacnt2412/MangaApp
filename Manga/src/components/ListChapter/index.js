@@ -20,7 +20,7 @@ class ListChapter extends PureComponent {
       idManga: this.state.idManga
     });
     if (res && res.status === 200) {
-      this.setState({ listChapter: res.data.data });
+      this.setState({ listChapter: res.data.listChapter });
     }
   };
   render() {
@@ -36,7 +36,7 @@ class ListChapter extends PureComponent {
           }}>
           Danh sách chapter:{' '}
         </Text>
-        {listChapter.map(item => {
+        { listChapter && listChapter.map(item => {
           return (
             <View key={item._id}>
               <Text style={{ color: 'white' }}>{item.name}</Text>
