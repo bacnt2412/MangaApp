@@ -80,7 +80,7 @@ class ListChapter extends PureComponent {
 
   updateVieManga = async () => {
     let res = await Api.updateViewManga({ idManga: this.state.idManga });
-    console.log(' ######################### ', res);
+    console.log(' ## updateViewManga ', res);
   };
 
   renderChapterItem = item => {
@@ -122,6 +122,7 @@ class ListChapter extends PureComponent {
       </TouchableOpacity>
     );
   };
+
   render() {
     const { listChapter, isFirstLoad, isLast, isLoadMore } = this.state;
     const loadingView = (

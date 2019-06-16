@@ -1,4 +1,3 @@
-
 const moment = require('moment');
 const timezone = require('moment-timezone');
 import Lang from '../Language';
@@ -8,7 +7,6 @@ if (Lang.lang === 'jp') {
   require('moment/locale/ja');
   moment.locale('ja');
 }
-
 
 export default class Utils {
   static userData = {
@@ -60,6 +58,18 @@ export default class Utils {
       if (min < 10) min = '0' + min;
       timeStr = min + ':' + second;
       return timeStr;
+    }
+  };
+
+  static String = {
+    getFromBetween: (source,sub1, sub2) => {
+      if (source.indexOf(sub1) < 0 || source.indexOf(sub2) < 0)
+        return false;
+      var SP = source.indexOf(sub1) + sub1.length;
+      var string1 = source.substr(0, SP);
+      var string2 = source.substr(SP);
+      var TP = string1.length + string2.indexOf(sub2);
+      return source.substring(SP, TP);
     }
   };
 }

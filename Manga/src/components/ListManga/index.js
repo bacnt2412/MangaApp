@@ -1,8 +1,6 @@
 import React, { PureComponent } from 'react';
 import { View, Text, FlatList, Dimensions } from 'react-native';
 import MangaItem from '../MangaItem';
-const { width } = Dimensions.get('window');
-
 export default class ListManga extends PureComponent {
   constructor(props) {
     super(props);
@@ -17,15 +15,13 @@ export default class ListManga extends PureComponent {
     if (!item._id) {
       return <View key={213} />;
     }
-
     return (
-      <View key={item._id}>
-        <MangaItem
-          componentId={this.props.componentId}
-          index={index}
-          item={item}
-        />
-      </View>
+      <MangaItem
+        componentId={this.props.componentId}
+        elementId={`manga_` + item._id}
+        index={index}
+        item={item}
+      />
     );
   };
 
@@ -39,11 +35,12 @@ export default class ListManga extends PureComponent {
       this.onEndReachedCalledDuringMomentum = true;
     }
   };
+
   render() {
     return (
-      <View style={{ flex: 1, width: width }}>
+      <View style={{ flex: 1 }}>
         <FlatList
-          data={this.props.listManga ? this.props.listManga : []}
+          data={this.props.listManga}
           renderItem={this.renderItem}
           keyExtractor={this.keyExtractor}
           extraData={this.state}

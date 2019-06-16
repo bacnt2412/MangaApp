@@ -8,7 +8,8 @@ export default class Const {
     COMMUNITY: 'bacnt.Comunity',
     LIBRARY: 'bacnt.Library',
     MANGA_DETAIL: 'bacnt.MangaDetail',
-    CHAPTER_DETAIL: 'bacnt.ChapterDetail'
+    CHAPTER_DETAIL: 'bacnt.ChapterDetail',
+    LIST_MANGA_SCREEN: 'bacnt.ListMangaScreen'
   };
 
   static ID_SCREEN = {
@@ -18,7 +19,8 @@ export default class Const {
     COMMUNITY: 'COMMUNITY_SCREEN',
     LIBRARY: 'LIBRARY_SCREEN',
     MANGA_DETAIL: 'MANGA_DETAIL_SCREEN',
-    CHAPTER_DETAIL: 'CHAPTER_DETAIL_SCREEN'
+    CHAPTER_DETAIL: 'CHAPTER_DETAIL_SCREEN',
+    LISTMANGASCREEN: 'LIST_MANGA_SCREEN'
   };
 
   static UI = {

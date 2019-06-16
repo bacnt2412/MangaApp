@@ -161,9 +161,12 @@ export default class Home extends BaseScreen {
 
   renderContenOfTabView = (listData, isLoading, isLoadMore, fucGetMoreData) => {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ flex: 1 }}>
         {isLoading ? (
-          <Loading />
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Loading />
+          </View>
         ) : (
           this.renderListManga(listData, isLoadMore, fucGetMoreData)
         )}

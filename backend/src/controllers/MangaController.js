@@ -65,10 +65,12 @@ getMangaByIdCategory = async (req, res) => {
       if (lastIdManga) {
         filter = {
           category: { $regex: regex },
-          _id: { $gt: lastIdManga }
+          _id: { $lt: lastIdManga }
         };
       }
-      let listManga = await Manga.find(filter).limit(settings.PAGE_LIMIT);
+      let listManga = await Manga.find(filter)
+        .sort({ _id: -1 })
+        .limit(settings.PAGE_LIMIT);
       res.status(200).json({ listManga });
     } else {
       res.status(404).json({ error: 'not found cate' });
@@ -116,7 +118,6 @@ getMostFavoriteManga = async (req, res) => {
     res.status(404).json({ error });
   }
 };
-
 
 updateViewManga = async (req, res) => {
   try {

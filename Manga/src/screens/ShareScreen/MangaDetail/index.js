@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   Dimensions,
   ScrollView,
   ImageBackground,
@@ -21,14 +20,12 @@ import ViewMoreText from 'react-native-view-more-text';
 import ListChapter from '../../../components/ListChapter';
 import styles from './styles';
 
-const { width } = Dimensions.get('window');
-
 const GUTTER = 8 * 2;
 const TOOLBAR_HEIGHT = 56;
 const BACKDROP_HEIGHT = 240;
 const POSTER_WIDTH = 100;
 const POSTER_HEIGHT = 160;
-const POSTER_X = BACKDROP_HEIGHT - POSTER_HEIGHT + 32;
+const POSTER_X = BACKDROP_HEIGHT - POSTER_HEIGHT + 15;
 
 class MangaDetail extends PureComponent {
   static options = {
@@ -112,7 +109,6 @@ class MangaDetail extends PureComponent {
           source={{ uri: manga && manga.thumbnail }}
           style={styles.cover_image}
         />
-        <View style={{ height: 23 }} />
         <LinearGradient
           colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 1)']}
           style={StyleSheet.absoluteFill}
@@ -122,7 +118,7 @@ class MangaDetail extends PureComponent {
 
     const avatar = (
       <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
-        <Navigation.Element resizeMode="cover" elementId="MOVIE_POSTER">
+        <Navigation.Element resizeMode="cover" elementId="MANGA_DETAIL_AVATAR">
           <TouchableWithoutFeedback onPress={this.onPressAvatar}>
             <View style={styles.avatar_container}>
               {manga && manga.thumbnail && (
@@ -186,7 +182,7 @@ class MangaDetail extends PureComponent {
     );
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <Animated.ScrollView
           style={{ flex: 1 }}
           testID="MOVIE_SCREEN"
@@ -243,7 +239,7 @@ class MangaDetail extends PureComponent {
             />
           </Animated.View>
         </Animated.ScrollView>
-      </SafeAreaView>
+      </View>
     );
   }
 }

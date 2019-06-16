@@ -4,6 +4,7 @@ import Lang from '../../../Language';
 import Api from '../../../services/api';
 import FastItem from 'react-native-fast-image';
 import Loading from '../../../components/Loading';
+import Utils from '../../../utils/utils';
 
 class ChapterDetail extends PureComponent {
   static options = {
@@ -31,13 +32,28 @@ class ChapterDetail extends PureComponent {
   componentDidMount() {
     this.getData();
   }
-  
+
   getData = async () => {
     this.setState({ isFirstLoad: true });
     let res = await Api.getListImageByIdChapter({
       idChapter: this.state.idChapter
     });
     if (res && res.status === 200) {
+      let data = res.data.data;
+      if (data.length > 0) {
+        res.data.data.map((item, index) => {
+          if (item.link.includes('proxy.truyen.cloud')) {
+            let newLink = Utils.String.getFromBetween(
+              item.link,
+              'url=',
+              '&hash='
+            );
+            data[index].link = newLink;
+          }
+        });
+      }
+      console.log('#########################', data);
+
       this.setState({ listImage: res.data.data });
     }
     this.setState({ isFirstLoad: false });
@@ -123,7 +139,7 @@ class ImageItem extends PureComponent {
         style={{
           flex: 1,
           width: width,
-          height: heightItem,
+          height: heightItem
         }}>
         <View
           style={{

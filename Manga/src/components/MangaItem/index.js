@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Lang from '../../Language';
 import { pushDetailScreen } from '../../screens';
+import { Navigation } from 'react-native-navigation';
 
 class MangaItem extends PureComponent {
   constructor(props) {
@@ -11,11 +12,11 @@ class MangaItem extends PureComponent {
   }
 
   render() {
-    const { item } = this.props;
+    const { item, componentId, elementId } = this.props;
     return (
       <TouchableOpacity
-        onPress={() => {
-          pushDetailScreen(this.props.componentId, item);
+        onPress={e => {
+          pushDetailScreen({ componentId, elementId, manga: item });
         }}
         style={{
           flex: 1,
@@ -26,26 +27,58 @@ class MangaItem extends PureComponent {
           borderRadius: 5,
           borderColor: '#ddd'
         }}>
-        <FastImage
+        <Navigation.Element elementId={`manga_` + item._id} resizeMode="cover">
+          <View>
+            <FastImage
+              source={{ uri: item.thumbnail }}
+              style={{
+                width: 100,
+                height: 120,
+                borderRadius: 5,
+                borderWidth: 0.3
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+          </View>
+        </Navigation.Element>
+
+        {/* <FastImage
           source={{ uri: item.thumbnail }}
           style={{ width: 100, height: 120, borderRadius: 5, borderWidth: 0.3 }}
           resizeMode={FastImage.resizeMode.cover}
-        />
+        /> */}
         <View style={{ flex: 1, paddingTop: 5, paddingLeft: 10 }}>
-          <Text style={{ flex: 1,fontSize: 14, fontWeight: 'bold', paddingBottom: 5 }} numberOfLines={1}>
+          <Text
+            style={{
+              flex: 1,
+              fontSize: 14,
+              fontWeight: 'bold',
+              paddingBottom: 5
+            }}
+            numberOfLines={1}>
             {item.name}
           </Text>
-          <Text style={{flex: 1, fontSize: 14, paddingBottom: 5 }} numberOfLines={1}>
-            <Text style={{ fontWeight: '600' }}>{Lang.getByKey('manga_item_author')}</Text>
+          <Text
+            style={{ flex: 1, fontSize: 14, paddingBottom: 5 }}
+            numberOfLines={1}>
+            <Text style={{ fontWeight: '600' }}>
+              {Lang.getByKey('manga_item_author')}
+            </Text>
             {':  ' + item.author}
           </Text>
-          <Text style={{ flex: 1,fontSize: 14, paddingBottom: 5 }} numberOfLines={1}>
-            <Text style={{ fontWeight: '600' }}>{Lang.getByKey('manga_item_category')}</Text>
+          <Text
+            style={{ flex: 1, fontSize: 14, paddingBottom: 5 }}
+            numberOfLines={1}>
+            <Text style={{ fontWeight: '600' }}>
+              {Lang.getByKey('manga_item_category')}
+            </Text>
             {':  ' + item.category}
           </Text>
           <View style={{ flex: 1, flexDirection: 'row' }}>
             <Text style={{ fontSize: 14 }} numberOfLines={1}>
-              <Text style={{ fontWeight: '600' }}>{Lang.getByKey('manga_item_latest_chapter')}</Text>
+              <Text style={{ fontWeight: '600' }}>
+                {Lang.getByKey('manga_item_latest_chapter')}
+              </Text>
               {':  ' + item.latestChapter}
             </Text>
           </View>

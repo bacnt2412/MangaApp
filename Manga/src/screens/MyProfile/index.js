@@ -10,7 +10,7 @@ class MyProfile extends React.PureComponent {
   render() {
     return (
       <View>
-        <Text> MyProfile </Text>
+        <Text> Chức năng hiện đang phát triển </Text>
       </View>
     );
   }

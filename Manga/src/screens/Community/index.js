@@ -9,7 +9,7 @@ class Community extends React.PureComponent {
   render() {
     return (
       <View>
-        <Text> textInComponent </Text>
+        <Text> Chức năng hiện đang phát triển </Text>
       </View>
     );
   }

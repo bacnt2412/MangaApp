@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   },
   cover_container: {
     position: 'relative',
-    marginBottom: 20
+    marginBottom: 40
   },
   cover_image: {
     height: 240,
