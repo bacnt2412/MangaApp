@@ -1,19 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
-import BaseScreen from '../../components/BaseScreen';
-import Api from '../../services/api';
+import Api from '../../../services/api';
 import { Navigation } from 'react-native-navigation';
-import Const from '../../utils/const';
-
-export class Library extends BaseScreen {
-  static options = {
-    topBar: {
-      title: {
-        text: 'Thể Loại'
-      }
-    }
-  };
-
+import Const from '../../../utils/const';
+export class ListCategory extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -73,7 +63,7 @@ export class Library extends BaseScreen {
     }
   };
 
-  renderContent() {
+  render() {
     return (
       <View style={{ flex: 1 }}>
         <FlatList
@@ -123,7 +113,7 @@ class CategoryItem extends React.PureComponent {
   };
 
   onItemPress = item => {
-    Navigation.push(Const.ID_SCREEN.LIBRARY, {
+    Navigation.push(Const.ID_SCREEN.HOME, {
       component: {
         name: Const.NAME_SCREEN.LIST_MANGA_SCREEN,
         passProps: {
@@ -174,4 +164,4 @@ class CategoryItem extends React.PureComponent {
   }
 }
 
-export default Library;
+export default ListCategory;

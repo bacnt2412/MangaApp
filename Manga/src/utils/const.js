@@ -11,7 +11,7 @@ export default class Const {
     HOME: 'bacnt.Home',
     MYPROFILE: 'bacnt.MyProfile',
     COMMUNITY: 'bacnt.Comunity',
-    LIBRARY: 'bacnt.Library',
+    FOLLOW: 'bacnt.Follow',
     MANGA_DETAIL: 'bacnt.MangaDetail',
     CHAPTER_DETAIL: 'bacnt.ChapterDetail',
     LIST_MANGA_SCREEN: 'bacnt.ListMangaScreen'
@@ -22,10 +22,10 @@ export default class Const {
     HOME: 'HOME_SCREEN',
     MYPROFILE: 'MYPROFILE_SCREEN',
     COMMUNITY: 'COMMUNITY_SCREEN',
-    LIBRARY: 'LIBRARY_SCREEN',
+    FOLLOW: 'FOLLOW_SCREEN',
     MANGA_DETAIL: 'MANGA_DETAIL_SCREEN',
     CHAPTER_DETAIL: 'CHAPTER_DETAIL_SCREEN',
-    LISTMANGASCREEN: 'LIST_MANGA_SCREEN'
+    LIST_MANGA_SCREEN: 'LIST_MANGA_SCREEN'
   };
 
   static UI = {

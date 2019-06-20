@@ -1,10 +1,11 @@
 export default {
   //================================== Home ====================================
-  home_title: 'Trang Chủ',
+  home_title: 'Trang chủ',
   home_latest_title_tab: 'Mới nhất',
   home_most_favorite_title_tab: 'Yêu thích',
   home_most_view_title_tab: 'Xem nhiều',
   detail_manga_title: 'Chi tiết',
+  home_category_title_tab: 'Thể loại',
   //================================== Manga =======================================
   manga_item_author: 'Tác giả',
   manga_item_status: 'Tình trạng',
@@ -17,11 +18,12 @@ export default {
   manga_description: 'Nội dung:',
   manga_list_chapter: 'Danh sách chapter',
   //================================== Category ====================================
-  category_title: 'Thể loại',
-
   //================================== MyProfile ====================================
   profile_title: 'Profile',
-
+  profile_follow_tab_title: 'Theo dõi',
+  profile_download_tab_title: 'Tải xuống',
+  profile_profile_tab_title: 'Hồ sơ',
+  profile_history_tab_title: 'Lịch sử',
   //================================== Community ====================================
   community_title: 'Cộng đồng',
 

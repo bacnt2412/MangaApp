@@ -29,6 +29,18 @@ const User = new Schema({
     type: String,
     default: 'system'
   },
+  listIdMangaFollow: {
+    type: String,
+    default: ''
+  },
+  listIdMangaHistory: {
+    type: String,
+    default: ''
+  },
+  listAppId: {
+    type: String,
+    default: ''
+  },
   created: {
     type: Date,
     default: Date.now

@@ -2,6 +2,7 @@ const CategoryModel = require('../models/CategoryModel');
 const MangaModel = require('../models/MangaModel');
 const ChapterModel = require('../models/ChapterModel');
 const ImageChapterModel = require('../models/ImageChapterModel');
+const UserModel = require('../models/UserModel');
 const Settings = require('../config/settings');
 
 checkExistMangaByName = async name => {
@@ -14,17 +15,12 @@ checkExistChapterByLink = async link => {
 
 updateManga = async (idManga, chapter) => {
   try {
-    let manga = await MangaModel.findByIdAndUpdate(
-      { _id: idManga },
-      { $set: { updated: Date.now(), latestChapter: chapter } },
-      { new: true },
-      (err, doc) => {
-        if (err) {
-          return false;
-        }
-        return true;
+    let manga = await MangaModel.findByIdAndUpdate({ _id: idManga }, { $set: { updated: Date.now(), latestChapter: chapter } }, { new: true }, (err, doc) => {
+      if (err) {
+        return false;
       }
-    );
+      return true;
+    });
   } catch (error) {
     console.log('########## error', error);
   }
@@ -34,15 +30,10 @@ updateViewManga = async (idManga, view) => {
   try {
     let manga = await MangaModel.findOne({ _id: idManga });
     if (manga) {
-      let result = await MangaModel.findByIdAndUpdate(
-        { _id: idManga },
-        { $set: { viewers: manga.viewers + 1 } },
-        { new: true },
-        (err, doc) => {
-          if (err) {
-          }
+      let result = await MangaModel.findByIdAndUpdate({ _id: idManga }, { $set: { viewers: manga.viewers + 1 } }, { new: true }, (err, doc) => {
+        if (err) {
         }
-      );
+      });
       return result;
     }
   } catch (error) {
@@ -130,6 +121,18 @@ getListAllChapterByIdManga = async (idManga, page) => {
   return await ChapterModel.find({ idmanga: idManga }).sort({ _id: -1 });
 };
 
+followManga = async (idUser, idManga) => {
+  let user = await UserModel.findById({ _id: idUser });
+  let listMangaFollow = [];
+  try {
+    listMangaFollow = JSON.parse(user.listIdMangaFollow);
+  } catch (error) {
+    listMangaFollow = [];
+  }
+  listMangaFollow.push(idManga);
+  let update = await UserModel.findOneAndUpdate({ _id: idUser }, { $set: { listIdMangaFollow: JSON.stringify(listMangaFollow) } });
+  return true;
+};
 module.exports = {
   checkExistMangaByName,
   addListChapter,
@@ -139,5 +142,6 @@ module.exports = {
   getListChapterByIdManga,
   updateManga,
   getListAllChapterByIdManga,
-  updateViewManga
+  updateViewManga,
+  followManga
 };

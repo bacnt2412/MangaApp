@@ -9,6 +9,7 @@ MangaRoute.route('/get-latest-manga').post(MangaController.getLatestManga);
 MangaRoute.route('/get-most-view-manga').post(MangaController.getMostViewManga);
 MangaRoute.route('/get-most-favorite-manga').post(MangaController.getMostFavoriteManga);
 MangaRoute.route('/update-view-manga').post(MangaController.updateViewManga);
+MangaRoute.route('/follow-manga').post(MangaController.followManga);
 
 
 module.exports = MangaRoute;

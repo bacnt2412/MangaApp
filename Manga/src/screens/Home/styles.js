@@ -1,11 +1,13 @@
 import { StyleSheet, Dimensions } from 'react-native';
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white'
   },
   tabbar: {
-    backgroundColor: '#fcfcfc'
+    backgroundColor: 'rgba(0,0,0,0)'
   },
   tab: {
     height: 50,
@@ -14,14 +16,15 @@ const styles = StyleSheet.create({
   },
   indicator: {
     backgroundColor: '#29A829',
-    height: 1
+    height: 1,
   },
   label: {
     color: 'rgba(0, 0, 0, 0.6)',
-    fontWeight: '500',
+    fontWeight: 'bold',
     marginBottom: 0,
-    fontSize: 16
-  }
+    fontSize: 12,
+    textTransform: 'capitalize'
+  },
 });
 
 export default styles;

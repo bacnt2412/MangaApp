@@ -3,7 +3,6 @@ import { Platform } from 'react-native';
 import Community from './Community/index';
 import Home from './Home/index';
 import MyProfile from './MyProfile/index';
-import Library from './Library/index';
 import MangaDetail from './ShareScreen/MangaDetail';
 import ChapterDetail from './ShareScreen/ChapterDetail';
 import Lang from '../Language';
@@ -12,7 +11,6 @@ import ListMangaScreen from './ShareScreen/ListMangaScreen';
 
 export const Screens = new Map();
 Screens.set(Const.NAME_SCREEN.HOME, Home);
-Screens.set(Const.NAME_SCREEN.LIBRARY, Library);
 Screens.set(Const.NAME_SCREEN.MYPROFILE, MyProfile);
 Screens.set(Const.NAME_SCREEN.COMMUNITY, Community);
 Screens.set(Const.NAME_SCREEN.MANGA_DETAIL, MangaDetail);
@@ -34,25 +32,6 @@ export const StartApplication = async () => {
         bottomTab: {
           text: Lang.getByKey('home_title'),
           icon: require('../assets/icons/home.png')
-        }
-      }
-    }
-  };
-
-  const LibraryScreen = {
-    stack: {
-      id: Const.ID_SCREEN.LIBRARY,
-      children: [
-        {
-          component: {
-            name: Const.NAME_SCREEN.LIBRARY
-          }
-        }
-      ],
-      options: {
-        bottomTab: {
-          text: Lang.getByKey('category_title'),
-          icon: require('../assets/icons/library.png')
         }
       }
     }
@@ -100,19 +79,13 @@ export const StartApplication = async () => {
       id: 'ROOT',
       bottomTabs: {
         id: Const.ID_SCREEN.BOTTOM_TAB,
-        children: [HomeScreen, LibraryScreen, MyProFileScreen, CommunityScreen]
+        children: [HomeScreen, MyProFileScreen, CommunityScreen]
       }
     }
   });
 };
 
-export const pushDetailScreen = ({
-  componentId,
-  movieId,
-  elementId,
-  selectedTab,
-  manga
-}) => {
+export const pushDetailScreen = ({ componentId, movieId, elementId, selectedTab, manga }) => {
   Navigation.push(componentId, {
     component: {
       name: Const.NAME_SCREEN.MANGA_DETAIL,
@@ -120,21 +93,7 @@ export const pushDetailScreen = ({
         manga,
         componentId
       },
-      options: {
-        animations: {
-          push: {
-            waitForRender: true,
-            enabled: true,
-            content: {
-              alpha: {
-                from: 0,
-                to: 1,
-                duration: 250
-              }
-            }
-          }
-        },
-
+      //options: {
         // customTransition: {
         //   animations: [
         //     {
@@ -148,10 +107,20 @@ export const pushDetailScreen = ({
         //       interactivePop: true
         //     }
         //   ]
+        // animations: {
+        //   push: {
+        //     waitForRender: true,
+        //     enabled: true,
+        //     content: {
+        //       alpha: {
+        //         from: 0,
+        //         to: 1,
+        //         duration: 250
+        //       }
+        //     }
+        //   }
         // }
-
-        
-      }
+      //}
     }
   });
 };

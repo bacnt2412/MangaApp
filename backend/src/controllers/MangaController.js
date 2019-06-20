@@ -33,24 +33,24 @@ addNewManga = async (req, res) => {
   }
 };
 
-function addValueInObject(object, key, value) {
-  var res = {};
-  var textObject = JSON.stringify(object);
-  if (textObject === '{}') {
-    res = JSON.parse('{"' + key + '":"' + value + '"}');
-  } else {
-    res = JSON.parse(
-      '{' +
-        textObject.substring(1, textObject.length - 1) +
-        ',"' +
-        key +
-        '":"' +
-        value +
-        '"}'
-    );
-  }
-  return res;
-}
+// function addValueInObject(object, key, value) {
+//   var res = {};
+//   var textObject = JSON.stringify(object);
+//   if (textObject === '{}') {
+//     res = JSON.parse('{"' + key + '":"' + value + '"}');
+//   } else {
+//     res = JSON.parse(
+//       '{' +
+//         textObject.substring(1, textObject.length - 1) +
+//         ',"' +
+//         key +
+//         '":"' +
+//         value +
+//         '"}'
+//     );
+//   }
+//   return res;
+// }
 getMangaByIdCategory = async (req, res) => {
   try {
     const _id = req.body.idCate;
@@ -128,6 +128,22 @@ updateViewManga = async (req, res) => {
     res.status(404).json({ error });
   }
 };
+
+followManga = async (req, res) => {
+  try {
+    let idManga = req.body.idManga;
+    let idUser = req.decoded._id;
+    if (idManga && idUser) {
+      let result = await DbServices.followManga(idUser, idManga);
+      res.status(200).json({ message: result });
+    } else {
+      res.status(400).json({ error: 'Invalid request' });
+    }
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
+
 module.exports = {
   getAllManga,
   addNewManga,
@@ -135,5 +151,6 @@ module.exports = {
   getLatestManga,
   getMostViewManga,
   getMostFavoriteManga,
-  updateViewManga
+  updateViewManga,
+  followManga
 };
