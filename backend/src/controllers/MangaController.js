@@ -143,6 +143,56 @@ followManga = async (req, res) => {
     res.status(404).json({ error });
   }
 };
+unfollowManga = async (req, res) => {
+  try {
+    let idManga = req.body.idManga;
+    let idUser = req.decoded._id;
+    if (idManga && idUser) {
+      let result = await DbServices.unfollowManga(idUser, idManga);
+      res.status(200).json({ message: result });
+    } else {
+      res.status(400).json({ error: 'Invalid request' });
+    }
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
+
+updateHistoryManga = async (req, res) => {
+  try {
+    let idManga = req.body.idManga;
+    let idUser = req.decoded._id;
+    let idChapter = req.body.idChapter;
+    if (idManga && idUser) {
+      let result = await DbServices.updateHistoryManga(
+        idUser,
+        idManga,
+        idChapter
+      );
+      res.status(200).json({ message: result });
+    } else {
+      res.status(400).json({ error: 'Invalid request' });
+    }
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
+
+getListHistoryManga = async (req, res) => {
+  try {
+    let page = req.body.page;
+    let idUser = req.decoded._id;
+    if (idUser) {
+      if (!page) page = 1;
+      let listHistory = await DbServices.getListHistoryManga(idUser, page);
+      res.status(200).json({ listHistory });
+    } else {
+      res.status(400).json({ error: 'Invalid request' });
+    }
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
 
 module.exports = {
   getAllManga,
@@ -152,5 +202,8 @@ module.exports = {
   getMostViewManga,
   getMostFavoriteManga,
   updateViewManga,
-  followManga
+  followManga,
+  unfollowManga,
+  updateHistoryManga,
+  getListHistoryManga
 };

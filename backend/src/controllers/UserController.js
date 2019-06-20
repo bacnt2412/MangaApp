@@ -40,9 +40,30 @@ async function login(req, res) {
     if (userLogin) {
       let checkPassword = userLogin.comparePassword(password);
       if (checkPassword) {
-        let token = jwt.sign({ username: username, _id: userLogin._id }, settings.SECRET_KEY, {
-          expiresIn: '30d' // expires in 24 hours
-        });
+        let token = userLogin.token;
+        if (token) {
+          await jwt.verify(token, settings.SECRET_KEY, async (err, decoded) => {
+            if (err) {
+              token = await jwt.sign(
+                { username: username, _id: userLogin._id },
+                settings.SECRET_KEY,
+                {
+                  expiresIn: '72h' // expires in 24 hours
+                }
+              );
+            }
+          });
+        } else {
+          token = await jwt.sign(
+            { username: username, _id: userLogin._id },
+            settings.SECRET_KEY,
+            {
+              expiresIn: '72h' // expires in 24 hours
+            }
+          );
+          userLogin.token = token;
+          userLogin.save();
+        }
         // return the JWT token for the future API calls
         res.json({
           success: true,

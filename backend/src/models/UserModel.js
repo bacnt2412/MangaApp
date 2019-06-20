@@ -16,6 +16,10 @@ const User = new Schema({
     type: String,
     required: true
   },
+  token: {
+    type: String,
+    default: ''
+  },
   name: {
     type: String,
     required: true,
@@ -30,10 +34,6 @@ const User = new Schema({
     default: 'system'
   },
   listIdMangaFollow: {
-    type: String,
-    default: ''
-  },
-  listIdMangaHistory: {
     type: String,
     default: ''
   },
