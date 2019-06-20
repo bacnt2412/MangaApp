@@ -118,7 +118,7 @@ class MangaDetail extends PureComponent {
 
     const avatar = (
       <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
-        <Navigation.Element resizeMode="cover" elementId="MANGA_DETAIL_AVATAR">
+        {/* <Navigation.Element resizeMode="cover" elementId="MANGA_DETAIL_AVATAR"> */}
           <TouchableWithoutFeedback onPress={this.onPressAvatar}>
             <View style={styles.avatar_container}>
               {manga && manga.thumbnail && (
@@ -130,7 +130,7 @@ class MangaDetail extends PureComponent {
               )}
             </View>
           </TouchableWithoutFeedback>
-        </Navigation.Element>
+        {/* </Navigation.Element> */}
       </View>
     );
 

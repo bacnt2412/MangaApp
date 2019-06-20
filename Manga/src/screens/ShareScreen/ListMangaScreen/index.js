@@ -37,10 +37,7 @@ class ListMangaScreen extends PureComponent {
   fucGetMoreData = async () => {
     this.setState({ isLoadMore: true });
     const { listManga } = this.state;
-    let lastIdManga =
-      listManga && listManga.length > 0
-        ? listManga[listManga.length - 1]
-        : null;
+    let lastIdManga = listManga && listManga.length > 0 ? listManga[listManga.length - 1] : null;
     let res = await Api.getListMangaByIdCategory({
       idCate: this.props.idCategory,
       lastIdManga
@@ -59,18 +56,11 @@ class ListMangaScreen extends PureComponent {
     return (
       <View style={{ flex: 1 }}>
         {isFirstLoading ? (
-          <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Loading />
           </View>
-        ) : (
-          <ListManga
-            listManga={listManga}
-            getMoreData={this.fucGetMoreData}
-            isLoadMore={isLoadMore}
-            componentId={Const.ID_SCREEN.LIBRARY}
-          />
-        )}
+        ) : null}
+        <ListManga listManga={listManga} getMoreData={this.fucGetMoreData} componentId={Const.ID_SCREEN.HOME} />
       </View>
     );
   }

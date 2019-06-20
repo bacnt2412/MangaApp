@@ -1,12 +1,5 @@
-import React, { Component } from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ActivityIndicator
-} from 'react-native';
+import React from 'react';
+import { View, Dimensions } from 'react-native';
 import { TabView, PagerScroll, TabBar } from 'react-native-tab-view';
 import BaseScreen from '../../components/BaseScreen';
 import ListManga from '../../components/ListManga';
@@ -15,6 +8,7 @@ import Api from '../../services/api.js';
 import Lang from '../../Language';
 import styles from './styles';
 import Const from '../../utils/const';
+import ListCategory from './ListCategory';
 
 export default class Home extends BaseScreen {
   static options = {
@@ -39,7 +33,11 @@ export default class Home extends BaseScreen {
           key: 'favorite',
           title: Lang.getByKey('home_most_favorite_title_tab')
         },
-        { key: 'view', title: Lang.getByKey('home_most_view_title_tab') }
+        { key: 'view', title: Lang.getByKey('home_most_view_title_tab') },
+        {
+          key: 'category',
+          title: Lang.getByKey('home_category_title_tab')
+        }
       ],
       listLatestManga: [],
       listMostFavoriteManga: [],
@@ -120,7 +118,6 @@ export default class Home extends BaseScreen {
   getMostViewManga = async () => {
     this.setState({ isMostViewFirstLoading: true });
     let res = await Api.getMostViewManga();
-
     if (res && res.status === 200) {
       this.setState({ listMostViewManga: res.data.listManga });
     } else if (res && res.error && res.error.response.status === 403) {
@@ -133,9 +130,7 @@ export default class Home extends BaseScreen {
     this.setState({ isLoadMoreMostView: true });
     let { pageMostView, listMostViewManga } = this.state;
     pageMostView++;
-
     let res = await Api.getLatestManga({ page: pageMostView });
-
     if (res && res.status === 200) {
       listMostViewManga = [...listMostViewManga, ...res.data.listManga];
     } else if (res && res.error && res.error.response.status === 403) {
@@ -148,28 +143,15 @@ export default class Home extends BaseScreen {
     });
   };
 
-  renderListManga(listData, isLoadMore, fucGetMoreData) {
-    return (
-      <ListManga
-        listManga={listData}
-        getMoreData={fucGetMoreData}
-        isLoadMore={isLoadMore}
-        componentId={Const.ID_SCREEN.HOME}
-      />
-    );
-  }
-
   renderContenOfTabView = (listData, isLoading, isLoadMore, fucGetMoreData) => {
     return (
       <View style={{ flex: 1 }}>
         {isLoading ? (
-          <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Loading />
           </View>
-        ) : (
-          this.renderListManga(listData, isLoadMore, fucGetMoreData)
-        )}
+        ) : null}
+        <ListManga listManga={listData} getMoreData={fucGetMoreData} componentId={Const.ID_SCREEN.HOME} />
       </View>
     );
   };
@@ -202,14 +184,7 @@ export default class Home extends BaseScreen {
   };
 
   renderTabBar = props => (
-    <TabBar
-      {...props}
-      indicatorStyle={styles.indicator}
-      style={styles.tabbar}
-      tabStyle={styles.tab}
-      labelStyle={styles.label}
-      scrollEnabled={false}
-    />
+    <TabBar {...props} indicatorStyle={styles.indicator} style={styles.tabbar} tabStyle={styles.tab} labelStyle={styles.label} scrollEnabled={false} />
   );
 
   renderContent() {
@@ -242,6 +217,8 @@ export default class Home extends BaseScreen {
                   this.state.isLoadMoreMostView,
                   this.getMoreMostView
                 );
+              case 'category':
+                return <ListCategory />;
             }
           }}
           onIndexChange={this.onChangeTab}

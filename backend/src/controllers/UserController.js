@@ -40,7 +40,7 @@ async function login(req, res) {
     if (userLogin) {
       let checkPassword = userLogin.comparePassword(password);
       if (checkPassword) {
-        let token = jwt.sign({ username: username }, settings.SECRET_KEY, {
+        let token = jwt.sign({ username: username, _id: userLogin._id }, settings.SECRET_KEY, {
           expiresIn: '30d' // expires in 24 hours
         });
         // return the JWT token for the future API calls
