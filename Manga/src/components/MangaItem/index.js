@@ -4,6 +4,7 @@ import FastImage from 'react-native-fast-image';
 import Lang from '../../Language';
 import { pushDetailScreen } from '../../screens';
 import { Navigation } from 'react-native-navigation';
+import images from '../../assets/images';
 
 class MangaItem extends PureComponent {
   constructor(props) {
@@ -13,10 +14,14 @@ class MangaItem extends PureComponent {
 
   render() {
     const { item, componentId, elementId } = this.props;
+    const thumbmail =
+      item && item.thumbnail && item.thumbnail.includes('http')
+        ? { uri: item.thumbnail }
+        : images.no_image;
     return (
       <TouchableOpacity
         onPress={e => {
-          pushDetailScreen({ componentId, elementId, manga: item });
+          pushDetailScreen({ componentId, elementId, manga: item },e);
         }}
         style={{
           flex: 1,
@@ -28,9 +33,8 @@ class MangaItem extends PureComponent {
           borderColor: '#ddd'
         }}>
         <Navigation.Element elementId={`manga_` + item._id} resizeMode="cover">
-          <View>
             <FastImage
-              source={{ uri: item.thumbnail }}
+              source={thumbmail}
               style={{
                 width: 100,
                 height: 120,
@@ -39,14 +43,7 @@ class MangaItem extends PureComponent {
               }}
               resizeMode={FastImage.resizeMode.cover}
             />
-          </View>
         </Navigation.Element>
-
-        {/* <FastImage
-          source={{ uri: item.thumbnail }}
-          style={{ width: 100, height: 120, borderRadius: 5, borderWidth: 0.3 }}
-          resizeMode={FastImage.resizeMode.cover}
-        /> */}
         <View style={{ flex: 1, paddingTop: 5, paddingLeft: 10 }}>
           <Text
             style={{

@@ -2,6 +2,11 @@ import { Platform } from 'react-native';
 import Funcs from './funcs';
 
 export default class Const {
+
+  static APP = {
+    NAME: 'Songoku'
+  }
+
   static NAME_SCREEN = {
     HOME: 'bacnt.Home',
     MYPROFILE: 'bacnt.MyProfile',

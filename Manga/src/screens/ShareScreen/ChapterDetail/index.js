@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { View, Text, FlatList, Dimensions } from 'react-native';
 import Lang from '../../../Language';
 import Api from '../../../services/api';
-import FastItem from 'react-native-fast-image';
-import Loading from '../../../components/Loading';
+import FastImage from 'react-native-fast-image';
+import { Loading } from '../../../components';
 import Utils from '../../../utils/utils';
 
 class ChapterDetail extends PureComponent {
@@ -52,7 +52,7 @@ class ChapterDetail extends PureComponent {
           }
         });
       }
-      console.log('#########################', data);
+      console.log('### getListImageByIdChapter: ', data);
 
       this.setState({ listImage: res.data.data });
     }
@@ -134,6 +134,8 @@ class ImageItem extends PureComponent {
     const { image, isLoading } = this.props;
     const { width, height } = Dimensions.get('window');
     const heightItem = width * this.state.ratio;
+    console.log('############### image',image);
+
     return (
       <View
         style={{
@@ -152,18 +154,22 @@ class ImageItem extends PureComponent {
           }}>
           <Loading />
         </View>
-        <FastItem
+        <FastImage
           source={{ uri: image }}
           style={{
             width: width,
             height: heightItem
           }}
-          resizeMode={FastItem.resizeMode.contain}
           onLoad={evt => {
             let ratio = evt.nativeEvent.height / evt.nativeEvent.width;
             this.setState({ ratio });
           }}
+          onError={(error) => {
+            console.log('############### onError',error);
+            this.setState({ isLoading: false });
+          }}
           onLoadEnd={() => {
+            console.log('############### onLoadEnd');
             this.setState({ isLoading: false });
           }}
         />

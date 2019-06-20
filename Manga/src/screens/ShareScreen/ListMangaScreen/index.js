@@ -1,9 +1,8 @@
 import React, { PureComponent } from 'react';
 import { View, Text } from 'react-native';
 import Api from '../../../services/api';
-import ListManga from '../../../components/ListManga';
 import Const from '../../../utils/const';
-import Loading from '../../../components/Loading';
+import { Loading, ListManga } from '../../../components';
 
 class ListMangaScreen extends PureComponent {
   constructor(props) {

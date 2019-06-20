@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
 import {
-  ScrollView,
-  StyleSheet,
-  Text,
   View,
-  Dimensions,
-  ActivityIndicator
+  Dimensions
 } from 'react-native';
 import { TabView, PagerScroll, TabBar } from 'react-native-tab-view';
+import { ListManga, Loading } from '../../components';
 import BaseScreen from '../../components/BaseScreen';
-import ListManga from '../../components/ListManga';
-import Loading from '../../components/Loading';
 import Api from '../../services/api.js';
 import Lang from '../../Language';
 import styles from './styles';
 import Const from '../../utils/const';
+import Analytic from '../../utils/analytic';
 
 export default class Home extends BaseScreen {
   static options = {
@@ -57,6 +53,7 @@ export default class Home extends BaseScreen {
   }
 
   componentDidMount() {
+    Analytic.sendScreen('HomeScreen');
     this.getLatestManga();
   }
 

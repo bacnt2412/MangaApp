@@ -135,20 +135,20 @@ export const pushDetailScreen = ({
           }
         },
 
-        customTransition: {
-          animations: [
-            {
-              type: 'sharedElement',
-              fromId: elementId,
-              toId: 'MANGA_DETAIL_AVATAR',
-              startDelay: 0,
-              springVelocity: 0.9,
-              springDamping: 0.9,
-              duration: 500 * Platform.select({ ios: 0.001, android: 1 }),
-              interactivePop: true
-            }
-          ]
-        }
+        // customTransition: {
+        //   animations: [
+        //     {
+        //       type: 'sharedElement',
+        //       fromId: elementId,
+        //       toId: 'MANGA_DETAIL_AVATAR',
+        //       startDelay: 0,
+        //       springVelocity: 0.9,
+        //       springDamping: 0.9,
+        //       duration: 500 * Platform.select({ ios: 0.001, android: 1 }),
+        //       interactivePop: true
+        //     }
+        //   ]
+        // }
 
         
       }

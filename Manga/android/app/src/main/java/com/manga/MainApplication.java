@@ -19,6 +19,8 @@ import com.reactnativenavigation.react.ReactGateway;
 import com.merryjs.PhotoViewer.MerryPhotoViewPackage;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.BV.LinearGradient.LinearGradientPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class MainApplication extends NavigationApplication {
         // Add additional packages you require here
         // No need to add RnnPackage and MainReactPackage
         return Arrays.<ReactPackage>asList(
+            new RNDeviceInfo(),
             new RNGestureHandlerPackage(),
             new ReanimatedPackage(),
             new LottiePackage(),

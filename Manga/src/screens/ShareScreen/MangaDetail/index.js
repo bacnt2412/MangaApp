@@ -2,9 +2,6 @@ import React, { PureComponent } from 'react';
 import {
   View,
   Text,
-  Dimensions,
-  ScrollView,
-  ImageBackground,
   Animated,
   TouchableWithoutFeedback,
   StyleSheet
@@ -14,11 +11,11 @@ import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
-import CountView from '../../../components/CountView';
-import TitleWithIcon from '../../../components/TitleWithIcon';
+import { CountView, TitleWithIcon, ListChapter } from '../../../components';
 import ViewMoreText from 'react-native-view-more-text';
-import ListChapter from '../../../components/ListChapter';
 import styles from './styles';
+import Analytic from '../../../utils/analytic';
+import images from '../../../assets/images.js';
 
 const GUTTER = 8 * 2;
 const TOOLBAR_HEIGHT = 56;
@@ -84,6 +81,10 @@ class MangaDetail extends PureComponent {
     };
   }
 
+  componentDidMount() {
+    Analytic.sendScreen('DetailScreen');
+  }
+
   onPressAvatar = () => {
     this.setState({ visible: true });
   };
@@ -101,12 +102,15 @@ class MangaDetail extends PureComponent {
 
   render() {
     const { manga } = this.props;
-
+    const thumbmail =
+      manga && manga.thumbnail && manga.thumbnail.includes('http')
+        ? { uri: manga.thumbnail }
+        : images.no_image;
     const cover = (
       <Animated.View style={[styles.cover_container, this.animatedHeroStyles]}>
         <FastImage
           resizeMode="cover"
-          source={{ uri: manga && manga.thumbnail }}
+          source={thumbmail}
           style={styles.cover_image}
         />
         <LinearGradient
@@ -125,7 +129,7 @@ class MangaDetail extends PureComponent {
                 <FastImage
                   resizeMode="cover"
                   style={styles.avatar_image}
-                  source={{ uri: manga.thumbnail }}
+                  source={thumbmail}
                 />
               )}
             </View>
@@ -182,7 +186,7 @@ class MangaDetail extends PureComponent {
     );
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
         <Animated.ScrollView
           style={{ flex: 1 }}
           testID="MOVIE_SCREEN"
