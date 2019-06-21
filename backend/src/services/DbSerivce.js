@@ -162,6 +162,7 @@ unfollowManga = async (idUser, idManga) => {
       return item != idManga;
     });
   }
+  
   let update = await UserModel.findOneAndUpdate(
     { _id: idUser },
     { $set: { listIdMangaFollow: JSON.stringify(listMangaFollow) } }
@@ -176,13 +177,14 @@ updateHistoryManga = async (idUser, idManga, idChapter) => {
       idmanga: idManga
     },
     { $set: { idchapter: idChapter, updated: Date.now() } },
-    { upsert: true }
+    { upsert: true,new: true }
   );
 
   return await history;
 };
 
 getListHistoryManga = async (idUser, page) => {
+  console.log(' ##################### idUser',idUser)
   let listHistory = await HistoryMangaModel.find({ iduser: idUser })
     .sort({ updated: -1 })
     .skip((page - 1) * Settings.PAGE_LIMIT)

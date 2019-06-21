@@ -124,13 +124,16 @@ updateViewManga = async (req, res) => {
     let idManga = req.body.idManga;
     let idUser = req.decoded._id;
     let idChapter = req.body.idChapter;
-
-    let result = await DbServices.updateHistoryManga(
-      idUser,
-      idManga,
-      idChapter
-    );
+    if (idUser && idManga && idChapter) {
+      let result = await DbServices.updateHistoryManga(
+        idUser,
+        idManga,
+        idChapter
+      );
+      console.log('################ result', result);
+    }
     result = await DbServices.updateViewManga(idManga);
+
     res.status(200).json({ result });
   } catch (error) {
     res.status(404).json({ error });
@@ -151,6 +154,7 @@ followManga = async (req, res) => {
     res.status(404).json({ error });
   }
 };
+
 unfollowManga = async (req, res) => {
   try {
     let idManga = req.body.idManga;
@@ -171,6 +175,9 @@ updateHistoryManga = async (req, res) => {
     let idManga = req.body.idManga;
     let idUser = req.decoded._id;
     let idChapter = req.body.idChapter;
+
+    console.log('################# idUser', idUser);
+
     if (idManga && idUser) {
       let result = await DbServices.updateHistoryManga(
         idUser,
@@ -190,6 +197,7 @@ getListHistoryManga = async (req, res) => {
   try {
     let page = req.body.page;
     let idUser = req.decoded._id;
+    console.log('################# idUser', idUser);
     if (idUser) {
       if (!page) page = 1;
       let listHistory = await DbServices.getListHistoryManga(idUser, page);
