@@ -124,13 +124,13 @@ updateViewManga = async (req, res) => {
     let idManga = req.body.idManga;
     let idUser = req.decoded._id;
     let idChapter = req.body.idChapter;
-    
+
     let result = await DbServices.updateHistoryManga(
       idUser,
       idManga,
       idChapter
     );
-    let result = await DbServices.updateViewManga(idManga);
+    result = await DbServices.updateViewManga(idManga);
     res.status(200).json({ result });
   } catch (error) {
     res.status(404).json({ error });
