@@ -122,6 +122,14 @@ getMostFavoriteManga = async (req, res) => {
 updateViewManga = async (req, res) => {
   try {
     let idManga = req.body.idManga;
+    let idUser = req.decoded._id;
+    let idChapter = req.body.idChapter;
+    
+    let result = await DbServices.updateHistoryManga(
+      idUser,
+      idManga,
+      idChapter
+    );
     let result = await DbServices.updateViewManga(idManga);
     res.status(200).json({ result });
   } catch (error) {

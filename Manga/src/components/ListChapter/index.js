@@ -78,8 +78,11 @@ class ListChapter extends PureComponent {
     });
   };
 
-  updateVieManga = async () => {
-    let res = await Api.updateViewManga({ idManga: this.state.idManga });
+  updateVieManga = async idChapter => {
+    let res = await Api.updateViewManga({
+      idManga: this.state.idManga,
+      idChapter
+    });
     console.log(' ## updateViewManga ', res);
   };
 
@@ -104,7 +107,7 @@ class ListChapter extends PureComponent {
               }
             }
           });
-          this.updateVieManga();
+          this.updateVieManga(item._id);
         }}>
         <Text style={styles.item_name} numberOfLines={1}>
           {item.name}
