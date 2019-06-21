@@ -1,8 +1,3 @@
-import React, { Component } from 'react';
-import {
-  View,
-  Dimensions
-} from 'react-native';
 import React from 'react';
 import { View, Dimensions } from 'react-native';
 import { TabView, PagerScroll, TabBar } from 'react-native-tab-view';

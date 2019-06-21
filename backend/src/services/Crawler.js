@@ -35,12 +35,7 @@ var getListProxy = new Crawler({
         }
         let item = listNodeProxy[index];
 
-        listProxy.push(
-          'http://' +
-            $(item).find('td')[0].children[0].data +
-            ':' +
-            $(item).find('td')[1].children[0].data
-        );
+        listProxy.push('http://' + $(item).find('td')[0].children[0].data + ':' + $(item).find('td')[1].children[0].data);
       }
       console.log('################ listProxy', listProxy);
 
@@ -70,9 +65,7 @@ var NET_TRUYEN_Image_get_list_Crawler = new Crawler({
       console.log('Error NET_TRUYEN_Image_get_list_Crawler: ', error);
     } else {
       let $ = res.$;
-      let allNodeimage = $(
-        '#ctl00_divCenter > div > div.reading-detail.box_doc > div.page-chapter'
-      );
+      let allNodeimage = $('#ctl00_divCenter > div > div.reading-detail.box_doc > div.page-chapter');
       for (let index = 0; index < allNodeimage.length; index++) {
         try {
           const item = allNodeimage[index];
@@ -125,29 +118,19 @@ let NET_TRUYEN_Manga_get_info_Crawler = new Crawler({
           .find('div.col-xs-8.col-info > ul > li.author.row > p.col-xs-8')
           .text();
         let status = $(parent)
-          .find(
-            '#item-detail > div.detail-info > div > div.col-xs-8.col-info > ul > li.status.row > p.col-xs-8'
-          )
+          .find('#item-detail > div.detail-info > div > div.col-xs-8.col-info > ul > li.status.row > p.col-xs-8')
           .text();
         let category = $(parent)
-          .find(
-            '#item-detail > div.detail-info > div > div.col-xs-8.col-info > ul > li.kind.row > p.col-xs-8'
-          )
+          .find('#item-detail > div.detail-info > div > div.col-xs-8.col-info > ul > li.kind.row > p.col-xs-8')
           .text();
         let viewers = $(parent)
-          .find(
-            '#item-detail > div.detail-info > div > div.col-xs-8.col-info > ul > li:nth-child(4) > p.col-xs-8'
-          )
+          .find('#item-detail > div.detail-info > div > div.col-xs-8.col-info > ul > li:nth-child(4) > p.col-xs-8')
           .text();
         let rating = $(parent)
-          .find(
-            '#item-detail > div.detail-info > div > div.col-xs-8.col-info > div.row.rating > div:nth-child(1) > div'
-          )
+          .find('#item-detail > div.detail-info > div > div.col-xs-8.col-info > div.row.rating > div:nth-child(1) > div')
           .attr('data-rating');
         let flower = $(parent)
-          .find(
-            '#item-detail > div.detail-info > div > div.col-xs-8.col-info > div.follow > span > b'
-          )
+          .find('#item-detail > div.detail-info > div > div.col-xs-8.col-info > div.follow > span > b')
           .text();
         let thumbnail = $(parent)
           .find('.col-xs-4.col-image')
@@ -276,9 +259,7 @@ var NET_TRUYEN_Category_get_list_Crawler = new Crawler({
       console.log(error);
     } else {
       let $ = res.$;
-      let listNodeCategory = $(
-        '#ctl00_divRight > div.box.darkBox.genres.hidden-sm.hidden-xs.Module.Module-179 > div > ul > li'
-      );
+      let listNodeCategory = $('#ctl00_divRight > div.box.darkBox.genres.hidden-sm.hidden-xs.Module.Module-179 > div > ul > li');
       for (let index = 0; index < listNodeCategory.length; index++) {
         const item = listNodeCategory[index];
         let name = $(item)
@@ -327,20 +308,16 @@ function sleep(ms) {
 
 async function startGetAllCategory() {
   try {
-    let listCate = await NET_TRUYEN_Category_get_list(
-      'http://www.nettruyen.com/tim-truyen'
-    );
+    let listCate = await NET_TRUYEN_Category_get_list('http://www.nettruyen.com/tim-truyen');
     DbService.addNewCategory(listCate);
   } catch (error) {}
 }
 async function startCrawNewData() {
-  console.log(
-    '============================================================= Start ============================================================='
-  );
+  console.log('============================================================= Start =============================================================');
   try {
     let list = await NET_TRUYEN_Manga_get_list([
       'http://www.nettruyen.com/',
-      'http://www.nettruyen.com/?page=2',
+      'http://www.nettruyen.com/?page=2'
       // 'http://www.nettruyen.com/?page=3',
       // 'http://www.nettruyen.com/?page=4',
       // 'http://www.nettruyen.com/?page=5',
@@ -383,10 +360,7 @@ async function startCrawNewData() {
       //Existed
       if (result) {
         let listChapter = detailMangaOnSite.listChapter;
-        listChapterNew = await DbService.addListChapter(
-          listChapter,
-          result._id
-        );
+        listChapterNew = await DbService.addListChapter(listChapter, result._id);
       } else {
         console.log('################# Add New Manga', detailMangaOnSite);
         listChapterNew = await DbService.addNewManga(detailMangaOnSite);
@@ -406,26 +380,20 @@ async function startCrawNewData() {
   } catch (error) {
     console.log('####################### Error: ', error);
   }
-  console.log(
-    '======================================= End ' +
-      new Date().getHours() +
-      ' ===================================='
-  );
+  console.log('======================================= End ' + new Date().getHours() + ' ====================================');
 }
 
 start = async () => {
   try {
-    console.log(
-      '********************** Start Crawler Data ************************'
-    );
-    // startGetAllCategory();
-    // setTimeout(async () => {
-    //   while (true) {
-    //     await startCrawNewData();
-    //     //sleep 3h.
-    //     await sleep(3600 * 1000 * 2);
-    //   }
-    // }, 1000);
+    console.log('********************** Start Crawler Data ************************');
+    startGetAllCategory();
+    setTimeout(async () => {
+      while (true) {
+        await startCrawNewData();
+        //sleep 3h.
+        await sleep(3600 * 1000 * 2);
+      }
+    }, 1000);
   } catch (error) {
     console.log('############################ ERROR: ', error);
   }

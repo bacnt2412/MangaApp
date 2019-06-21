@@ -3,6 +3,7 @@ package com.manga;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.realm.react.RealmReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.dylanvann.fastimage.FastImageViewPackage;
 import com.airbnb.android.react.lottie.LottiePackage;
@@ -61,7 +62,8 @@ public class MainApplication extends NavigationApplication {
             new FastImageViewPackage(),
             new MerryPhotoViewPackage(),
             new LinearGradientPackage(),
-            new VectorIconsPackage()
+            new VectorIconsPackage(),
+            new RealmReactPackage()
             // eg. new VectorIconsPackage()
         );
     }
