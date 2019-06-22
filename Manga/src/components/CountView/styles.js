@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: '100',
-    fontSize: 17,
+    fontSize: 14,
     color: '#B5B5B5',
   }
 });

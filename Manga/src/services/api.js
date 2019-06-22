@@ -126,4 +126,16 @@ export default class Api {
     let url = Settings.SERVER_API + 'manga/get-manga-by-id-category';
     return await this.post(url, data);
   };
+
+  static getHistoryManga = async (data) => {
+    let url = Settings.SERVER_API + 'manga/get-history-manga';
+    return await this.post(url, data);
+  };
+
+  static getFollowManga = async (data) => {
+    let url = Settings.SERVER_API + 'manga/get-follow-manga';
+    return await this.post(url, data);
+  };
+
+
 }

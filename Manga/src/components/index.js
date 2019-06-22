@@ -4,6 +4,9 @@ import ListManga from './ListManga';
 import Loading from './Loading';
 import MangaItem from './MangaItem';
 import TitleWithIcon from './TitleWithIcon';
+import HeartAnimation from './HeartAnimation';
+import DownloadIcon from './DownloadIcon';
+
 
 export  {
   CountView,
@@ -11,5 +14,7 @@ export  {
   ListManga,
   Loading,
   MangaItem,
-  TitleWithIcon
+  TitleWithIcon,
+  HeartAnimation,
+  DownloadIcon
 };

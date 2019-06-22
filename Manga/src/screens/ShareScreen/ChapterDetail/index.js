@@ -71,7 +71,20 @@ class ChapterDetail extends PureComponent {
       lastIdImage
     });
     if (res && res.status === 200) {
-      this.setState({ listImage: [...listImage, ...res.data.data] });
+      let data = res.data.data;
+      if (data.length > 0) {
+        res.data.data.map((item, index) => {
+          if (item.link.includes('proxy.truyen.cloud')) {
+            let newLink = Utils.String.getFromBetween(
+              item.link,
+              'url=',
+              '&hash='
+            );
+            data[index].link = newLink;
+          }
+        });
+      }
+      this.setState({ listImage: [...listImage, ...data] });
     }
     this.setState({ isLoadMore: false });
   };

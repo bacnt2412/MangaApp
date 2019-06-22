@@ -33,43 +33,19 @@ addNewManga = async (req, res) => {
   }
 };
 
-// function addValueInObject(object, key, value) {
-//   var res = {};
-//   var textObject = JSON.stringify(object);
-//   if (textObject === '{}') {
-//     res = JSON.parse('{"' + key + '":"' + value + '"}');
-//   } else {
-//     res = JSON.parse(
-//       '{' +
-//         textObject.substring(1, textObject.length - 1) +
-//         ',"' +
-//         key +
-//         '":"' +
-//         value +
-//         '"}'
-//     );
-//   }
-//   return res;
-// }
 getMangaByIdCategory = async (req, res) => {
   try {
     const _id = req.body.idCate;
-    const lastIdManga = req.body.lastIdManga;
+    let page = req.body.page ? req.body.page : 1;
     const cate = await Category.findById({ _id });
     if (cate) {
       const regex = '\\b' + cate.name + '\\b';
-      //const listManga = await Manga.find({"category": { $regex: regex }});
       let filter = {
         category: { $regex: regex }
       };
-      if (lastIdManga) {
-        filter = {
-          category: { $regex: regex },
-          _id: { $lt: lastIdManga }
-        };
-      }
       let listManga = await Manga.find(filter)
         .sort({ _id: -1 })
+        .skip((page - 1) * settings.PAGE_LIMIT)
         .limit(settings.PAGE_LIMIT);
       res.status(200).json({ listManga });
     } else {
@@ -130,7 +106,7 @@ updateViewManga = async (req, res) => {
         idManga,
         idChapter
       );
-      console.log('################ result', result);
+      console.log('############## result',result)
     }
     result = await DbServices.updateViewManga(idManga);
 
@@ -176,8 +152,6 @@ updateHistoryManga = async (req, res) => {
     let idUser = req.decoded._id;
     let idChapter = req.body.idChapter;
 
-    console.log('################# idUser', idUser);
-
     if (idManga && idUser) {
       let result = await DbServices.updateHistoryManga(
         idUser,
@@ -197,11 +171,27 @@ getListHistoryManga = async (req, res) => {
   try {
     let page = req.body.page;
     let idUser = req.decoded._id;
-    console.log('################# idUser', idUser);
+    console.log('### ',idUser)
     if (idUser) {
       if (!page) page = 1;
-      let listHistory = await DbServices.getListHistoryManga(idUser, page);
-      res.status(200).json({ listHistory });
+      let listManga = await DbServices.getListHistoryManga(idUser, page);
+      res.status(200).json({ listManga });
+    } else {
+      res.status(400).json({ error: 'Invalid request' });
+    }
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
+
+getFollowManga = async (req, res) => {
+  try {
+    let page = req.body.page;
+    let idUser = req.decoded._id;
+    if (idUser) {
+      if (!page) page = 1;
+      let listManga = await DbServices.getFollowManga(idUser, page);
+      res.status(200).json({ listManga });
     } else {
       res.status(400).json({ error: 'Invalid request' });
     }
@@ -221,5 +211,6 @@ module.exports = {
   followManga,
   unfollowManga,
   updateHistoryManga,
-  getListHistoryManga
+  getListHistoryManga,
+  getFollowManga
 };

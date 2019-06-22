@@ -21,7 +21,7 @@ class MangaItem extends PureComponent {
     return (
       <TouchableOpacity
         onPress={e => {
-          pushDetailScreen({ componentId, elementId, manga: item },e);
+          pushDetailScreen({ componentId, elementId, manga: item }, e);
         }}
         style={{
           flex: 1,
@@ -32,18 +32,16 @@ class MangaItem extends PureComponent {
           borderRadius: 5,
           borderColor: '#ddd'
         }}>
-        <Navigation.Element elementId={`manga_` + item._id} resizeMode="cover">
-            <FastImage
-              source={thumbmail}
-              style={{
-                width: 100,
-                height: 120,
-                borderRadius: 5,
-                borderWidth: 0.3
-              }}
-              resizeMode={FastImage.resizeMode.cover}
-            />
-        </Navigation.Element>
+        <FastImage
+          source={thumbmail}
+          style={{
+            width: 100,
+            height: 120,
+            borderRadius: 5,
+            borderWidth: 0.3
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
         <View style={{ flex: 1, paddingTop: 5, paddingLeft: 10 }}>
           <Text
             style={{
@@ -72,12 +70,21 @@ class MangaItem extends PureComponent {
             {':  ' + item.category}
           </Text>
           <View style={{ flex: 1, flexDirection: 'row' }}>
-            <Text style={{ fontSize: 14 }} numberOfLines={1}>
-              <Text style={{ fontWeight: '600' }}>
-                {Lang.getByKey('manga_item_latest_chapter')}
+            {item.readChapter ? (
+              <Text style={{ fontSize: 14 }} numberOfLines={1}>
+                <Text style={{ fontWeight: '600' }}>
+                  {Lang.getByKey('manga_item_chapter')}
+                </Text>
+                {':  ' + item.readChapter.name}
               </Text>
-              {':  ' + item.latestChapter}
-            </Text>
+            ) : (
+              <Text style={{ fontSize: 14 }} numberOfLines={1}>
+                <Text style={{ fontWeight: '600' }}>
+                  {Lang.getByKey('manga_item_latest_chapter')}
+                </Text>
+                {':  ' + item.latestChapter}
+              </Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>

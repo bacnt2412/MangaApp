@@ -3,7 +3,7 @@ const MangaModel = require('../models/MangaModel');
 const ChapterModel = require('../models/ChapterModel');
 const ImageChapterModel = require('../models/ImageChapterModel');
 const HistoryMangaModel = require('../models/HistoryMangaModel');
-
+const Utils = require('../utils/utils');
 const UserModel = require('../models/UserModel');
 const Settings = require('../config/settings');
 
@@ -162,12 +162,28 @@ unfollowManga = async (idUser, idManga) => {
       return item != idManga;
     });
   }
-  
+
   let update = await UserModel.findOneAndUpdate(
     { _id: idUser },
     { $set: { listIdMangaFollow: JSON.stringify(listMangaFollow) } }
   );
   return update ? true : fasle;
+};
+
+getFollowManga = async (idUser, page) => {
+  let userData = await UserModel.findOne({ _id: idUser });
+  let listIdFollowManga = JSON.parse(userData.listIdMangaFollow);
+  listIdFollowManga = listIdFollowManga.reverse();
+  listIdFollowManga = listIdFollowManga.slice(
+    (page - 1) * Settings.PAGE_LIMIT,
+    page * Settings.PAGE_LIMIT
+  );
+  let listManga = [];
+  for (let idManga of listIdFollowManga) {
+    let manga = await MangaModel.findOne({ _id: idManga });
+    listManga.push(manga);
+  }
+  return listManga;
 };
 
 updateHistoryManga = async (idUser, idManga, idChapter) => {
@@ -177,19 +193,28 @@ updateHistoryManga = async (idUser, idManga, idChapter) => {
       idmanga: idManga
     },
     { $set: { idchapter: idChapter, updated: Date.now() } },
-    { upsert: true,new: true }
+    { upsert: true, new: true }
   );
-
   return await history;
 };
 
 getListHistoryManga = async (idUser, page) => {
-  console.log(' ##################### idUser',idUser)
   let listHistory = await HistoryMangaModel.find({ iduser: idUser })
     .sort({ updated: -1 })
     .skip((page - 1) * Settings.PAGE_LIMIT)
     .limit(Settings.PAGE_LIMIT);
-  return listHistory;
+  let listIdChapter = listHistory.map(item => {
+    return item.idchapter;
+  });
+  let listMangaHistory = [];
+  for (let item of listHistory) {
+    let manga = await MangaModel.findOne({ _id: item.idmanga });
+    let chapter = await ChapterModel.findOne({ _id: item.idchapter });
+    manga = Utils.Object.addValueInObject(manga, 'readChapter', chapter);
+    listMangaHistory.push(manga);
+  }
+
+  return listMangaHistory;
 };
 
 module.exports = {
@@ -205,5 +230,6 @@ module.exports = {
   followManga,
   unfollowManga,
   updateHistoryManga,
-  getListHistoryManga
+  getListHistoryManga,
+  getFollowManga
 };

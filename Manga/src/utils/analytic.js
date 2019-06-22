@@ -32,16 +32,6 @@ export default class Analytic {
     Analytic.getInstance().send(screenView);
   }
 
-  /*
-    event(category, action, label, value, experiment)
-  */
-  // static sendEvent(event) {
-  //   Funcs.log('Send event', event);
-  //   var { category, action, label, value, experiment } = event;
-  //   let gaEvent = new Hits.Event(category, action, label, value, experiment);
-  //   Analytic.getInstance().send(gaEvent);
-  // }
-
   static sendEvent(category, action, label, value) {
     label = label ? label : action;
     value = value ? value : action;

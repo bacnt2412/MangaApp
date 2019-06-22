@@ -11,7 +11,21 @@ if (Lang.lang === 'jp') {
 export default class Utils {
   static userData = {
     token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiaWF0IjoxNTYwNTI0NDY4LCJleHAiOjE1NjMxMTY0Njh9.Px_LPuFImfQ3ny44byPHimBhGL7vWTgSACEDeYNntCc'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiX2lkIjoiNWQwYjk2ODgwNTQxY2UwOGMxZjIzNjU1IiwiaWF0IjoxNTYxMDQzNDIyLCJleHAiOjE1NjEzMDI2MjJ9.yidZVpM6ERA1WB_PhVve16covLNzay_bpB_mg-NOjQM'
+  };
+
+  static Thread = {
+    sleep: timeout => {
+      return new Promise((resolve, reject) => {
+        try {
+          setTimeout(() => {
+            resolve();
+          }, timeout);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
   };
 
   static Time = {
@@ -62,9 +76,8 @@ export default class Utils {
   };
 
   static String = {
-    getFromBetween: (source,sub1, sub2) => {
-      if (source.indexOf(sub1) < 0 || source.indexOf(sub2) < 0)
-        return false;
+    getFromBetween: (source, sub1, sub2) => {
+      if (source.indexOf(sub1) < 0 || source.indexOf(sub2) < 0) return false;
       var SP = source.indexOf(sub1) + sub1.length;
       var string1 = source.substr(0, SP);
       var string2 = source.substr(SP);

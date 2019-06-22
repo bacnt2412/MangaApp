@@ -11,12 +11,17 @@ import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
-import { CountView, TitleWithIcon, ListChapter } from '../../../components';
+import {
+  CountView,
+  TitleWithIcon,
+  ListChapter,
+  HeartAnimation,
+  DownloadIcon
+} from '../../../components';
 import ViewMoreText from 'react-native-view-more-text';
 import styles from './styles';
 import Analytic from '../../../utils/analytic';
 import images from '../../../assets/images.js';
-
 const GUTTER = 8 * 2;
 const TOOLBAR_HEIGHT = 56;
 const BACKDROP_HEIGHT = 240;
@@ -28,13 +33,27 @@ class MangaDetail extends PureComponent {
   static options = {
     topBar: {
       visible: true,
-      drawBehind: true,
+      drawBehind: false,
       title: {
         text: Lang.getByKey('detail_manga_title')
       },
       layout: {
         backgroundColor: '#000000'
       },
+      rightButtons: [
+        {
+          id: 'btnDownload',
+          component: {
+            name: 'DownloadIcon'
+          }
+        },
+        {
+          id: 'btnFollow',
+          component: {
+            name: 'HeartAnimation'
+          }
+        }
+      ],
       translucent: true,
       transparent: true
     }
@@ -122,19 +141,17 @@ class MangaDetail extends PureComponent {
 
     const avatar = (
       <View style={{ position: 'absolute', top: POSTER_X, left: GUTTER }}>
-        {/* <Navigation.Element resizeMode="cover" elementId="MANGA_DETAIL_AVATAR"> */}
-          <TouchableWithoutFeedback onPress={this.onPressAvatar}>
-            <View style={styles.avatar_container}>
-              {manga && manga.thumbnail && (
-                <FastImage
-                  resizeMode="cover"
-                  style={styles.avatar_image}
-                  source={thumbmail}
-                />
-              )}
-            </View>
-          </TouchableWithoutFeedback>
-        {/* </Navigation.Element> */}
+        <TouchableWithoutFeedback onPress={this.onPressAvatar}>
+          <View style={styles.avatar_container}>
+            {manga && manga.thumbnail && (
+              <FastImage
+                resizeMode="cover"
+                style={styles.avatar_image}
+                source={thumbmail}
+              />
+            )}
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     );
 

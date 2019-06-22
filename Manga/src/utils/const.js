@@ -1,5 +1,4 @@
 import { Platform } from 'react-native';
-import Funcs from './funcs';
 
 export default class Const {
 
@@ -28,10 +27,7 @@ export default class Const {
     LIST_MANGA_SCREEN: 'LIST_MANGA_SCREEN'
   };
 
-  static UI = {
-    PADDING_TOP: Funcs.isIphoneX() ? 50 : Platform.OS === 'android' ? 0 : 20,
-    BORDER_WIDTH_ICON_FLAG: Platform.OS === 'android' ? 0.4 : 0.5
-  };
+
   static COLOR = {
     LOADDING: '#4286f4'
   };

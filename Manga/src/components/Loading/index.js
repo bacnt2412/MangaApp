@@ -14,7 +14,7 @@ class Loading extends PureComponent {
           style={{ width: 100, height: 100 }}
           autoPlay={true}
           loop={true}
-          source={require('../../assets/loading/loading1.json')}
+          source={require('../../assets/lotties/loading1.json')}
           enableMergePathsAndroidForKitKatAndAbove
         />
     );
