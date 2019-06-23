@@ -11,7 +11,7 @@ import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
-import { CountView, TitleWithIcon, ListChapter } from '../../../components';
+import { CountView, TitleWithIcon, ListChapter, DownloadModal } from '../../../components';
 import ViewMoreText from 'react-native-view-more-text';
 import styles from './styles';
 import Analytic from '../../../utils/analytic';
@@ -127,6 +127,8 @@ class MangaDetail extends PureComponent {
   renderViewLess(onPress) {
     return <Text />;
   }
+
+
 
   render() {
     const { manga } = this.props;
@@ -269,6 +271,7 @@ class MangaDetail extends PureComponent {
             />
           </Animated.View>
         </Animated.ScrollView>
+      
       </View>
     );
   }

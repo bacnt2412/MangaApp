@@ -6,6 +6,7 @@ import MangaItem from './MangaItem';
 import TitleWithIcon from './TitleWithIcon';
 import HeartAnimation from './HeartAnimation';
 import DownloadIcon from './DownloadIcon';
+import DownloadModal from './DownloadModal';
 
 
 export  {
@@ -16,5 +17,6 @@ export  {
   MangaItem,
   TitleWithIcon,
   HeartAnimation,
-  DownloadIcon
+  DownloadIcon,
+  DownloadModal
 };
