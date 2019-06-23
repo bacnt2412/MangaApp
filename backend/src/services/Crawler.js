@@ -386,14 +386,14 @@ async function startCrawNewData() {
 start = async () => {
   try {
     console.log('********************** Start Crawler Data ************************');
-    // startGetAllCategory();
-    // setTimeout(async () => {
-    //   while (true) {
-    //     await startCrawNewData();
-    //     //sleep 3h.
-    //     await sleep(3600 * 1000 * 2);
-    //   }
-    // }, 1000);
+    startGetAllCategory();
+    setTimeout(async () => {
+      while (true) {
+        await startCrawNewData();
+        //sleep 3h.
+        await sleep(3600 * 1000 * 2);
+      }
+    }, 1000);
   } catch (error) {
     console.log('############################ ERROR: ', error);
   }

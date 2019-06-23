@@ -47,7 +47,9 @@ export default class Home extends BaseScreen {
   }
 
   getLatestManga = async data => {
-    return await Api.getLatestManga(data);
+    let res = await Api.getLatestManga(data);
+    console.log(' #################### data ',res)
+    return res;
   };
 
   getMostFavoriteManga = async data => {

@@ -11,7 +11,18 @@ if (Lang.lang === 'jp') {
 export default class Utils {
   static userData = {
     token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiX2lkIjoiNWQwYjk2ODgwNTQxY2UwOGMxZjIzNjU1IiwiaWF0IjoxNTYxMDQzNDIyLCJleHAiOjE1NjEzMDI2MjJ9.yidZVpM6ERA1WB_PhVve16covLNzay_bpB_mg-NOjQM'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiX2lkIjoiNWQwYjk1NDk0NzEwMDU3M2I0YmYzY2JmIiwiaWF0IjoxNTYxMTEwMTQ4LCJleHAiOjE1NjEzNjkzNDh9.d0ByFHnENkET7EK22XDybq8d_axpEBSkP-bJ1s-LfJg',
+    name: 'Tuan Bac',
+    avatar: '',
+    provider: 'system',
+    listIdMangaFollow: ['5d046a879627483f328e9209','5d0461369627483f328ccbd5','5d0462ae9627483f328d2755'],
+    listAppId: '',
+    _id: '5d0b954947100573b4bf3cbf',
+    username: 'bacnt',
+    email: 'bacnt',
+    created: '2019-06-20T14:16:41.587Z',
+    hash_password:
+      '$2b$10$3sLVgQmIMxcrotemBieBWerI71/u4oj9h5zJJlT.HQTmWIKdF/IDO'
   };
 
   static Thread = {
@@ -83,6 +94,12 @@ export default class Utils {
       var string2 = source.substr(SP);
       var TP = string1.length + string2.indexOf(sub2);
       return source.substring(SP, TP);
+    }
+  };
+
+  static Number = {
+    random: () => {
+      return Math.random(0, 1000000);
     }
   };
 }

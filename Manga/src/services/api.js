@@ -137,5 +137,15 @@ export default class Api {
     return await this.post(url, data);
   };
 
+  static followManga = async (data) => {
+    let url = Settings.SERVER_API + 'manga/follow-manga';
+    return await this.post(url, data);
+  };
 
+  static unfollowManga = async (data) => {
+    let url = Settings.SERVER_API + 'manga/unfollow-manga';
+    return await this.post(url, data);
+  };
+
+  
 }

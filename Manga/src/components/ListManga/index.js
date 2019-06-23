@@ -32,9 +32,7 @@ export default class ListManga extends PureComponent {
         alert('Token is not valid');
       }
       this.setState({ isLoadFirst: false, listManga });
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   getMoreData = async () => {
@@ -66,17 +64,17 @@ export default class ListManga extends PureComponent {
   };
 
   keyExtractor = item => {
-    return item._id && item._id.toString();
+    return item && item._id ? item._id.toString() : Utils.Number.random().toString();
   };
 
   renderItem = ({ index, item }) => {
-    if (!item._id) {
-      return <View key={213} />;
+    if (!item || !item._id) {
+      return <View key={'key_213'} />;
     }
     return (
       <MangaItem
         componentId={this.props.componentId}
-        elementId={`manga_` + item._id}
+        elementId={`manga_` + item && item._id ? item._id : Utils.Number.random().toString()}
         index={index}
         item={item}
       />
@@ -87,10 +85,10 @@ export default class ListManga extends PureComponent {
     this.onEndReachedCalledDuringMomentum = false;
   };
 
-  onEndReached = async () => {
+  onEndReached = () => {
     if (!this.onEndReachedCalledDuringMomentum) {
-      await this.getMoreData();
       this.onEndReachedCalledDuringMomentum = true;
+      this.getMoreData();
     }
   };
 

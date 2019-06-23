@@ -17,6 +17,12 @@ export default {
   manga_item_latest_chapter: 'Chapter mới',
   manga_description: 'Nội dung:',
   manga_list_chapter: 'Danh sách chapter',
+  manga_follow_message: 'Bạn sẽ nhận được thông báo khi ra chapter mới',
+  manga_unfollow_message: 'Bạn sẽ không nhận được thông báo khi ra chapter mới nữa',
+  manga_follow: 'Theo dõi',
+  manga_unfollow: 'Bỏ theo dõi',
+
+
   //================================== Category ====================================
   //================================== MyProfile ====================================
   profile_title: 'Profile',

@@ -9,15 +9,25 @@ import images from '../../assets/images';
 class MangaItem extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isImageLoadError: false
+    };
   }
 
+  onImageLoadError = () => {
+    console.log(' ############# onImageLoadError')
+    this.setState({ isImageLoadError: true });
+  };
   render() {
     const { item, componentId, elementId } = this.props;
+    const { isImageLoadError } = this.state;
     const thumbmail =
-      item && item.thumbnail && item.thumbnail.includes('http')
+      item &&
+      item.thumbnail &&
+      item.thumbnail.includes('http') && !isImageLoadError
         ? { uri: item.thumbnail }
         : images.no_image;
+
     return (
       <TouchableOpacity
         onPress={e => {
@@ -40,6 +50,7 @@ class MangaItem extends PureComponent {
             borderRadius: 5,
             borderWidth: 0.3
           }}
+          onError={this.onImageLoadError}
           resizeMode={FastImage.resizeMode.cover}
         />
         <View style={{ flex: 1, paddingTop: 5, paddingLeft: 10 }}>

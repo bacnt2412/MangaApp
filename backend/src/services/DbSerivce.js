@@ -199,20 +199,21 @@ updateHistoryManga = async (idUser, idManga, idChapter) => {
 };
 
 getListHistoryManga = async (idUser, page) => {
-  let listHistory = await HistoryMangaModel.find({ iduser: idUser })
-    .sort({ updated: -1 })
-    .skip((page - 1) * Settings.PAGE_LIMIT)
-    .limit(Settings.PAGE_LIMIT);
-  let listIdChapter = listHistory.map(item => {
-    return item.idchapter;
-  });
-  let listMangaHistory = [];
-  for (let item of listHistory) {
-    let manga = await MangaModel.findOne({ _id: item.idmanga });
-    let chapter = await ChapterModel.findOne({ _id: item.idchapter });
-    manga = Utils.Object.addValueInObject(manga, 'readChapter', chapter);
-    listMangaHistory.push(manga);
-  }
+  try {
+    let listHistory = await HistoryMangaModel.find({ iduser: idUser })
+      .sort({ updated: -1 })
+      .skip((page - 1) * Settings.PAGE_LIMIT)
+      .limit(Settings.PAGE_LIMIT);
+    let listMangaHistory = [];
+    for (let item of listHistory) {
+      try {
+        let manga = await MangaModel.findOne({ _id: item.idmanga });
+        let chapter = await ChapterModel.findOne({ _id: item.idchapter });
+        manga = Utils.Object.addValueInObject(manga, 'readChapter', chapter);
+        listMangaHistory.push(manga);
+      } catch (error) {}
+    }
+  } catch (error) {}
 
   return listMangaHistory;
 };

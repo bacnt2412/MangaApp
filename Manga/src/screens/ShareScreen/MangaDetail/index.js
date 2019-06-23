@@ -11,13 +11,7 @@ import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
-import {
-  CountView,
-  TitleWithIcon,
-  ListChapter,
-  HeartAnimation,
-  DownloadIcon
-} from '../../../components';
+import { CountView, TitleWithIcon, ListChapter } from '../../../components';
 import ViewMoreText from 'react-native-view-more-text';
 import styles from './styles';
 import Analytic from '../../../utils/analytic';
@@ -30,34 +24,42 @@ const POSTER_HEIGHT = 160;
 const POSTER_X = BACKDROP_HEIGHT - POSTER_HEIGHT + 15;
 
 class MangaDetail extends PureComponent {
-  static options = {
-    topBar: {
-      visible: true,
-      drawBehind: false,
-      title: {
-        text: Lang.getByKey('detail_manga_title')
-      },
-      layout: {
-        backgroundColor: '#000000'
-      },
-      rightButtons: [
-        {
-          id: 'btnDownload',
-          component: {
-            name: 'DownloadIcon'
-          }
+  static options(props) {
+    return {
+      topBar: {
+        visible: true,
+        drawBehind: false,
+        title: {
+          text: Lang.getByKey('detail_manga_title')
         },
-        {
-          id: 'btnFollow',
-          component: {
-            name: 'HeartAnimation'
+        layout: {
+          backgroundColor: '#000000'
+        },
+        rightButtons: [
+          {
+            id: 'buttonOne',
+            component: {
+              name: 'DownloadIcon',
+              passProps: {
+                idManga:
+                  props && props.manga && props.manga._id ? props.manga._id : 1
+              }
+            }
+          },
+          {
+            id: 'btnFollow',
+            component: {
+              name: 'HeartAnimation',
+              passProps: {
+                idManga:
+                  props && props.manga && props.manga._id ? props.manga._id : 1
+              }
+            }
           }
-        }
-      ],
-      translucent: true,
-      transparent: true
-    }
-  };
+        ]
+      }
+    };
+  }
 
   constructor(props) {
     super(props);
@@ -101,6 +103,13 @@ class MangaDetail extends PureComponent {
   }
 
   componentDidMount() {
+    Navigation.events().registerNavigationButtonPressedListener(
+      ({ buttonId }) => {
+        console.log('####################');
+        console.warn(buttonId); // BACK
+      }
+    );
+
     Analytic.sendScreen('DetailScreen');
   }
 
