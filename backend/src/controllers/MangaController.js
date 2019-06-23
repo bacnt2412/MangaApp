@@ -106,7 +106,7 @@ updateViewManga = async (req, res) => {
         idManga,
         idChapter
       );
-      console.log('############## result',result)
+      console.log('############## result', result);
     }
     result = await DbServices.updateViewManga(idManga);
 
@@ -171,7 +171,6 @@ getListHistoryManga = async (req, res) => {
   try {
     let page = req.body.page;
     let idUser = req.decoded._id;
-    console.log('### ',idUser)
     if (idUser) {
       if (!page) page = 1;
       let listManga = await DbServices.getListHistoryManga(idUser, page);
