@@ -101,11 +101,7 @@ updateViewManga = async (req, res) => {
     let idUser = req.decoded._id;
     let idChapter = req.body.idChapter;
     if (idUser && idManga && idChapter) {
-      let result = await DbServices.updateHistoryManga(
-        idUser,
-        idManga,
-        idChapter
-      );
+      let result = await DbServices.updateHistoryManga(idUser, idManga, idChapter);
       console.log('############## result', result);
     }
     result = await DbServices.updateViewManga(idManga);
@@ -153,11 +149,7 @@ updateHistoryManga = async (req, res) => {
     let idChapter = req.body.idChapter;
 
     if (idManga && idUser) {
-      let result = await DbServices.updateHistoryManga(
-        idUser,
-        idManga,
-        idChapter
-      );
+      let result = await DbServices.updateHistoryManga(idUser, idManga, idChapter);
       res.status(200).json({ message: result });
     } else {
       res.status(400).json({ error: 'Invalid request' });
@@ -199,6 +191,21 @@ getFollowManga = async (req, res) => {
   }
 };
 
+getMangaById = async (req, res) => {
+  try {
+    let idManga = req.body.idManga;
+    if (idManga) {
+      let listManga = await DbServices.getMangaById(idManga);
+      if (!listManga) res.status(400).json({ error: 'Error' });
+      res.status(200).json({ listManga });
+    } else {
+      res.status(400).json({ error: 'Invalid request' });
+    }
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
+
 module.exports = {
   getAllManga,
   addNewManga,
@@ -211,5 +218,6 @@ module.exports = {
   unfollowManga,
   updateHistoryManga,
   getListHistoryManga,
-  getFollowManga
+  getFollowManga,
+  getMangaById
 };

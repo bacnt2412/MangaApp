@@ -14,7 +14,6 @@ MangaRoute.route('/unfollow-manga').post(MangaController.unfollowManga);
 MangaRoute.route('/update-history-manga').post(MangaController.updateHistoryManga);
 MangaRoute.route('/get-history-manga').post(MangaController.getListHistoryManga);
 MangaRoute.route('/get-follow-manga').post(MangaController.getFollowManga);
-
-
+MangaRoute.route('/get-manga-by-id').post(MangaController.getMangaById);
 
 module.exports = MangaRoute;

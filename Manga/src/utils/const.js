@@ -1,7 +1,12 @@
 import { Platform } from 'react-native';
+import RNFS  from 'react-native-fs';
 
 export default class Const {
 
+  static DOCUMENT = {
+    FOLDER_APP: RNFS.DocumentDirectoryPath + '/MangaApp',
+    
+  }
   static APP = {
     NAME: 'Songoku'
   }
