@@ -147,5 +147,13 @@ export default class Api {
     return await this.post(url, data);
   };
 
-  
+  static getMangaById = async (data) => {
+    let url = Settings.SERVER_API + 'manga/get-manga-by-id';
+    return await this.post(url, data);
+  };
+
+  static getAllImageByIdChapter = async (data) => {
+    let url = Settings.SERVER_API + 'image/get-all-image-by-id-chapter';
+    return await this.post(url, data);
+  };
 }

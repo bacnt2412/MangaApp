@@ -1,9 +1,10 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Modal, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { View, Text, Modal, TouchableWithoutFeedback, Dimensions, Image } from 'react-native';
 import * as Progress from 'react-native-progress';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import RNFS from 'react-native-fs';
 import Const from '../../utils/const';
+import Api from '../../services/api';
 
 const { width, height } = Dimensions.get('window');
 
@@ -12,59 +13,87 @@ class DownloadModal extends PureComponent {
     super(props);
     this.state = {
       visiable: false,
-      idManga: ''
+      idManga: '',
+      thumbnail: ''
     };
   }
 
-  show = async idManga => {
-    try {
-      let checkExistFolderApp = await RNFS.exists(Const.DOCUMENT.FOLDER_APP);
-      if (!checkExistFolderApp) {
-        await RNFS.mkdir(Const.DOCUMENT.FOLDER_APP);
-      }
+  downloadChapter = async (chapter, folderManga) => {
+    let folderChapter = folderManga + '/' + chapter._id;
+    console.log(' ############################# folderChapter', folderChapter);
 
-      let folderManga = Const.DOCUMENT.FOLDER_APP + '/Manga/' + idManga;
-      let fileInfomationMangga = folderManga + '/info.txt';
-      let fileThumbnail = folderManga + '/thumbnail.png';
+    await RNFS.mkdir(folderChapter);
 
-      let checkExist = await RNFS.exists(folderManga);
-      let infomationManga;
-      if (checkExist) {
-        await RNFS.unlink(folderManga)
-          .then(() => {
-            console.log('FILE DELETED');
-          })
-          // `unlink` will throw an error, if the item to unlink does not exist
-          .catch(err => {
-            console.log(err.message);
-          });
+    let fileInfoChapter = folderChapter + '/info.txt';
+
+    let res = await Api.getAllImageByIdChapter({ idChapter: chapter._id });
+    if (!res || res.status !== 200) return { success: false, message: ' Lỗi lấy thông tin Chapter' };
+    let listImage = res.data.listImage;
+    if (listImage.length > 0) {
+      let resultWriteFileInfo = false;
+      await RNFS.writeFile(fileInfoChapter, JSON.stringify(chapter), 'utf8').then(success => {
+        resultWriteFileInfo = true;
+      });
+      if (!resultWriteFileInfo) return { success: false, message: ' Lỗi ghi file Chapter' };
+
+      for (let image of listImage) {
+        let saveImage = folderChapter + '/' + image._id + '.png';
+        let downloadImageOptions = {
+          fromUrl: image.link,
+          toFile: saveImage,
+          readTimeout: 60 * 1000
+        };
+        let resultDownloadImage = await RNFS.downloadFile(downloadImageOptions).promise;
+        if (!resultDownloadImage || resultDownloadImage.statusCode !== 200) {
+          console.log(' ####################### Lỗi tải ảnh: ', image.link);
+          return { success: false, message: ' Lỗi tải ảnh: ' + image.name };
+        }
+        console.log(' ##### Download Thành Công Image', image.name);
       }
-      await RNFS.mkdir(folderManga);
-      infomationManga = {
-        author: 'Đang cập nhật',
-        category: 'Comic - Drama - Fantasy - Truyện Màu - Xuyên Không',
-        created: '2019-06-24T00:06:58.213Z',
-        description: 'Đang Loading...',
-        folowers: 0,
-        latestChapter: 'Chapter 3: Gọi Quản Lý Của Các Người Ra !!! Tôi Là Khách Kim Cương',
-        link: 'http://www.nettruyen.com/truyen-tranh/do-thi-phong-than',
-        name: 'Đô Thị Phong Thần',
-        rating: 0,
-        status: 'Đang tiến hành',
-        thumbnail: 'http://st.nettruyen.com/data/comics/129/do-thi-phong-than.jpg',
-        updated: '2019-06-24T06:35:52.851Z',
-        viewers: 0,
-        _id: '5d101422143f537734737c6d'
-      };
-      // ghi info manga vào file
-      RNFS.writeFile(fileInfomationMangga, JSON.stringify(infomationManga), 'utf8')
-        .then(success => {
-          console.log('WRITTEN! infomation success');
+      console.log(' ########################## Download Thành Công Chapter #######################', chapter.name);
+      return { success: true };
+    }
+  };
+
+  downloadManga = async idManga => {
+    let checkExistFolderApp = await RNFS.exists(Const.DOCUMENT.FOLDER_APP);
+    if (!checkExistFolderApp) {
+      await RNFS.mkdir(Const.DOCUMENT.FOLDER_APP);
+    }
+
+    let folderManga = Const.DOCUMENT.FOLDER_APP + '/Manga/' + idManga;
+    let fileInfomationMangga = folderManga + '/info.txt';
+    let fileThumbnail = folderManga + '/thumbnail.png';
+    console.log(' ############ fileThumbnail', fileThumbnail);
+    let checkExist = await RNFS.exists(folderManga);
+    let res = await Api.getMangaById({ idManga });
+    if (!res | (res.status !== 200)) {
+      alert('Lỗi tải thông tin truyện');
+      return;
+    }
+    infomationManga = res.data.listManga;
+    console.log(' ############# infomationManga', infomationManga);
+
+    // Nếu tồn tại thì hỏi xem có muốn tải lại hay ko
+    if (checkExist) {
+      await RNFS.unlink(folderManga)
+        .then(() => {
+          console.log('FILE DELETED');
         })
+        // `unlink` will throw an error, if the item to unlink does not exist
         .catch(err => {
           console.log(err.message);
         });
+    }
 
+    await RNFS.mkdir(folderManga);
+
+    let resultWriteInfo = false;
+    // ghi info manga vào file
+    await RNFS.writeFile(fileInfomationMangga, JSON.stringify(infomationManga), 'utf8').then(success => {
+      resultWriteInfo = true;
+    });
+    if (resultWriteInfo) {
       // download thumbnail
       let downloadFileOptions = {
         fromUrl: infomationManga.thumbnail,
@@ -72,20 +101,24 @@ class DownloadModal extends PureComponent {
         readTimeout: 60 * 1000
       };
       let result = await RNFS.downloadFile(downloadFileOptions).promise;
-      console.log('################ result', result);
+      console.log('################ result Download thumbnail', result);
 
-      console.log('####### infomationManga ', infomationManga);
-
-      var path = RNFS.DocumentDirectoryPath + '/test.txt';
-
-      // write the file
+      for (let chapter of infomationManga.listChapter) {
+        let resultDownloadChapter = await this.downloadChapter(chapter, folderManga);
+        console.log(' ############## resultDownloadChapter', resultDownloadChapter);
+      }
 
       let data = await RNFS.readDir(folderManga);
+
       console.log('####### data ', data);
-      this.setState({ visiable: true, idManga });
-    } catch (error) {
-      console.log('################## error', error);
+    } else {
+      alert(' Lỗi ghi file Manga');
     }
+  };
+
+  show = async idManga => {
+    this.setState({ visiable: true, idManga });
+    this.downloadManga(idManga);
   };
 
   hide = () => {
@@ -93,6 +126,7 @@ class DownloadModal extends PureComponent {
   };
 
   render() {
+    const { thumbnail } = this.state;
     return (
       <Modal visible={this.state.visiable} transparent={true} animated={true} animationType={'fade'}>
         <View

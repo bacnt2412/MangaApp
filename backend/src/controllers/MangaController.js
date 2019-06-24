@@ -195,9 +195,9 @@ getMangaById = async (req, res) => {
   try {
     let idManga = req.body.idManga;
     if (idManga) {
-      let listManga = await DbServices.getMangaById(idManga);
-      if (!listManga) res.status(400).json({ error: 'Error' });
-      res.status(200).json({ listManga });
+      let manga = await DbServices.getMangaById(idManga);
+      if (!manga) res.status(400).json({ error: 'Error' });
+      res.status(200).json({ manga });
     } else {
       res.status(400).json({ error: 'Invalid request' });
     }

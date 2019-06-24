@@ -15,7 +15,7 @@ class DownloadIcon extends PureComponent {
 
   onPress = () => {
     const { idManga } = this.props;
-    this.refs.DownloadModal.show();
+    this.refs.DownloadModal.show(idManga);
   };
 
   render() {

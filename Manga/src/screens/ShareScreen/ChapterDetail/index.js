@@ -39,9 +39,9 @@ class ChapterDetail extends PureComponent {
       idChapter: this.state.idChapter
     });
     if (res && res.status === 200) {
-      let data = res.data.data;
+      let data = res.data.listImage;
       if (data.length > 0) {
-        res.data.data.map((item, index) => {
+        res.data.listImage.map((item, index) => {
           if (item.link.includes('proxy.truyen.cloud')) {
             let newLink = Utils.String.getFromBetween(
               item.link,
@@ -54,7 +54,7 @@ class ChapterDetail extends PureComponent {
       }
       console.log('### getListImageByIdChapter: ', data);
 
-      this.setState({ listImage: res.data.data });
+      this.setState({ listImage: data });
     }
     this.setState({ isFirstLoad: false });
   };
@@ -71,9 +71,9 @@ class ChapterDetail extends PureComponent {
       lastIdImage
     });
     if (res && res.status === 200) {
-      let data = res.data.data;
+      let data = res.data.listImage;
       if (data.length > 0) {
-        res.data.data.map((item, index) => {
+        res.data.listImage.map((item, index) => {
           if (item.link.includes('proxy.truyen.cloud')) {
             let newLink = Utils.String.getFromBetween(
               item.link,
