@@ -11,7 +11,12 @@ import FastImage from 'react-native-fast-image';
 import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
-import { CountView, TitleWithIcon, ListChapter, DownloadModal } from '../../../components';
+import {
+  CountView,
+  TitleWithIcon,
+  ListChapter,
+  DownloadModal
+} from '../../../components';
 import ViewMoreText from 'react-native-view-more-text';
 import styles from './styles';
 import Analytic from '../../../utils/analytic';
@@ -128,19 +133,22 @@ class MangaDetail extends PureComponent {
     return <Text />;
   }
 
-
-
   render() {
     const { manga } = this.props;
-    const thumbmail =
+    let thumbnail =
       manga && manga.thumbnail && manga.thumbnail.includes('http')
         ? { uri: manga.thumbnail }
         : images.no_image;
+    if (manga.isLocal) {
+      thumbnail = {
+        uri: 'file://' + manga.thumbnail
+      };
+    }
     const cover = (
       <Animated.View style={[styles.cover_container, this.animatedHeroStyles]}>
         <FastImage
           resizeMode="cover"
-          source={thumbmail}
+          source={thumbnail}
           style={styles.cover_image}
         />
         <LinearGradient
@@ -158,7 +166,7 @@ class MangaDetail extends PureComponent {
               <FastImage
                 resizeMode="cover"
                 style={styles.avatar_image}
-                source={thumbmail}
+                source={thumbnail}
               />
             )}
           </View>
@@ -246,10 +254,7 @@ class MangaDetail extends PureComponent {
           {detail}
 
           {description}
-          <ListChapter
-            idManga={manga ? manga._id : null}
-            componentId={this.props.componentId}
-          />
+          <ListChapter manga={manga} componentId={this.props.componentId} />
           <Animated.View
             style={{
               position: 'absolute',
@@ -271,7 +276,6 @@ class MangaDetail extends PureComponent {
             />
           </Animated.View>
         </Animated.ScrollView>
-      
       </View>
     );
   }

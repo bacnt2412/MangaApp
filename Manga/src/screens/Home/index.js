@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, PermissionsAndroid } from 'react-native';
 import { TabView, PagerScroll, TabBar } from 'react-native-tab-view';
 import { ListManga, Loading } from '../../components';
 import BaseScreen from '../../components/BaseScreen';
@@ -9,6 +9,7 @@ import styles from './styles';
 import Const from '../../utils/const';
 import Analytic from '../../utils/analytic';
 import ListCategory from './ListCategory';
+import RNFS from 'react-native-fs';
 
 export default class Home extends BaseScreen {
   static options = {
@@ -42,13 +43,12 @@ export default class Home extends BaseScreen {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = async ()=> {
     Analytic.sendScreen('HomeScreen');
   }
 
   getLatestManga = async data => {
     let res = await Api.getLatestManga(data);
-    console.log(' #################### data ',res)
     return res;
   };
 

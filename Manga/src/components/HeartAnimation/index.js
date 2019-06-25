@@ -9,7 +9,6 @@ import Lang from '../../Language';
 class HeartAnimation extends PureComponent {
   constructor(props) {
     super(props);
-    console.log('########## props',props)
     let isEnable = props.idManga
       ? Utils.userData.listIdMangaFollow.includes(props.idManga)
       : false;

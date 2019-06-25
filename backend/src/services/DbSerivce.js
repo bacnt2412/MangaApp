@@ -7,6 +7,12 @@ const Utils = require('../utils/utils');
 const UserModel = require('../models/UserModel');
 const Settings = require('../config/settings');
 
+function sleep(ms) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
 checkExistMangaByName = async name => {
   return await MangaModel.findOne({ name });
 };
@@ -87,7 +93,7 @@ addListImage = async (listImage, idChapter) => {
       link: image.link,
       idchapter: idChapter
     });
-    let result = newImage.save();
+    let result = await newImage.save();
   }
 };
 

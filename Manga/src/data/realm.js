@@ -12,7 +12,6 @@ export const ChapterSchema = {
     name: { type: 'string' },
     link: { type: 'string' },
     created: { type: 'date', default: Date.now() },
-    viewers: { type: 'int' },
     listImage: {
       type: 'list',
       objectType: IMAGE_SCHEMA
@@ -91,7 +90,7 @@ export const ImageSchema = {
 const realmDataOptions = {
   path: 'realmData.realm',
   schema: [MangaSchema, ChapterSchema, ImageSchema],
-  schemaVersion: 7
+  schemaVersion: 1
 };
 
 export const insertManga = newManga =>

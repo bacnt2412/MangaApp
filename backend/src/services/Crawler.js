@@ -352,7 +352,7 @@ async function startCrawNewData() {
       const manga = listManga[i];
 
       const detailMangaOnSite = await NET_TRUYEN_Manga_get_info(manga.link);
-
+      await sleep(3000);
       //Check Exist Manga
       let result = await DbService.checkExistMangaByName(manga.name);
 

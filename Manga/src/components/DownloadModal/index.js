@@ -1,10 +1,19 @@
 import React, { PureComponent } from 'react';
-import { View, Text, Modal, TouchableWithoutFeedback, Dimensions, Image } from 'react-native';
+import {
+  View,
+  Text,
+  Modal,
+  TouchableWithoutFeedback,
+  Dimensions,
+  Image,
+  TouchableOpacity
+} from 'react-native';
 import * as Progress from 'react-native-progress';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import RNFS from 'react-native-fs';
 import Const from '../../utils/const';
+import Utils from '../../utils/utils';
 import Api from '../../services/api';
+import { getManga, insertManga, insertListImage } from '../../data/realm';
 
 const { width, height } = Dimensions.get('window');
 
@@ -14,9 +23,21 @@ class DownloadModal extends PureComponent {
     this.state = {
       visiable: false,
       idManga: '',
-      thumbnail: ''
+      thumbnail: '',
+      totalImage: 0,
+      totalImageDownloaded: 0,
+      isSuccess: false
     };
   }
+
+  addMangaToDbLocal = async manga => {
+    let data = await insertManga(manga);
+  };
+
+  addImageToChapter = async (idChapter, listImage) => {
+    let data = await insertListImage(idChapter, listImage);
+    console.log(' ################### listImage ', data);
+  };
 
   downloadChapter = async (chapter, folderManga) => {
     let folderChapter = folderManga + '/' + chapter._id;
@@ -24,18 +45,12 @@ class DownloadModal extends PureComponent {
 
     await RNFS.mkdir(folderChapter);
 
-    let fileInfoChapter = folderChapter + '/info.txt';
-
     let res = await Api.getAllImageByIdChapter({ idChapter: chapter._id });
-    if (!res || res.status !== 200) return { success: false, message: ' Lỗi lấy thông tin Chapter' };
+    if (!res || res.status !== 200)
+      return { success: false, message: ' Lỗi lấy thông tin Chapter' };
     let listImage = res.data.listImage;
     if (listImage.length > 0) {
-      let resultWriteFileInfo = false;
-      await RNFS.writeFile(fileInfoChapter, JSON.stringify(chapter), 'utf8').then(success => {
-        resultWriteFileInfo = true;
-      });
-      if (!resultWriteFileInfo) return { success: false, message: ' Lỗi ghi file Chapter' };
-
+      let newListImage = [];
       for (let image of listImage) {
         let saveImage = folderChapter + '/' + image._id + '.png';
         let downloadImageOptions = {
@@ -43,14 +58,24 @@ class DownloadModal extends PureComponent {
           toFile: saveImage,
           readTimeout: 60 * 1000
         };
-        let resultDownloadImage = await RNFS.downloadFile(downloadImageOptions).promise;
+        let resultDownloadImage = await RNFS.downloadFile(downloadImageOptions)
+          .promise;
         if (!resultDownloadImage || resultDownloadImage.statusCode !== 200) {
           console.log(' ####################### Lỗi tải ảnh: ', image.link);
           return { success: false, message: ' Lỗi tải ảnh: ' + image.name };
         }
+        await this.setState({
+          totalImageDownloaded: this.state.totalImageDownloaded + 1
+        });
         console.log(' ##### Download Thành Công Image', image.name);
+        image.link = saveImage;
+        newListImage.push(image);
       }
-      console.log(' ########################## Download Thành Công Chapter #######################', chapter.name);
+      this.addImageToChapter(chapter._id, newListImage);
+      console.log(
+        ' ########################## Download Thành Công Chapter #######################',
+        chapter.name
+      );
       return { success: true };
     }
   };
@@ -60,19 +85,19 @@ class DownloadModal extends PureComponent {
     if (!checkExistFolderApp) {
       await RNFS.mkdir(Const.DOCUMENT.FOLDER_APP);
     }
-
+    // init file
     let folderManga = Const.DOCUMENT.FOLDER_APP + '/Manga/' + idManga;
-    let fileInfomationMangga = folderManga + '/info.txt';
     let fileThumbnail = folderManga + '/thumbnail.png';
-    console.log(' ############ fileThumbnail', fileThumbnail);
+
     let checkExist = await RNFS.exists(folderManga);
-    let res = await Api.getMangaById({ idManga });
+
+    // get infomation manga
+    res = await Api.getMangaById({ idManga });
     if (!res | (res.status !== 200)) {
       alert('Lỗi tải thông tin truyện');
       return;
     }
-    infomationManga = res.data.listManga;
-    console.log(' ############# infomationManga', infomationManga);
+    infomationManga = res.data.manga;
 
     // Nếu tồn tại thì hỏi xem có muốn tải lại hay ko
     if (checkExist) {
@@ -88,36 +113,58 @@ class DownloadModal extends PureComponent {
 
     await RNFS.mkdir(folderManga);
 
-    let resultWriteInfo = false;
-    // ghi info manga vào file
-    await RNFS.writeFile(fileInfomationMangga, JSON.stringify(infomationManga), 'utf8').then(success => {
-      resultWriteInfo = true;
+    console.log(' ############## infomationManga', infomationManga);
+
+    // require the module
+
+    // create a path you want to write to
+    // :warning: on iOS, you cannot write into `RNFS.MainBundlePath`,
+    // but `RNFS.DocumentDirectoryPath` exists on both platforms and is writable
+
+    console.log(' ############## fileThumbnail', fileThumbnail);
+  
+    // download thumbnail
+    let downloadFileOptions = {
+      fromUrl: infomationManga.thumbnail,
+      toFile: fileThumbnail
+    };
+
+    let result = await RNFS.downloadFile(downloadFileOptions).promise;
+    console.log(' ################### ', await RNFS.readDir(folderManga));
+
+    console.log('################ result Download thumbnail', result);
+
+    this.addMangaToDbLocal({ ...infomationManga, thumbnail: fileThumbnail });
+
+    // get total Image;
+    let res = await Api.getTotalImageOfChapter({
+      idManga: infomationManga._id
     });
-    if (resultWriteInfo) {
-      // download thumbnail
-      let downloadFileOptions = {
-        fromUrl: infomationManga.thumbnail,
-        toFile: fileThumbnail,
-        readTimeout: 60 * 1000
-      };
-      let result = await RNFS.downloadFile(downloadFileOptions).promise;
-      console.log('################ result Download thumbnail', result);
-
-      for (let chapter of infomationManga.listChapter) {
-        let resultDownloadChapter = await this.downloadChapter(chapter, folderManga);
-        console.log(' ############## resultDownloadChapter', resultDownloadChapter);
-      }
-
-      let data = await RNFS.readDir(folderManga);
-
-      console.log('####### data ', data);
-    } else {
-      alert(' Lỗi ghi file Manga');
+    if (!res || res.status !== 200) {
+      alert('Lỗi lấy total image');
+      return false;
     }
+    await this.setState({ totalImage: res.data.totalImage });
+
+    for (let chapter of infomationManga.listChapter) {
+      let resultDownloadChapter = await this.downloadChapter(
+        chapter,
+        folderManga
+      );
+      if (!resultDownloadChapter || !resultDownloadChapter.success) {
+        alert('Lỗi tải hình ảnh ' + chapter.name);
+      }
+    }
+
+    this.setState({ isSuccess: true });
+    let data = await RNFS.readDir(folderManga);
   };
 
   show = async idManga => {
     this.setState({ visiable: true, idManga });
+    await Utils.Permission.request_WRITE_EXTERNAL_STORAGE_Permission();
+    await Utils.Permission.request_READ_EXTERNAL_STORAGE_Permission();
+
     this.downloadManga(idManga);
   };
 
@@ -126,9 +173,14 @@ class DownloadModal extends PureComponent {
   };
 
   render() {
-    const { thumbnail } = this.state;
+    const { totalImage, totalImageDownloaded } = this.state;
+    let progress = totalImage > 0 ? totalImageDownloaded / totalImage : 0;
     return (
-      <Modal visible={this.state.visiable} transparent={true} animated={true} animationType={'fade'}>
+      <Modal
+        visible={this.state.visiable}
+        transparent={true}
+        animated={true}
+        animationType={'fade'}>
         <View
           style={{
             flex: 1,
@@ -139,7 +191,6 @@ class DownloadModal extends PureComponent {
           <View
             style={{
               width: width - 100,
-              height: height / 3.5,
               backgroundColor: 'white',
               borderRadius: 5
             }}>
@@ -150,8 +201,7 @@ class DownloadModal extends PureComponent {
                 fontWeight: '600',
                 marginTop: 5
               }}>
-              {' '}
-              Download{' '}
+              Download
             </Text>
             <Text
               style={{
@@ -163,21 +213,48 @@ class DownloadModal extends PureComponent {
             </Text>
             <View
               style={{
-                flex: 1,
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-              <Progress.Circle progress={1} size={120} thickness={5} showsText={true} borderWidth={0} allowFontScaling={true} direction={'clockwise'} />
+              {this.state.isSuccess ? (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 24,
+                      color: 'green',
+                      fontWeight: '600'
+                    }}>
+                    Thành Công
+                  </Text>
+                </View>
+              ) : (
+                <Progress.Circle
+                  progress={progress}
+                  size={120}
+                  thickness={5}
+                  showsText={true}
+                  borderWidth={0}
+                  allowFontScaling={true}
+                  direction={'clockwise'}
+                />
+              )}
               <TouchableOpacity
                 style={{
-                  marginTop: 10,
-                  backgroundColor: 'gray',
+                  marginVertical: 10,
+                  backgroundColor: this.state.isSuccess ? '#26bf3c' : 'gray',
                   borderRadius: 5,
                   paddingHorizontal: 20,
                   paddingVertical: 5
                 }}
                 onPress={this.hide}>
-                <Text style={{ color: 'white' }}>Hủy</Text>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                  {this.state.isSuccess ? 'Ok' : 'Hủy'}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

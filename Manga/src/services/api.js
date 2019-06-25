@@ -156,4 +156,10 @@ export default class Api {
     let url = Settings.SERVER_API + 'image/get-all-image-by-id-chapter';
     return await this.post(url, data);
   };
+
+  static getTotalImageOfChapter = async (data) => {
+    let url = Settings.SERVER_API + 'manga/get-total-image-by-id-chapter';
+    return await this.post(url, data,{ timeout: 30000 });
+  };
+
 }

@@ -8,8 +8,7 @@ import Api from '../../services/api.js';
 import Lang from '../../Language';
 import styles from './styles';
 import Const from '../../utils/const';
-import { getManga, insertManga } from '../../data/realm';
-import realm from '../../data/realm';
+import { getManga, insertManga, insertListImage } from '../../data/realm';
 
 class MyProfile extends BaseScreen {
   static options = {
@@ -51,36 +50,6 @@ class MyProfile extends BaseScreen {
       isHistoryLoadMore: false
     };
   }
-  test = async () => {
-    let manga = {
-      author: 'Đang cập nhật',
-      category: 'Drama - Manhua - Ngôn Tình - Truyện Màu',
-      created: '2019-06-15T03:20:33.182Z',
-      description: 'Đường Nhược Sơ ',
-      folowers: 0,
-      latestChapter: 'Chapter 30: Liên quan gì tới cô',
-      link:
-        'http://www.nettruyen.com/truyen-tranh/con-duong-phan-cong-cua-sung-the',
-      name: 'Con Đường Phản Công Của Sủng Thê',
-      rating: 0,
-      status: 'Đang tiến hành',
-      thumbnail:
-        'http://st.nettruyen.com/data/comics/247/con-duong-phan-cong-cua-sung-the.jpg',
-      updated: '2019-06-21T03:19:01.510Z',
-      viewers: 0,
-      _id: '5d0464019627483f328dbafbxxYYYYYYYYx'
-    };
-
-    // insertManga(manga)
-    //   .then(x => console.log(' ############ x', x))
-    //   .catch(error => console.log(' ############ error', error));
-    let data = await insertManga(manga);
-    console.log(' ################### data', data);
-    // //let result =  getManga();
-    // for (var item of result) {
-    //   console.log(' ################### item', item);
-    // }
-  };
 
   componentDidMount() {
     //   this.test();
@@ -116,6 +85,28 @@ class MyProfile extends BaseScreen {
     return await Api.getHistoryManga(data);
   };
 
+  GetDataDownload = async (page) => {
+    if(page) return;
+    let data = await getManga();
+    let listManga = [];
+
+    for (let manga of data) {
+      let listChapter = [];
+      for (let chapter of manga.listChapter) {
+        let listImage = [];
+        for (image of chapter.listImage) {
+          listImage.push({ ...image, isLocal: true });
+        }
+        chapter = { ...chapter, listImage: listImage, isLocal: true };
+        listChapter.push({ ...chapter });
+      }
+      manga = { ...manga, listChapter: listChapter, isLocal: true };
+      listManga.push({ ...manga });
+    }
+    let res = { data: { listManga }, status: 200 };
+    console.log(' ###################### GetDataDownload',res)
+    return res;
+  };
   renderContent() {
     return (
       <View style={{ flex: 1 }}>
@@ -126,13 +117,9 @@ class MyProfile extends BaseScreen {
           renderScene={({ route, jumpTo }) => {
             switch (route.key) {
               case 'follow':
-                return this.renderContenOfTabView(
-                  this.getDataFollow
-                );
+                return this.renderContenOfTabView(this.getDataFollow);
               case 'download':
-                return this.renderContenOfTabView(
-                  
-                );
+                return this.renderContenOfTabView(this.GetDataDownload);
               case 'history':
                 return this.renderContenOfTabView(this.getDataHistory);
             }

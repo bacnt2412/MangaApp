@@ -24,13 +24,15 @@ class ChapterDetail extends PureComponent {
     this.state = {
       isFirstLoad: false,
       isLoadMore: false,
-      listImage: [],
-      idChapter: props.chapter ? props.chapter._id : null
+      listImage:
+        props.chapter && props.chapter.listImage ? props.chapter.listImage : [],
+      idChapter: props.chapter ? props.chapter._id : null,
+      isLocal: props.chapter && props.chapter.listImage ? true : false
     };
   }
 
   componentDidMount() {
-    this.getData();
+    if (!this.state.isLocal) this.getData();
   }
 
   getData = async () => {
@@ -92,7 +94,7 @@ class ChapterDetail extends PureComponent {
   renderItem = ({ item }) => {
     return (
       <View>
-        <ImageItem image={item.link} />
+        <ImageItem item={item} />
       </View>
     );
   };
@@ -106,7 +108,7 @@ class ChapterDetail extends PureComponent {
   };
 
   loadMoreData = () => {
-    if (!this.onMomentumScrollBegin) {
+    if (!this.onMomentumScrollBegin && !this.props.chapter.isLocal) {
       this.getMoreData();
       this.onMomentumScrollBegin = true;
     }
@@ -144,11 +146,11 @@ class ImageItem extends PureComponent {
   }
 
   render() {
-    const { image, isLoading } = this.props;
+    const { item, isLoading } = this.props;
     const { width, height } = Dimensions.get('window');
     const heightItem = width * this.state.ratio;
-    console.log('############### image',image);
-
+    console.log('############### image', item);
+    let linkImage = item.isLocal ? 'file://' + item.link : item.link
     return (
       <View
         style={{
@@ -168,7 +170,7 @@ class ImageItem extends PureComponent {
           <Loading />
         </View>
         <FastImage
-          source={{ uri: image }}
+          source={{ uri: linkImage }}
           style={{
             width: width,
             height: heightItem
@@ -177,11 +179,10 @@ class ImageItem extends PureComponent {
             let ratio = evt.nativeEvent.height / evt.nativeEvent.width;
             this.setState({ ratio });
           }}
-          onError={(error) => {
-            console.log('############### onError',error);
+          onError={error => {
+            console.log('############### onError', error);
             this.setState({ isLoading: false });
           }}
-          
           onLoadEnd={() => {
             console.log('############### onLoadEnd');
             this.setState({ isLoading: false });

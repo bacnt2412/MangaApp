@@ -15,20 +15,21 @@ import { Navigation } from 'react-native-navigation';
 class ListChapter extends PureComponent {
   constructor(props) {
     super(props);
-    let { idManga } = props;
-
+    let idManga = props.manga._id;
+    let listChapter =
+      props.manga && props.manga.listChapter ? props.manga.listChapter : [];
     this.state = {
       isFirstLoad: false,
       isLoadMore: false,
       idManga,
-      listChapter: [],
+      listChapter,
       page: 1,
       isLast: false
     };
   }
 
   componentDidMount = () => {
-    this.getData();
+    if (this.state.listChapter.length === 0) this.getData();
   };
 
   getData = async () => {
@@ -129,7 +130,13 @@ class ListChapter extends PureComponent {
   render() {
     const { listChapter, isFirstLoad, isLast, isLoadMore } = this.state;
     const loadingView = (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginTop: 10
+        }}>
         <ActivityIndicator size={'small'} color={Const.COLOR.LOADDING} />
       </View>
     );
@@ -159,7 +166,7 @@ class ListChapter extends PureComponent {
                 return this.renderChapterItem(item);
               })}
         </View>
-        {isLast || isLoadMore ? null : (
+        {isLast || isLoadMore || this.props.manga.isLocal ? null : (
           <Text
             onPress={() => {
               this.getMoreData();

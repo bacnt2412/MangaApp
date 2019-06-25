@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import Lang from '../../Language';
 import { pushDetailScreen } from '../../screens';
@@ -15,19 +15,35 @@ class MangaItem extends PureComponent {
   }
 
   onImageLoadError = () => {
-    console.log(' ############# onImageLoadError')
+    console.log(' ############# onImageLoadError');
     this.setState({ isImageLoadError: true });
   };
   render() {
     const { item, componentId, elementId } = this.props;
     const { isImageLoadError } = this.state;
-    const thumbmail =
+    let thumbnail =
       item &&
       item.thumbnail &&
-      item.thumbnail.includes('http') && !isImageLoadError
+      item.thumbnail.includes('http') &&
+      !isImageLoadError
         ? { uri: item.thumbnail }
         : images.no_image;
+    if (item.isLocal) thumbnail = { uri: 'file://' + item.thumbnail };
 
+    let avatar = (
+        <FastImage
+          source={thumbnail}
+          style={{
+            width: 100,
+            height: 120,
+            borderRadius: 5,
+            borderWidth: 0.3
+          }}
+          onError={this.onImageLoadError}
+          resizeMode={FastImage.resizeMode.cover}
+        />
+      );
+  
     return (
       <TouchableOpacity
         onPress={e => {
@@ -42,17 +58,7 @@ class MangaItem extends PureComponent {
           borderRadius: 5,
           borderColor: '#ddd'
         }}>
-        <FastImage
-          source={thumbmail}
-          style={{
-            width: 100,
-            height: 120,
-            borderRadius: 5,
-            borderWidth: 0.3
-          }}
-          onError={this.onImageLoadError}
-          resizeMode={FastImage.resizeMode.cover}
-        />
+        {avatar}
         <View style={{ flex: 1, paddingTop: 5, paddingLeft: 10 }}>
           <Text
             style={{

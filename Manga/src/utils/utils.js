@@ -1,3 +1,4 @@
+import { PermissionsAndroid } from 'react-native';
 const moment = require('moment');
 const timezone = require('moment-timezone');
 import Lang from '../Language';
@@ -15,7 +16,11 @@ export default class Utils {
     name: 'Tuan Bac',
     avatar: '',
     provider: 'system',
-    listIdMangaFollow: ['5d046a879627483f328e9209','5d0461369627483f328ccbd5','5d0462ae9627483f328d2755'],
+    listIdMangaFollow: [
+      '5d046a879627483f328e9209',
+      '5d0461369627483f328ccbd5',
+      '5d0462ae9627483f328d2755'
+    ],
     listAppId: '',
     _id: '5d0b954947100573b4bf3cbf',
     username: 'bacnt',
@@ -25,6 +30,54 @@ export default class Utils {
       '$2b$10$3sLVgQmIMxcrotemBieBWerI71/u4oj9h5zJJlT.HQTmWIKdF/IDO'
   };
 
+  static Permission = {
+    request_WRITE_EXTERNAL_STORAGE_Permission: async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'Cool Photo App Camera Permission',
+            message:
+              'Cool Photo App needs access to your camera ' +
+              'so you can take awesome pictures.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK'
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('You can use the camera');
+        } else {
+          console.log('Camera permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    },
+    request_READ_EXTERNAL_STORAGE_Permission: async () => {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          {
+            title: 'Cool Photo App Camera Permission',
+            message:
+              'Cool Photo App needs access to your camera ' +
+              'so you can take awesome pictures.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK'
+          }
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('You can use the camera');
+        } else {
+          console.log('Camera permission denied');
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+  };
   static Thread = {
     sleep: timeout => {
       return new Promise((resolve, reject) => {
