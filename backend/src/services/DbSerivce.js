@@ -17,12 +17,17 @@ checkExistChapterByLink = async link => {
 
 updateManga = async (idManga, chapter) => {
   try {
-    let manga = await MangaModel.findByIdAndUpdate({ _id: idManga }, { $set: { updated: Date.now(), latestChapter: chapter } }, { new: true }, (err, doc) => {
-      if (err) {
-        return false;
+    let manga = await MangaModel.findByIdAndUpdate(
+      { _id: idManga },
+      { $set: { updated: Date.now(), latestChapter: chapter } },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          return false;
+        }
+        return true;
       }
-      return true;
-    });
+    );
   } catch (error) {
     console.log('########## error', error);
   }
@@ -32,10 +37,15 @@ updateViewManga = async (idManga, view) => {
   try {
     let manga = await MangaModel.findOne({ _id: idManga });
     if (manga) {
-      let result = await MangaModel.findByIdAndUpdate({ _id: idManga }, { $set: { viewers: manga.viewers + 1 } }, { new: true }, (err, doc) => {
-        if (err) {
+      let result = await MangaModel.findByIdAndUpdate(
+        { _id: idManga },
+        { $set: { viewers: manga.viewers + 1 } },
+        { new: true },
+        (err, doc) => {
+          if (err) {
+          }
         }
-      });
+      );
       return result;
     }
   } catch (error) {
@@ -132,7 +142,10 @@ followManga = async (idUser, idManga) => {
     listMangaFollow = [];
   }
   listMangaFollow.push(idManga);
-  let update = await UserModel.findOneAndUpdate({ _id: idUser }, { $set: { listIdMangaFollow: JSON.stringify(listMangaFollow) } });
+  let update = await UserModel.findOneAndUpdate(
+    { _id: idUser },
+    { $set: { listIdMangaFollow: JSON.stringify(listMangaFollow) } }
+  );
   return update ? true : fasle;
 };
 
@@ -150,7 +163,10 @@ unfollowManga = async (idUser, idManga) => {
     });
   }
 
-  let update = await UserModel.findOneAndUpdate({ _id: idUser }, { $set: { listIdMangaFollow: JSON.stringify(listMangaFollow) } });
+  let update = await UserModel.findOneAndUpdate(
+    { _id: idUser },
+    { $set: { listIdMangaFollow: JSON.stringify(listMangaFollow) } }
+  );
   return update ? true : fasle;
 };
 
@@ -158,7 +174,10 @@ getFollowManga = async (idUser, page) => {
   let userData = await UserModel.findOne({ _id: idUser });
   let listIdFollowManga = JSON.parse(userData.listIdMangaFollow);
   listIdFollowManga = listIdFollowManga.reverse();
-  listIdFollowManga = listIdFollowManga.slice((page - 1) * Settings.PAGE_LIMIT, page * Settings.PAGE_LIMIT);
+  listIdFollowManga = listIdFollowManga.slice(
+    (page - 1) * Settings.PAGE_LIMIT,
+    page * Settings.PAGE_LIMIT
+  );
   let listManga = [];
   for (let idManga of listIdFollowManga) {
     let manga = await MangaModel.findOne({ _id: idManga });
@@ -220,6 +239,20 @@ getAllImageByIdChapter = async idChapter => {
   }
 };
 
+getTotalImageOfManga = async idManga => {
+  let listChapter = await ChapterModel.find({ idmanga: idManga });
+  let totalImage = 0;
+  for (let chapter of listChapter) {
+    try {
+      let count = await ImageChapterModel.find({
+        idchapter: chapter._id
+      }).count();
+      totalImage += count;
+    } catch (error) {}
+  }
+  return totalImage;
+};
+
 module.exports = {
   checkExistMangaByName,
   addListChapter,
@@ -236,5 +269,6 @@ module.exports = {
   getListHistoryManga,
   getFollowManga,
   getMangaById,
-  getAllImageByIdChapter
+  getAllImageByIdChapter,
+  getTotalImageOfManga
 };

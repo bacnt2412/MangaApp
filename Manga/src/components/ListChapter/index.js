@@ -129,7 +129,7 @@ class ListChapter extends PureComponent {
   render() {
     const { listChapter, isFirstLoad, isLast, isLoadMore } = this.state;
     const loadingView = (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
         <ActivityIndicator size={'small'} color={Const.COLOR.LOADDING} />
       </View>
     );

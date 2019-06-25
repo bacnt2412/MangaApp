@@ -51,6 +51,8 @@ async function login(req, res) {
                   expiresIn: '72h' // expires in 24 hours
                 }
               );
+              userLogin.token = token;
+              userLogin.save();
             }
           });
         } else {

@@ -11,7 +11,7 @@ if (Lang.lang === 'jp') {
 export default class Utils {
   static userData = {
     token:
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiX2lkIjoiNWQwYjk1NDk0NzEwMDU3M2I0YmYzY2JmIiwiaWF0IjoxNTYxMTEwMTQ4LCJleHAiOjE1NjEzNjkzNDh9.d0ByFHnENkET7EK22XDybq8d_axpEBSkP-bJ1s-LfJg',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJhY250IiwiX2lkIjoiNWQwYjk1NDk0NzEwMDU3M2I0YmYzY2JmIiwiaWF0IjoxNTYxMzg0NzI3LCJleHAiOjE1NjE2NDM5Mjd9.1ewkmQS4wWSAb5-Z-v8ScG3oZK95cxwmclg9dYk7OGQ',
     name: 'Tuan Bac',
     avatar: '',
     provider: 'system',

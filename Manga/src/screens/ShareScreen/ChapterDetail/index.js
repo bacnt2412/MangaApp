@@ -181,6 +181,7 @@ class ImageItem extends PureComponent {
             console.log('############### onError',error);
             this.setState({ isLoading: false });
           }}
+          
           onLoadEnd={() => {
             console.log('############### onLoadEnd');
             this.setState({ isLoading: false });
