@@ -368,11 +368,12 @@ async function startCrawNewData() {
       }
       console.log('################# list Chapter New ', listChapterNew);
       if (listChapterNew && listChapterNew.length > 0) {
-        listChapterNew.map(async item => {
-          let listImage = await NET_TRUYEN_Image_get_list(item.link);
-          await DbService.addListImage(listImage, item._id);
-          await sleep(5000);
-        });
+        for (let i = 0; i < listChapterNew.length; i++) {
+          const chapterNew = listChapterNew[i];
+          let listImage = await NET_TRUYEN_Image_get_list(chapterNew.link);
+          await DbService.addListImage(listImage, chapterNew._id);
+          await sleep(3000);
+        }
       }
 
       await sleep(5000);
