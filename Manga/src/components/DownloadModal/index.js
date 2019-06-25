@@ -162,10 +162,10 @@ class DownloadModal extends PureComponent {
 
   show = async idManga => {
     this.setState({ visiable: true, idManga });
-    await Utils.Permission.request_WRITE_EXTERNAL_STORAGE_Permission();
-    await Utils.Permission.request_READ_EXTERNAL_STORAGE_Permission();
+    // await Utils.Permission.request_WRITE_EXTERNAL_STORAGE_Permission();
+    // await Utils.Permission.request_READ_EXTERNAL_STORAGE_Permission();
 
-    this.downloadManga(idManga);
+   // this.downloadManga(idManga);
   };
 
   hide = () => {
@@ -219,9 +219,8 @@ class DownloadModal extends PureComponent {
               {this.state.isSuccess ? (
                 <View
                   style={{
-                    flex: 1,
                     justifyContent: 'center',
-                    alignItems: 'center'
+                    alignItems: 'center',
                   }}>
                   <Text
                     style={{

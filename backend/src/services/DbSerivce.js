@@ -228,7 +228,13 @@ getMangaById = async idManga => {
   try {
     let manga = await MangaModel.findById({ _id: idManga });
     let listChapter = await ChapterModel.find({ idmanga: idManga });
-    manga = Utils.Object.addValueInObject(manga, 'listChapter', listChapter);
+    let listChapterNews = [];
+    for (let chapter of listChapter) {
+      let listImage = await ImageChapterModel.find({ idchapter: chapter._id });
+      chapter = Utils.Object.addValueInObject(chapter, 'listImage', listImage);
+      listChapterNews.push(chapter);
+    }
+    manga = Utils.Object.addValueInObject(manga, 'listChapter', listChapterNews);
     return manga;
   } catch (error) {
     console.log(' ########## error', error);
@@ -252,7 +258,7 @@ getTotalImageOfManga = async idManga => {
     try {
       let count = await ImageChapterModel.find({
         idchapter: chapter._id
-      }).count();
+      });
       totalImage += count;
     } catch (error) {}
   }
