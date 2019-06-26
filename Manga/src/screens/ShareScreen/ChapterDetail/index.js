@@ -5,6 +5,7 @@ import Api from '../../../services/api';
 import FastImage from 'react-native-fast-image';
 import { Loading } from '../../../components';
 import Utils from '../../../utils/utils';
+import images from '../../../assets/images';
 
 class ChapterDetail extends PureComponent {
   static options = {
@@ -142,15 +143,17 @@ class ChapterDetail extends PureComponent {
 class ImageItem extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = { ratio: 1, isLoading: true };
+    this.state = { ratio: 1, isLoading: true, isError: false };
   }
 
   render() {
-    const { item, isLoading } = this.props;
+    const { item } = this.props;
+    const { ratio, isError, isLoading } = this.state;
     const { width, height } = Dimensions.get('window');
     const heightItem = width * this.state.ratio;
     console.log('############### image', item);
-    let linkImage = item.isLocal ? 'file://' + item.link : item.link
+    let linkImage = item.isLocal ? 'file://' + item.link : item.link;
+    linkImage = isError ? images.no_image : { uri: linkImage };
     return (
       <View
         style={{
@@ -158,19 +161,21 @@ class ImageItem extends PureComponent {
           width: width,
           height: heightItem
         }}>
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: width,
-            height: heightItem
-          }}>
-          <Loading />
-        </View>
+        {isLoading ? (
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: width,
+              height: heightItem
+            }}>
+            <Loading />
+          </View>
+        ) : null}
         <FastImage
-          source={{ uri: linkImage }}
+          source={linkImage}
           style={{
             width: width,
             height: heightItem
@@ -181,10 +186,9 @@ class ImageItem extends PureComponent {
           }}
           onError={error => {
             console.log('############### onError', error);
-            this.setState({ isLoading: false });
+            this.setState({ isError: true });
           }}
           onLoadEnd={() => {
-            console.log('############### onLoadEnd');
             this.setState({ isLoading: false });
           }}
         />

@@ -220,6 +220,24 @@ getTotalImageOfManga = async (req, res) => {
   }
 };
 
+searchMangaByName = async (req, res) => {
+  try {
+    let key = req.body.key;
+    let page = req.body.page;
+    page = page ? page : 1;
+    if (key) {
+      let listManga = await DbServices.searchMangaByName(key,page);
+      res.status(200).json({ listManga });
+    } else {
+      res.status(400).json({ error: 'Invalid request' });
+    }
+  } catch (error) {
+    res.status(404).json({ error });
+  }
+};
+
+
+
 module.exports = {
   getAllManga,
   addNewManga,
@@ -234,5 +252,6 @@ module.exports = {
   getListHistoryManga,
   getFollowManga,
   getMangaById,
-  getTotalImageOfManga
+  getTotalImageOfManga,
+  searchMangaByName
 };

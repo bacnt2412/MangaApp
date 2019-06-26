@@ -7,6 +7,7 @@ import TitleWithIcon from './TitleWithIcon';
 import HeartAnimation from './HeartAnimation';
 import DownloadIcon from './DownloadIcon';
 import DownloadModal from './DownloadModal';
+import SearchButton from './SearchButton';
 
 
 export  {
@@ -18,5 +19,6 @@ export  {
   TitleWithIcon,
   HeartAnimation,
   DownloadIcon,
-  DownloadModal
+  DownloadModal,
+  SearchButton
 };

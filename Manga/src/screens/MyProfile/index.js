@@ -8,7 +8,7 @@ import Api from '../../services/api.js';
 import Lang from '../../Language';
 import styles from './styles';
 import Const from '../../utils/const';
-import { getManga, insertManga, insertListImage } from '../../data/realm';
+import { getManga } from '../../data/realm';
 
 class MyProfile extends BaseScreen {
   static options = {
@@ -85,26 +85,37 @@ class MyProfile extends BaseScreen {
     return await Api.getHistoryManga(data);
   };
 
-  GetDataDownload = async (page) => {
-    if(page) return;
-    let data = await getManga();
-    let listManga = [];
+  GetDataDownload = async  page => {
+    console.log(' ######################');
 
-    for (let manga of data) {
-      let listChapter = [];
-      for (let chapter of manga.listChapter) {
-        let listImage = [];
-        for (image of chapter.listImage) {
-          listImage.push({ ...image, isLocal: true });
-        }
-        chapter = { ...chapter, listImage: listImage, isLocal: true };
-        listChapter.push({ ...chapter });
-      }
-      manga = { ...manga, listChapter: listChapter, isLocal: true };
-      listManga.push({ ...manga });
-    }
+    if (page) return;
+    let data =  await getManga();
+
+    let listManga = data.map(manga => {
+      // let listChapter = manga.listChapter.map(chapter => {
+      //   // let listImage = chapter.listImage.map(image => {
+      //   //   return { ...image, isLocal: true };
+      //   // });
+      //   return { ...chapter, isLocal: true };
+      // });
+      return { ...manga,  isLocal: true };
+    });
+
+    // for (let manga of data) {
+    //   let listChapter = [];
+    //   for (let chapter of manga.listChapter) {
+    //     let listImage = [];
+    //     for (image of chapter.listImage) {
+    //       listImage.push({ ...image, isLocal: true });
+    //     }
+    //     chapter = { ...chapter, listImage: listImage, isLocal: true };
+    //     listChapter.push({ ...chapter });
+    //   }
+    //   manga = { ...manga, listChapter: listChapter, isLocal: true };
+    //   listManga.push({ ...manga });
+    // }
     let res = { data: { listManga }, status: 200 };
-    console.log(' ###################### GetDataDownload',res)
+    console.log(' ###################### GetDataDownload', res);
     return res;
   };
   renderContent() {

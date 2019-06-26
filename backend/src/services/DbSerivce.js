@@ -131,8 +131,8 @@ addNewCategory = async listCategory => {
 getListChapterByIdManga = async (idManga, page) => {
   return await ChapterModel.find({ idmanga: idManga })
     .sort({ _id: -1 })
-    .skip((page - 1) * Settings.PAGE_LIMIT)
-    .limit(Settings.PAGE_LIMIT);
+    .skip((page - 1) * Settings.PAGE_LIMIT*2)
+    .limit(Settings.PAGE_LIMIT*2);
 };
 
 getListAllChapterByIdManga = async (idManga, page) => {
@@ -265,6 +265,12 @@ getTotalImageOfManga = async idManga => {
   return totalImage;
 };
 
+searchMangaByName = async ( key, page ) => {
+  const regex = '.*' + key + '.*';
+  let listManga = await MangaModel.find({ name: {  $regex: regex } }).skip((page - 1)* Settings.PAGE_LIMIT).limit(Settings.PAGE_LIMIT);
+  return listManga;
+}
+
 module.exports = {
   checkExistMangaByName,
   addListChapter,
@@ -282,5 +288,6 @@ module.exports = {
   getFollowManga,
   getMangaById,
   getAllImageByIdChapter,
-  getTotalImageOfManga
+  getTotalImageOfManga,
+  searchMangaByName
 };

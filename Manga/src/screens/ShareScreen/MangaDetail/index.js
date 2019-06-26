@@ -8,19 +8,18 @@ import {
 } from 'react-native';
 import Lang from '../../../Language';
 import FastImage from 'react-native-fast-image';
-import { Navigation } from 'react-native-navigation';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
 import {
   CountView,
   TitleWithIcon,
-  ListChapter,
-  DownloadModal
+  ListChapter
 } from '../../../components';
 import ViewMoreText from 'react-native-view-more-text';
 import styles from './styles';
 import Analytic from '../../../utils/analytic';
 import images from '../../../assets/images.js';
+import Const from '../../../utils/const';
 const GUTTER = 8 * 2;
 const TOOLBAR_HEIGHT = 56;
 const BACKDROP_HEIGHT = 240;
@@ -42,9 +41,9 @@ class MangaDetail extends PureComponent {
         },
         rightButtons: [
           {
-            id: 'buttonOne',
+            id: Const.ID_SCREEN.DOWNLOAD_BUTTON,
             component: {
-              name: 'DownloadIcon',
+              name: Const.NAME_SCREEN.DOWNLOAD_BUTTON,
               passProps: {
                 idManga:
                   props && props.manga && props.manga._id ? props.manga._id : 1
@@ -52,9 +51,9 @@ class MangaDetail extends PureComponent {
             }
           },
           {
-            id: 'btnFollow',
+            id: Const.ID_SCREEN.HEART_BUTTON,
             component: {
-              name: 'HeartAnimation',
+              name: Const.NAME_SCREEN.HEART_BUTTON,
               passProps: {
                 idManga:
                   props && props.manga && props.manga._id ? props.manga._id : 1
@@ -108,13 +107,6 @@ class MangaDetail extends PureComponent {
   }
 
   componentDidMount() {
-    Navigation.events().registerNavigationButtonPressedListener(
-      ({ buttonId }) => {
-        console.log('####################');
-        console.warn(buttonId); // BACK
-      }
-    );
-
     Analytic.sendScreen('DetailScreen');
   }
 

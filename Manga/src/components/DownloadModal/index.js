@@ -41,35 +41,32 @@ class DownloadModal extends PureComponent {
 
   downloadChapter = async (chapter, folderManga) => {
     let folderChapter = folderManga + '/' + chapter._id;
-    console.log(' ############################# folderChapter', folderChapter);
-
     await RNFS.mkdir(folderChapter);
-
-    let res = await Api.getAllImageByIdChapter({ idChapter: chapter._id });
-    if (!res || res.status !== 200)
-      return { success: false, message: ' Lỗi lấy thông tin Chapter' };
-    let listImage = res.data.listImage;
+    let listImage = chapter.listImage;
     if (listImage.length > 0) {
       let newListImage = [];
       for (let image of listImage) {
-        let saveImage = folderChapter + '/' + image._id + '.png';
-        let downloadImageOptions = {
-          fromUrl: image.link,
-          toFile: saveImage,
-          readTimeout: 60 * 1000
-        };
-        let resultDownloadImage = await RNFS.downloadFile(downloadImageOptions)
-          .promise;
-        if (!resultDownloadImage || resultDownloadImage.statusCode !== 200) {
-          console.log(' ####################### Lỗi tải ảnh: ', image.link);
-          return { success: false, message: ' Lỗi tải ảnh: ' + image.name };
-        }
-        await this.setState({
-          totalImageDownloaded: this.state.totalImageDownloaded + 1
-        });
-        console.log(' ##### Download Thành Công Image', image.name);
-        image.link = saveImage;
-        newListImage.push(image);
+        try {
+          let saveImage = folderChapter + '/' + image._id + '.png';
+          let downloadImageOptions = {
+            fromUrl: image.link,
+            toFile: saveImage,
+            readTimeout: 60 * 1000
+          };
+          let resultDownloadImage = await RNFS.downloadFile(
+            downloadImageOptions
+          ).promise;
+          if (!resultDownloadImage || resultDownloadImage.statusCode !== 200) {
+            console.log(' ####################### Lỗi tải ảnh: ', image.link);
+          } else {
+            console.log(' ##### Download Thành Công Image', image.name);
+            image.link = saveImage;
+            newListImage.push(image);
+          }
+          await this.setState({
+            totalImageDownloaded: this.state.totalImageDownloaded + 1
+          });
+        } catch (error) {}
       }
       this.addImageToChapter(chapter._id, newListImage);
       console.log(
@@ -99,6 +96,7 @@ class DownloadModal extends PureComponent {
     }
     infomationManga = res.data.manga;
 
+    console.log(' ############## infomationManga', infomationManga);
     // Nếu tồn tại thì hỏi xem có muốn tải lại hay ko
     if (checkExist) {
       await RNFS.unlink(folderManga)
@@ -113,8 +111,6 @@ class DownloadModal extends PureComponent {
 
     await RNFS.mkdir(folderManga);
 
-    console.log(' ############## infomationManga', infomationManga);
-
     // require the module
 
     // create a path you want to write to
@@ -122,7 +118,7 @@ class DownloadModal extends PureComponent {
     // but `RNFS.DocumentDirectoryPath` exists on both platforms and is writable
 
     console.log(' ############## fileThumbnail', fileThumbnail);
-  
+
     // download thumbnail
     let downloadFileOptions = {
       fromUrl: infomationManga.thumbnail,
@@ -137,14 +133,11 @@ class DownloadModal extends PureComponent {
     this.addMangaToDbLocal({ ...infomationManga, thumbnail: fileThumbnail });
 
     // get total Image;
-    let res = await Api.getTotalImageOfChapter({
-      idManga: infomationManga._id
+    let totalImage = 0;
+    infomationManga.listChapter.map(item => {
+      totalImage = totalImage + item.listImage.length;
     });
-    if (!res || res.status !== 200) {
-      alert('Lỗi lấy total image');
-      return false;
-    }
-    await this.setState({ totalImage: res.data.totalImage });
+    await this.setState({ totalImage });
 
     for (let chapter of infomationManga.listChapter) {
       let resultDownloadChapter = await this.downloadChapter(
@@ -165,7 +158,7 @@ class DownloadModal extends PureComponent {
     // await Utils.Permission.request_WRITE_EXTERNAL_STORAGE_Permission();
     // await Utils.Permission.request_READ_EXTERNAL_STORAGE_Permission();
 
-   // this.downloadManga(idManga);
+    this.downloadManga(idManga);
   };
 
   hide = () => {
@@ -220,7 +213,7 @@ class DownloadModal extends PureComponent {
                 <View
                   style={{
                     justifyContent: 'center',
-                    alignItems: 'center',
+                    alignItems: 'center'
                   }}>
                   <Text
                     style={{

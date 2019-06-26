@@ -8,7 +8,8 @@ import ChapterDetail from './ShareScreen/ChapterDetail';
 import Lang from '../Language';
 import Const from '../utils/const';
 import ListMangaScreen from './ShareScreen/ListMangaScreen';
-import { CountView, TitleWithIcon, ListChapter, HeartAnimation,DownloadIcon } from '../components';
+import { HeartAnimation, DownloadIcon, SearchButton } from '../components';
+import SearchScreen from './ShareScreen/SearchScreen';
 
 export const Screens = new Map();
 Screens.set(Const.NAME_SCREEN.HOME, Home);
@@ -17,9 +18,10 @@ Screens.set(Const.NAME_SCREEN.COMMUNITY, Community);
 Screens.set(Const.NAME_SCREEN.MANGA_DETAIL, MangaDetail);
 Screens.set(Const.NAME_SCREEN.CHAPTER_DETAIL, ChapterDetail);
 Screens.set(Const.NAME_SCREEN.LIST_MANGA_SCREEN, ListMangaScreen);
-Screens.set('HeartAnimation', HeartAnimation);
-Screens.set('DownloadIcon', DownloadIcon);
-
+Screens.set(Const.NAME_SCREEN.HEART_BUTTON, HeartAnimation);
+Screens.set(Const.NAME_SCREEN.DOWNLOAD_BUTTON, DownloadIcon);
+Screens.set(Const.NAME_SCREEN.SEARCH_BUTTON, SearchButton);
+Screens.set(Const.NAME_SCREEN.SEARCH_SCREEN, SearchScreen);
 
 export const StartApplication = async () => {
   const HomeScreen = {
@@ -89,7 +91,13 @@ export const StartApplication = async () => {
   });
 };
 
-export const pushDetailScreen = ({ componentId, movieId, elementId, selectedTab, manga }) => {
+export const pushDetailScreen = ({
+  componentId,
+  movieId,
+  elementId,
+  selectedTab,
+  manga
+}) => {
   Navigation.push(componentId, {
     component: {
       name: Const.NAME_SCREEN.MANGA_DETAIL,

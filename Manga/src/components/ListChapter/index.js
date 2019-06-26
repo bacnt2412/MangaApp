@@ -29,7 +29,11 @@ class ListChapter extends PureComponent {
   }
 
   componentDidMount = () => {
-    if (this.state.listChapter.length === 0) this.getData();
+    if (this.props.manga.isLocal) {
+      console.log(' ####################### this.props.manga ',this.props.manga)
+    } else {
+      this.getData();
+    }
   };
 
   getData = async () => {

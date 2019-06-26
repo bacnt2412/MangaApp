@@ -149,7 +149,7 @@ export default class Api {
 
   static getMangaById = async (data) => {
     let url = Settings.SERVER_API + 'manga/get-manga-by-id';
-    return await this.post(url, data);
+    return await this.post(url, data,{ timeout: 60000 });
   };
 
   static getAllImageByIdChapter = async (data) => {

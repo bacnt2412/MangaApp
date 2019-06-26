@@ -21,7 +21,18 @@ export default class Home extends BaseScreen {
       title: {
         text: Lang.getByKey('home_title'),
         fontSize: 20
-      }
+      },
+      rightButtons: [
+        {
+          id: Const.ID_SCREEN.SEARCH_BUTTON,
+          component: {
+            name: Const.NAME_SCREEN.SEARCH_BUTTON,
+            passProps: {
+              componentIdParent: Const.ID_SCREEN.HOME
+            }
+          }
+        }
+      ]
     }
   };
   constructor(props) {
@@ -43,9 +54,9 @@ export default class Home extends BaseScreen {
     };
   }
 
-  componentDidMount = async ()=> {
+  componentDidMount = async () => {
     Analytic.sendScreen('HomeScreen');
-  }
+  };
 
   getLatestManga = async data => {
     let res = await Api.getLatestManga(data);

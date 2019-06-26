@@ -16,6 +16,7 @@ MangaRoute.route('/get-history-manga').post(MangaController.getListHistoryManga)
 MangaRoute.route('/get-follow-manga').post(MangaController.getFollowManga);
 MangaRoute.route('/get-manga-by-id').post(MangaController.getMangaById);
 MangaRoute.route('/get-total-image-by-id-chapter').post(MangaController.getTotalImageOfManga);
+MangaRoute.route('/search-by-name').post(MangaController.searchMangaByName);
 
 
 module.exports = MangaRoute;
