@@ -1,8 +1,19 @@
 import React, { PureComponent } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import {
+  View,
+  ActivityIndicator,
+  TextInput,
+  TouchableOpacity,
+  FlatList
+} from 'react-native';
 import Lang from '../../../Language';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { ListManga } from '../../../components/ListManga';
+import { Loading, MangaItem } from '../../../components';
+import Api from '../../../services/api';
+import Utils from '../../../utils/utils';
+import Const from '../../../utils/const';
+
+let timeout = null;
 
 class SearchScreen extends PureComponent {
   static options = {
@@ -12,7 +23,8 @@ class SearchScreen extends PureComponent {
       testID: 'topBar',
       title: {
         text: 'Search',
-        fontSize: 20
+        fontSize: 20,
+        page: 1
       }
     }
   };
@@ -21,19 +33,103 @@ class SearchScreen extends PureComponent {
     super(props);
     this.state = {
       textSearch: '',
-      listManga: []
+      listManga: [],
+      isLoadFirst: false,
+      isLoadMore: false
     };
   }
 
+  searchManga = async () => {
+    let { textSearch, listManga } = this.state;
+    if (!textSearch) return;
+    this.setState({
+      isLoadFirst: true,
+      page: 1
+    });
+    let data = {
+      key: textSearch
+    };
+    let res = await Api.searchMangaByName(data);
+    if (res && res.status === 200) {
+      console.log(' ################## searchManga', res);
+      listManga = res.data.listManga;
+    }
+    this.setState({
+      isLoadFirst: false,
+      listManga
+    });
+  };
+
+  getMoreData = async () => {
+    let { textSearch, listManga, page } = this.state;
+    if (!textSearch) return;
+
+    page++;
+    this.setState({
+      isLoadMore: true
+    });
+    let data = {
+      key: textSearch,
+      page
+    };
+    let res = await Api.searchMangaByName(data);
+    if (res && res.status === 200) {
+      console.log(' ################## res', res);
+      listManga = [...listManga, ...res.data.listManga];
+    }
+    this.setState({
+      isLoadMore: false,
+      listManga,
+      page
+    });
+  };
   onChangeTextSearch = text => {
     this.setState({ textSearch: text });
+    clearTimeout(timeout);
+    timeout = setTimeout(this.searchManga, 500);
   };
 
   onClearText = () => {
     this.setState({ textSearch: '' });
   };
 
+  keyExtractor = item => {
+    return item && item._id
+      ? item._id.toString()
+      : Utils.Number.random().toString();
+  };
+
+  renderItem = ({ index, item }) => {
+    if (!item || !item._id) {
+      return <View key={'key_213'} />;
+    }
+    return (
+      <MangaItem
+        componentId={this.props.componentId}
+        elementId={
+          `manga_` + item && item._id
+            ? item._id
+            : Utils.Number.random().toString()
+        }
+        index={index}
+        item={item}
+      />
+    );
+  };
+
+  onMomentumScrollBegin = () => {
+    this.onEndReachedCalledDuringMomentum = false;
+  };
+
+  onEndReached = () => {
+    if (!this.onEndReachedCalledDuringMomentum) {
+      this.onEndReachedCalledDuringMomentum = true;
+      this.getMoreData();
+    }
+  };
+
   render() {
+    const { listManga, isLoadFirst, isLoadMore } = this.state;
     return (
       <View style={{ flex: 1, padding: 10 }}>
         <View
@@ -72,8 +168,38 @@ class SearchScreen extends PureComponent {
             </TouchableOpacity>
           ) : null}
         </View>
-        <View>
-            {/* <ListManga /> */}
+        <View style={{flex: 1}} >
+          {isLoadFirst ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}>
+              <Loading />
+            </View>
+          ) : (
+            <FlatList
+              data={listManga}
+              renderItem={this.renderItem}
+              keyExtractor={this.keyExtractor}
+              extraData={this.state}
+              scrollEventThrottle={160}
+              onEndReachedThreshold={0.5}
+              onMomentumScrollBegin={this.onMomentumScrollBegin}
+              onEndReached={this.onEndReached}
+              ListFooterComponent={
+                isLoadMore && (
+                  <View style={{ justifyContent: 'center', marginTop: 5 }}>
+                    <ActivityIndicator
+                      size={'small'}
+                      color={Const.COLOR.LOADDING}
+                    />
+                  </View>
+                )
+              }
+            />
+          )}
         </View>
       </View>
     );

@@ -20,7 +20,10 @@ export default class Const {
     DOWNLOAD_BUTTON: 'bacnt.DownloadButton',
     HEART_BUTTON: 'bacnt.HeartButton',
     SEARCH_BUTTON: 'bacnt.SearchButton',
-    SEARCH_SCREEN: 'bacnt.SearchScreen'
+    SEARCH_SCREEN: 'bacnt.SearchScreen',
+    LOGIN_SCREEN: 'bacnt.LoginScreen',
+    REGISTER_SCREEN: 'bacnt.RegisterScreen',
+
   };
 
   static ID_SCREEN = {
@@ -35,7 +38,9 @@ export default class Const {
     DOWNLOAD_BUTTON: 'DOWNLOAD_BUTTON',
     HEART_BUTTON: 'HEART_BUTTON',
     SEARCH_BUTTON: 'SEARCH_BUTTON',
-    SEARCH_SCREEN: 'SEARCH_SCREEN'
+    SEARCH_SCREEN: 'SEARCH_SCREEN',
+    LOGIN_SCREEN: 'LOGIN_SCREEN',
+    REGISTERSCREEN: 'REGISTERSCREEN'
   };
 
   static COLOR = {

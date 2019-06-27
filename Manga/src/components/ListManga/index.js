@@ -53,7 +53,7 @@ export default class ListManga extends PureComponent {
     const { getData } = this.props;
     let { listManga } = this.state;
 
-    this.setState({ isRefreshing: true });
+    this.setState({ isRefreshing: true, page: 1 });
     const res = getData ? await getData() : null;
     if (res && res.status === 200) {
       listManga = res.data.listManga;
@@ -64,7 +64,9 @@ export default class ListManga extends PureComponent {
   };
 
   keyExtractor = item => {
-    return item && item._id ? item._id.toString() : Utils.Number.random().toString();
+    return item && item._id
+      ? item._id.toString()
+      : Utils.Number.random().toString();
   };
 
   renderItem = ({ index, item }) => {
@@ -74,7 +76,11 @@ export default class ListManga extends PureComponent {
     return (
       <MangaItem
         componentId={this.props.componentId}
-        elementId={`manga_` + item && item._id ? item._id : Utils.Number.random().toString()}
+        elementId={
+          `manga_` + item && item._id
+            ? item._id
+            : Utils.Number.random().toString()
+        }
         index={index}
         item={item}
       />

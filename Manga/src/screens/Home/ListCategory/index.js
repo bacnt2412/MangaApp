@@ -3,6 +3,7 @@ import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import Api from '../../../services/api';
 import { Navigation } from 'react-native-navigation';
 import Const from '../../../utils/const';
+
 export class ListCategory extends PureComponent {
   constructor(props) {
     super(props);
@@ -52,16 +53,6 @@ export class ListCategory extends PureComponent {
     return <CategoryItem item={item} />;
   };
 
-  onMomentumScrollBegin = () => {
-    this.onEndReachedCalledDuringMomentum = false;
-  };
-
-  onEndReached = () => {
-    if (!this.onEndReachedCalledDuringMomentum) {
-      this.props.getMoreData ? this.props.getMoreData() : null;
-      this.onEndReachedCalledDuringMomentum = true;
-    }
-  };
 
   render() {
     return (
@@ -72,9 +63,7 @@ export class ListCategory extends PureComponent {
           keyExtractor={this.keyExtractor}
           extraData={this.state}
           scrollEventThrottle={160}
-          onEndReachedThreshold={0.5}
-          onMomentumScrollBegin={this.onMomentumScrollBegin}
-          onEndReached={this.onEndReached}
+          
         />
       </View>
     );

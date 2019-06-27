@@ -162,4 +162,9 @@ export default class Api {
     return await this.post(url, data,{ timeout: 30000 });
   };
 
+  static searchMangaByName = async (data) => {
+    let url = Settings.SERVER_API + 'manga/search-by-name';
+    return await this.post(url, data,{ timeout: 30000 });
+  };
+
 }

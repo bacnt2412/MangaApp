@@ -10,6 +10,7 @@ import Const from '../utils/const';
 import ListMangaScreen from './ShareScreen/ListMangaScreen';
 import { HeartAnimation, DownloadIcon, SearchButton } from '../components';
 import SearchScreen from './ShareScreen/SearchScreen';
+import LoginScreen from './Login';
 
 export const Screens = new Map();
 Screens.set(Const.NAME_SCREEN.HOME, Home);
@@ -22,8 +23,12 @@ Screens.set(Const.NAME_SCREEN.HEART_BUTTON, HeartAnimation);
 Screens.set(Const.NAME_SCREEN.DOWNLOAD_BUTTON, DownloadIcon);
 Screens.set(Const.NAME_SCREEN.SEARCH_BUTTON, SearchButton);
 Screens.set(Const.NAME_SCREEN.SEARCH_SCREEN, SearchScreen);
+Screens.set(Const.NAME_SCREEN.LOGIN_SCREEN, LoginScreen);
+Screens.set(Const.NAME_SCREEN.REGISTER_SCREEN, SearchScreen);
+
 
 export const StartApplication = async () => {
+
   const HomeScreen = {
     stack: {
       id: Const.ID_SCREEN.HOME,
@@ -83,6 +88,19 @@ export const StartApplication = async () => {
   return Navigation.setRoot({
     root: {
       id: 'ROOT',
+      stack: {
+        children: [
+          {
+            component: {
+              name: Const.NAME_SCREEN.LOGIN_SCREEN
+            }
+          }
+        ],
+        options: {
+
+        }
+      }
+      ,
       bottomTabs: {
         id: Const.ID_SCREEN.BOTTOM_TAB,
         children: [HomeScreen, MyProFileScreen, CommunityScreen]
