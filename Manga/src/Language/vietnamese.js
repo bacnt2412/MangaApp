@@ -18,10 +18,10 @@ export default {
   manga_description: 'Nội dung:',
   manga_list_chapter: 'Danh sách chapter',
   manga_follow_message: 'Bạn sẽ nhận được thông báo khi ra chapter mới',
-  manga_unfollow_message: 'Bạn sẽ không nhận được thông báo khi ra chapter mới nữa',
+  manga_unfollow_message:
+    'Bạn sẽ không nhận được thông báo khi ra chapter mới nữa',
   manga_follow: 'Theo dõi',
   manga_unfollow: 'Bỏ theo dõi',
-
 
   //================================== Category ====================================
   //================================== MyProfile ====================================
@@ -34,5 +34,21 @@ export default {
   community_title: 'Cộng đồng',
 
   //================================== Share ========================================
-  view_more: 'Xem thêm'
+  view_more: 'Xem thêm',
+  //================================== Login ========================================
+  login_title: 'Đăng nhập',
+  login_email_placeholder: 'Email',
+  login_password_placeholder: 'Password',
+  login_password_name: 'Name',
+  login_btn_login: 'Đăng nhập',
+  login_btn_register: 'Đăng ký',
+  //================================== Register ========================================
+  register_title: 'Đăng ký',
+  register_gender: 'Giới tính',
+  register_email: 'Email',
+  register_password: 'Mật khẩu',
+  register_name: 'Họ tên',
+  register_error_message: 'Vui lòng điền đầy đủ vào các trường',
+  register_gender_male: 'Nam',
+  register_gender_female: 'Nữ'
 };

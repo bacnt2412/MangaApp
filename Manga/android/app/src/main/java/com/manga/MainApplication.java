@@ -21,6 +21,7 @@ import com.merryjs.PhotoViewer.MerryPhotoViewPackage;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +65,8 @@ public class MainApplication extends NavigationApplication {
             new LinearGradientPackage(),
             new VectorIconsPackage(),
             new RealmReactPackage(),
-            new RNFSPackage()
+            new RNFSPackage(),
+            new AsyncStoragePackage()
             // eg. new VectorIconsPackage()
         );
     }

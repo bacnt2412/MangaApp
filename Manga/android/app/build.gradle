@@ -158,6 +158,7 @@ dependencies {
     implementation(project(":react-native-device-info"), { exclude group: "com.google.android.gms"})
     implementation "com.google.android.gms:play-services-gcm:16.0.0"
     compile project(':react-native-fs')
+    implementation project(':@react-native-community_async-storage')
     implementation project(':realm')
     implementation project(':react-native-device-info')
     implementation project(':react-native-vector-icons')

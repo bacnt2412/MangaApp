@@ -127,44 +127,53 @@ export default class Api {
     return await this.post(url, data);
   };
 
-  static getHistoryManga = async (data) => {
+  static getHistoryManga = async data => {
     let url = Settings.SERVER_API + 'manga/get-history-manga';
     return await this.post(url, data);
   };
 
-  static getFollowManga = async (data) => {
+  static getFollowManga = async data => {
     let url = Settings.SERVER_API + 'manga/get-follow-manga';
     return await this.post(url, data);
   };
 
-  static followManga = async (data) => {
+  static followManga = async data => {
     let url = Settings.SERVER_API + 'manga/follow-manga';
     return await this.post(url, data);
   };
 
-  static unfollowManga = async (data) => {
+  static unfollowManga = async data => {
     let url = Settings.SERVER_API + 'manga/unfollow-manga';
     return await this.post(url, data);
   };
 
-  static getMangaById = async (data) => {
+  static getMangaById = async data => {
     let url = Settings.SERVER_API + 'manga/get-manga-by-id';
-    return await this.post(url, data,{ timeout: 60000 });
+    return await this.post(url, data, { timeout: 60000 });
   };
 
-  static getAllImageByIdChapter = async (data) => {
+  static getAllImageByIdChapter = async data => {
     let url = Settings.SERVER_API + 'image/get-all-image-by-id-chapter';
     return await this.post(url, data);
   };
 
-  static getTotalImageOfChapter = async (data) => {
+  static getTotalImageOfChapter = async data => {
     let url = Settings.SERVER_API + 'manga/get-total-image-by-id-chapter';
-    return await this.post(url, data,{ timeout: 30000 });
+    return await this.post(url, data, { timeout: 30000 });
   };
 
-  static searchMangaByName = async (data) => {
+  static searchMangaByName = async data => {
     let url = Settings.SERVER_API + 'manga/search-by-name';
-    return await this.post(url, data,{ timeout: 30000 });
+    return await this.post(url, data, { timeout: 30000 });
   };
 
+  static login = async data => {
+    let url = Settings.SERVER_IP + 'login';
+    return await this.post(url, data);
+  };
+
+  static register = async data => {
+    let url = Settings.SERVER_IP + 'register';
+    return await this.post(url, data);
+  };
 }

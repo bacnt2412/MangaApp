@@ -806,6 +806,11 @@
   resolved "https://registry.yarnpkg.com/@merryjs/photo-viewer/-/photo-viewer-3.0.1.tgz#6760fe5acd35f1221954720affe42617a813630f"
   integrity sha512-/9aFYUm72WJVhuBdlpHhVwSjpMzasSN5LiXC0yiG29tAum4JVoougaJMz7Eiv9fAQNPpGT9FH+W9qTIpt/9l2A==
 
+"@react-native-community/async-storage@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@react-native-community/async-storage/-/async-storage-1.5.0.tgz#647ffcd832272068b0be57332e08d73036ed391f"
+  integrity sha512-2yE4RzQ5IL+UTPhuMY0ykNRKHf1m90jOnmp8fcDPUun5U97cXlorjI4p66ovDgF0FuOv8ZpiUKvunGy3qqBxwg==
+
 "@react-native-community/cli@^1.2.1":
   version "1.9.7"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli/-/cli-1.9.7.tgz#1d0aad150a83f8ee06410c216b1b37e8861aa59f"
@@ -5319,6 +5324,11 @@ react-native-safe-module@^1.1.0:
   integrity sha1-ojgkyiTtwpAZE2lKdmRkdRE9Vw0=
   dependencies:
     dedent "^0.6.0"
+
+react-native-simple-radio-button@^2.7.3:
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/react-native-simple-radio-button/-/react-native-simple-radio-button-2.7.3.tgz#c7227c0f963d6bbcfa245255d18a5a8b98fde41f"
+  integrity sha512-kiYRarFj7PXzV9fbQwMBiYwS4YnhrR4NZGT68atlFIoNFxZLrt5OMCDqXZqu6R6bUWKLndzPpO/nhXc6/OU1Mg==
 
 react-native-tab-view@^2.5.0:
   version "2.5.0"

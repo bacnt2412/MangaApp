@@ -10,6 +10,7 @@ import Const from '../../utils/const';
 import Analytic from '../../utils/analytic';
 import ListCategory from './ListCategory';
 import RNFS from 'react-native-fs';
+import AsynStorage from '@react-native-community/async-storage';
 
 export default class Home extends BaseScreen {
   static options = {
@@ -56,6 +57,7 @@ export default class Home extends BaseScreen {
 
   componentDidMount = async () => {
     Analytic.sendScreen('HomeScreen');
+    AsynStorage.setItem('USER_DATA','');
   };
 
   getLatestManga = async data => {

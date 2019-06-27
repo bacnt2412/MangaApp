@@ -10,7 +10,8 @@ import Const from '../utils/const';
 import ListMangaScreen from './ShareScreen/ListMangaScreen';
 import { HeartAnimation, DownloadIcon, SearchButton } from '../components';
 import SearchScreen from './ShareScreen/SearchScreen';
-import LoginScreen from './Login';
+import Login from './Login';
+import Register from './Register';
 
 export const Screens = new Map();
 Screens.set(Const.NAME_SCREEN.HOME, Home);
@@ -23,12 +24,35 @@ Screens.set(Const.NAME_SCREEN.HEART_BUTTON, HeartAnimation);
 Screens.set(Const.NAME_SCREEN.DOWNLOAD_BUTTON, DownloadIcon);
 Screens.set(Const.NAME_SCREEN.SEARCH_BUTTON, SearchButton);
 Screens.set(Const.NAME_SCREEN.SEARCH_SCREEN, SearchScreen);
-Screens.set(Const.NAME_SCREEN.LOGIN_SCREEN, LoginScreen);
-Screens.set(Const.NAME_SCREEN.REGISTER_SCREEN, SearchScreen);
+Screens.set(Const.NAME_SCREEN.LOGIN_SCREEN, Login);
+Screens.set(Const.NAME_SCREEN.REGISTER_SCREEN, Register);
 
+export const startLogin = async () => {
+  const RegisterScreen = {
+    component: {
+      id: Const.ID_SCREEN.REGISTERSCREEN,
+      name: Const.NAME_SCREEN.REGISTER_SCREEN
+    }
+  };
+
+  const LoginScreen = {
+    component: {
+      id: Const.ID_SCREEN.LOGIN_SCREEN,
+      name: Const.NAME_SCREEN.LOGIN_SCREEN
+    }
+  };
+
+  return Navigation.setRoot({
+    root: {
+      stack: {
+        id: 'STACK_LOGIN',
+        children: [ RegisterScreen, LoginScreen ]
+      }
+    }
+  });
+};
 
 export const StartApplication = async () => {
-
   const HomeScreen = {
     stack: {
       id: Const.ID_SCREEN.HOME,
@@ -96,11 +120,8 @@ export const StartApplication = async () => {
             }
           }
         ],
-        options: {
-
-        }
-      }
-      ,
+        options: {}
+      },
       bottomTabs: {
         id: Const.ID_SCREEN.BOTTOM_TAB,
         children: [HomeScreen, MyProFileScreen, CommunityScreen]

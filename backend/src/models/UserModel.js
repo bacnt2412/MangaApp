@@ -5,7 +5,6 @@ const User = new Schema({
   username: {
     type: String,
     trim: true,
-    required: true
   },
   hash_password: {
     type: String,
@@ -24,6 +23,10 @@ const User = new Schema({
     type: String,
     required: true,
     default: ''
+  },
+  gender: {
+    type: Number,
+    default: 0
   },
   avatar: {
     type: String,
