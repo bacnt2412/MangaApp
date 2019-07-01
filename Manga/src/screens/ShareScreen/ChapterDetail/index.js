@@ -95,7 +95,7 @@ class ChapterDetail extends PureComponent {
   renderItem = ({ item }) => {
     return (
       <View>
-        <ImageItem item={item} />
+        <ImageItem isLocal={this.state.isLocal} item={item} />
       </View>
     );
   };
@@ -147,12 +147,11 @@ class ImageItem extends PureComponent {
   }
 
   render() {
-    const { item } = this.props;
+    const { item, isLocal } = this.props;
     const { ratio, isError, isLoading } = this.state;
     const { width, height } = Dimensions.get('window');
     const heightItem = width * this.state.ratio;
-    console.log('############### image', item);
-    let linkImage = item.isLocal ? 'file://' + item.link : item.link;
+    let linkImage = isLocal ? 'file://' + item.link : item.link;
     linkImage = isError ? images.no_image : { uri: linkImage };
     return (
       <View

@@ -22,6 +22,9 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.microsoft.codepush.react.CodePush;
+
 
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +55,14 @@ public class MainApplication extends NavigationApplication {
         return BuildConfig.DEBUG;
     }
 
+    @Override
+    protected String getJSBundleFile() {
+      if (BuildConfig.DEBUG){
+        return super.getJSBundleFile();
+      }
+      return CodePush.getJSBundleFile();
+    }
+
     protected List<ReactPackage> getPackages() {
         // Add additional packages you require here
         // No need to add RnnPackage and MainReactPackage
@@ -66,7 +77,9 @@ public class MainApplication extends NavigationApplication {
             new VectorIconsPackage(),
             new RealmReactPackage(),
             new RNFSPackage(),
-            new AsyncStoragePackage()
+            new AsyncStoragePackage(),
+            new RNFetchBlobPackage(),
+            new CodePush("FNCltvk2EvmwjphTlxt-Vz4dJ_oeSyZ2KiDlr", MainApplication.this, BuildConfig.DEBUG)
             // eg. new VectorIconsPackage()
         );
     }

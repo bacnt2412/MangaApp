@@ -6,7 +6,8 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Platform
 } from 'react-native';
 import * as Progress from 'react-native-progress';
 import RNFS from 'react-native-fs';
@@ -14,6 +15,7 @@ import Const from '../../utils/const';
 import Utils from '../../utils/utils';
 import Api from '../../services/api';
 import { getManga, insertManga, insertListImage } from '../../data/realm';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const { width, height } = Dimensions.get('window');
 
@@ -36,33 +38,52 @@ class DownloadModal extends PureComponent {
 
   addImageToChapter = async (idChapter, listImage) => {
     let data = await insertListImage(idChapter, listImage);
-    console.log(' ################### listImage ', data);
   };
 
   downloadChapter = async (chapter, folderManga) => {
     let folderChapter = folderManga + '/' + chapter._id;
     await RNFS.mkdir(folderChapter);
+
     let listImage = chapter.listImage;
+    if (listImage.length > 0) {
+      chapter.listImage.map((item, index) => {
+        if (item.link.includes('proxy.truyen.cloud')) {
+          let newLink = Utils.String.getFromBetween(
+            item.link,
+            'url=',
+            '&hash='
+          );
+          listImage[index].link = newLink;
+        }
+      });
+    }
+
     if (listImage.length > 0) {
       let newListImage = [];
       for (let image of listImage) {
         try {
           let saveImage = folderChapter + '/' + image._id + '.png';
-          let downloadImageOptions = {
-            fromUrl: image.link,
-            toFile: saveImage,
-            readTimeout: 60 * 1000
-          };
-          let resultDownloadImage = await RNFS.downloadFile(
-            downloadImageOptions
-          ).promise;
-          if (!resultDownloadImage || resultDownloadImage.statusCode !== 200) {
-            console.log(' ####################### Lỗi tải ảnh: ', image.link);
+          let resultDownloadImage = false;
+          await RNFetchBlob.config({
+            // response data will be saved to this path if it has access right.
+            path: saveImage
+          })
+            .fetch('GET', image.link, {
+              //some headers ..
+            })
+            .then(() => {
+              console.log(' #### Download hoan thanh ');
+
+              resultDownloadImage = true;
+            });
+
+          if (!resultDownloadImage) {
+            console.log(' #### lỗi tải ảnh ', image.link);
           } else {
-            console.log(' ##### Download Thành Công Image', image.name);
             image.link = saveImage;
             newListImage.push(image);
           }
+
           await this.setState({
             totalImageDownloaded: this.state.totalImageDownloaded + 1
           });
@@ -110,28 +131,26 @@ class DownloadModal extends PureComponent {
     }
 
     await RNFS.mkdir(folderManga);
-
-    // require the module
-
-    // create a path you want to write to
-    // :warning: on iOS, you cannot write into `RNFS.MainBundlePath`,
-    // but `RNFS.DocumentDirectoryPath` exists on both platforms and is writable
-
-    console.log(' ############## fileThumbnail', fileThumbnail);
-
-    // download thumbnail
-    let downloadFileOptions = {
-      fromUrl: infomationManga.thumbnail,
-      toFile: fileThumbnail
+    let resultDownloadThumbnail = false;
+    await RNFetchBlob.config({
+      // response data will be saved to this path if it has access right.
+      path: fileThumbnail
+    })
+      .fetch('GET', infomationManga.thumbnail, {
+        //some headers ..
+      })
+      .then(() => {
+        resultDownloadThumbnail = true;
+      });
+    let listChapter = infomationManga.listChapter.map(chapter => {
+      return { ...chapter, listImage: [] };
+    });
+    let realmManga = {
+      ...infomationManga,
+      listChapter,
+      thumbnail: fileThumbnail
     };
-
-    let result = await RNFS.downloadFile(downloadFileOptions).promise;
-    console.log(' ################### ', await RNFS.readDir(folderManga));
-
-    console.log('################ result Download thumbnail', result);
-
-    this.addMangaToDbLocal({ ...infomationManga, thumbnail: fileThumbnail });
-
+    this.addMangaToDbLocal(realmManga);
     // get total Image;
     let totalImage = 0;
     infomationManga.listChapter.map(item => {
@@ -155,8 +174,10 @@ class DownloadModal extends PureComponent {
 
   show = async idManga => {
     this.setState({ visiable: true, idManga });
-    // await Utils.Permission.request_WRITE_EXTERNAL_STORAGE_Permission();
-    // await Utils.Permission.request_READ_EXTERNAL_STORAGE_Permission();
+    if (Platform.OS == 'android') {
+      await Utils.Permission.request_WRITE_EXTERNAL_STORAGE_Permission();
+      await Utils.Permission.request_READ_EXTERNAL_STORAGE_Permission();
+    }
 
     this.downloadManga(idManga);
   };

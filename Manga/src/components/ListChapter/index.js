@@ -30,7 +30,6 @@ class ListChapter extends PureComponent {
 
   componentDidMount = () => {
     if (this.props.manga.isLocal) {
-      console.log(' ####################### this.props.manga ',this.props.manga)
     } else {
       this.getData();
     }
@@ -117,16 +116,6 @@ class ListChapter extends PureComponent {
         <Text style={styles.item_name} numberOfLines={1}>
           {item.name}
         </Text>
-        {/* <Text
-          style={{
-            flex: 1,
-            fontSize: 16,
-            fontWeight: '500',
-            maxWidth: Dimensions.get('window').width / 2
-          }}
-          numberOfLines={1}>
-          {Utils.Time.getTimeNow()}
-        </Text> */}
       </TouchableOpacity>
     );
   };
@@ -150,17 +139,6 @@ class ListChapter extends PureComponent {
           <Text style={styles.title_text}>
             {Lang.getByKey('manga_list_chapter')}
           </Text>
-          {/* <Text
-            style={{
-              flex: 1,
-              fontSize: 16,
-              fontWeight: '500',
-              marginBottom: 5,
-              textAlign: 'center',
-              backgroundColor: 'red'
-            }}>
-            Thời gian{' '}
-          </Text> */}
         </View>
         <View>
           {isFirstLoad

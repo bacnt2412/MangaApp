@@ -88,7 +88,7 @@ export const ImageSchema = {
 };
 
 const realmDataOptions = {
-  path: 'realmData.realm',
+  path: 'realmMangaApp.realm',
   schema: [MangaSchema, ChapterSchema, ImageSchema],
   schemaVersion: 1
 };
@@ -128,20 +128,20 @@ export const getManga = () =>
       .catch(error => reject(error));
   });
 
-export const insertListChapter = (idManga, listChapter) =>
-  new Promise((resolve, reject) => {
-    Realm.open(realmDataOptions)
-      .then(realm => {
-        let manga = realm.objectForPrimaryKey(MANGA_SCHEMA, idManga);
-        realm.write(() => {
-          for (var item of listChapter) {
-            manga.listChapter.push(item);
-          }
-        });
-        resolve(listChapter);
-      })
-      .catch(error => reject(error));
-  });
+// export const insertListChapter = (idManga, listChapter) =>
+//   new Promise((resolve, reject) => {
+//     Realm.open(realmDataOptions)
+//       .then(realm => {
+//         let manga = realm.objectForPrimaryKey(MANGA_SCHEMA, idManga);
+//         realm.write(() => {
+//           for (var item of listChapter) {
+//             manga.listChapter.push(item);
+//           }
+//         });
+//         resolve(listChapter);
+//       })
+//       .catch(error => reject(error));
+//   });
 
 export const insertListImage = (idChapter, listImage) =>
   new Promise((resolve, reject) => {

@@ -24,13 +24,19 @@ class HeartAnimation extends PureComponent {
       Api.followManga({ idManga });
       this.setState({ isEnable: true });
       Utils.userData.listIdMangaFollow.push(idManga);
-      Alert.alert(Lang.getByKey('manga_follow'),Lang.getByKey('manga_follow_message'))
+      Alert.alert(
+        Lang.getByKey('manga_follow'),
+        Lang.getByKey('manga_follow_message')
+      );
     } else {
       Api.unfollowManga({ idManga });
       this.setState({ isEnable: false });
       var index = Utils.userData.listIdMangaFollow.indexOf(idManga);
       if (index !== -1) Utils.userData.listIdMangaFollow.splice(index, 1);
-      Alert.alert(Lang.getByKey('manga_unfollow'),Lang.getByKey('manga_unfollow_message'))
+      Alert.alert(
+        Lang.getByKey('manga_unfollow'),
+        Lang.getByKey('manga_unfollow_message')
+      );
     }
   };
 

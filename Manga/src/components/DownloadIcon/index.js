@@ -21,7 +21,7 @@ class DownloadIcon extends PureComponent {
   render() {
     return (
       <TouchableOpacity onPress={this.onPress}>
-        <View style={{ paddingVertical: 6 }}>
+        <View style={{ paddingVertical: 6, marginRight: 10 }}>
           <Icon name={'progress-download'} size={30} color={'#707070'} />
         </View>
         <DownloadModal ref={'DownloadModal'} />

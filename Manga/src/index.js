@@ -19,8 +19,11 @@ registerAppLaunchedListener = async () => {
 
     if (res && res.status === 200 && res.data.success) {
       userData.token = res.data.token;
-      await AsynStorage.setItem('USERDATA', JSON.stringify( userData ));
+      await AsynStorage.setItem('USERDATA', JSON.stringify(userData));
       Ultils.userData = res.data.userData;
+      Ultils.userData.listIdMangaFollow = Ultils.userData.listIdMangaFollow
+        ? JSON.parse(Ultils.userData.listIdMangaFollow)
+        : [];
       StartApplication();
     } else {
       startLogin();

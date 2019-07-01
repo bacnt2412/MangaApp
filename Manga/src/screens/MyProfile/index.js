@@ -86,8 +86,6 @@ class MyProfile extends BaseScreen {
   };
 
   GetDataDownload = async  page => {
-    console.log(' ######################');
-
     if (page) return;
     let data =  await getManga();
 

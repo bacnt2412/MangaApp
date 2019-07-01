@@ -65,8 +65,10 @@ class LoginScreen extends PureComponent {
         let token = res.data.token;
         let userData = { token, email, password };
         await AsynStorage.setItem('USERDATA', JSON.stringify(userData));
-
         Ultils.userData = res.data.userData;
+        Ultils.userData.listIdMangaFollow = Ultils.userData.listIdMangaFollow
+          ? JSON.parse(Ultils.userData.listIdMangaFollow)
+          : [];
         StartApplication();
       } else {
         let error = res.error.response.data.message;

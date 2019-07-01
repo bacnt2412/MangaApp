@@ -50,7 +50,7 @@ class Register extends PureComponent {
       email: '',
       password: '',
       isLoading: false,
-      name,
+      name: '',
       gender: 0
     };
   }
@@ -70,13 +70,25 @@ class Register extends PureComponent {
   onChangeGender = index => {
     this.setState({ gender: index });
   };
+
+  validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  }
+
   onRegisterPress = async () => {
     try {
-      this.setState({ isLoading: true });
       let { email, password, name, gender } = this.state;
-      if (!email.trim() || !password.trim() || !name.trim())
+      if (!email.trim() || !password.trim() || !name.trim()) {
         alert(Lang.getByKey('register_error_message'));
-        email = email.toLocaleLowerCase();
+        return;
+      }
+      if(!this.validateEmail(email)){
+        alert(Lang.getByKey('register_email_error_message'));
+        return;
+      }
+      this.setState({ isLoading: true });
+      email = email.toLocaleLowerCase();
       let data = {
         email,
         password,
@@ -210,7 +222,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     borderBottomWidth: 0,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   input_text: {
     borderWidth: 1,
@@ -220,7 +233,8 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: 'rgba(255,255,255,0.8)',
     padding: 10,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   password_input_text: {
     borderWidth: 1,
@@ -231,7 +245,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   btn_login: {
     marginTop: 10,
@@ -272,7 +287,8 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   input: {
-    flex: 1
+    flex: 1,
+    height: 40
   },
   radio_form: {
     marginTop: 5,

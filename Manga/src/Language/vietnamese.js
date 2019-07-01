@@ -1,6 +1,6 @@
 export default {
   //================================== Home ====================================
-  home_title: 'Trang chủ',
+  home_title: 'Truyện tranh',
   home_latest_title_tab: 'Mới nhất',
   home_most_favorite_title_tab: 'Yêu thích',
   home_most_view_title_tab: 'Xem nhiều',
@@ -25,7 +25,7 @@ export default {
 
   //================================== Category ====================================
   //================================== MyProfile ====================================
-  profile_title: 'Profile',
+  profile_title: 'Theo dõi',
   profile_follow_tab_title: 'Theo dõi',
   profile_download_tab_title: 'Tải xuống',
   profile_profile_tab_title: 'Hồ sơ',
@@ -50,5 +50,6 @@ export default {
   register_name: 'Họ tên',
   register_error_message: 'Vui lòng điền đầy đủ vào các trường',
   register_gender_male: 'Nam',
-  register_gender_female: 'Nữ'
+  register_gender_female: 'Nữ',
+  register_email_error_message: 'Định dạng email sai'
 };

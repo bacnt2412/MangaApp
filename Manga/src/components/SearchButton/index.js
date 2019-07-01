@@ -23,7 +23,7 @@ class SearchButton extends PureComponent {
         }}>
         <FastImage
           source={images.search}
-          style={{ width: 25, height: 25 }}
+          style={{ width: 25, height: 25, marginRight: 10 }}
           resizeMode={FastImage.resizeMode.cover}
         />
       </TouchableOpacity>

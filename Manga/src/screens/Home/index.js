@@ -57,7 +57,6 @@ export default class Home extends BaseScreen {
 
   componentDidMount = async () => {
     Analytic.sendScreen('HomeScreen');
-    AsynStorage.setItem('USER_DATA','');
   };
 
   getLatestManga = async data => {
