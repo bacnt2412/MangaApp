@@ -6,6 +6,7 @@
  */
 
 #import "AppDelegate.h"
+#import <CodePush/CodePush.h>
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -19,6 +20,16 @@
   [ReactNativeNavigation bootstrap:jsCodeLocation launchOptions:launchOptions];
   
   return YES;
+}
+
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  return [CodePush bundleURL];
+//#if DEBUG
+//  return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+//#else
+//  return [CodePush bundleURL];
+//#endif
 }
 
 @end

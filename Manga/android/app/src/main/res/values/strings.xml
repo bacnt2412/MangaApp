@@ -1,4 +1,4 @@
 <resources>
-	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">deployment-key-here</string>
+	<string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">FNCltvk2EvmwjphTlxt-Vz4dJ_oeSyZ2KiDlr</string>
     <string name="app_name">Songoku</string>
 </resources>

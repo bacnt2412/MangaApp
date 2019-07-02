@@ -4,13 +4,16 @@ import AsynStorage from '@react-native-community/async-storage';
 import Api from './services/api';
 import Ultils from './utils/utils';
 
+
 registerAppLaunchedListener = async () => {
   try {
+    return startLogin();
+    await checkCodePush();
+
     let userData = await AsynStorage.getItem('USERDATA');
     userData = JSON.parse(userData);
-
     console.log(' ## userData', userData);
-
+    if (!userData) return startLogin();
     let res = await Api.login({
       email: userData.email,
       password: userData.password

@@ -29,8 +29,8 @@ import com.microsoft.codepush.react.CodePush;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends NavigationApplication {
-    
+public class MainApplication extends  NavigationApplication {
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -42,6 +42,11 @@ public class MainApplication extends NavigationApplication {
     @Override
     protected ReactGateway createReactGateway() {
         ReactNativeHost host = new NavigationReactNativeHost(this, isDebug(), createAdditionalReactPackages()) {
+            @Override
+            protected String getJSBundleFile() {
+                    return CodePush.getJSBundleFile();
+                }
+
             @Override
             protected String getJSMainModuleName() {
                 return "index";
@@ -55,14 +60,8 @@ public class MainApplication extends NavigationApplication {
         return BuildConfig.DEBUG;
     }
 
-    @Override
-    protected String getJSBundleFile() {
-      if (BuildConfig.DEBUG){
-        return super.getJSBundleFile();
-      }
-      return CodePush.getJSBundleFile();
-    }
 
+ 
     protected List<ReactPackage> getPackages() {
         // Add additional packages you require here
         // No need to add RnnPackage and MainReactPackage
@@ -79,7 +78,7 @@ public class MainApplication extends NavigationApplication {
             new RNFSPackage(),
             new AsyncStoragePackage(),
             new RNFetchBlobPackage(),
-            new CodePush("FNCltvk2EvmwjphTlxt-Vz4dJ_oeSyZ2KiDlr", MainApplication.this, BuildConfig.DEBUG)
+            new CodePush("FNCltvk2EvmwjphTlxt-Vz4dJ_oeSyZ2KiDlr",  MainApplication.this, BuildConfig.DEBUG)
             // eg. new VectorIconsPackage()
         );
     }
@@ -88,4 +87,6 @@ public class MainApplication extends NavigationApplication {
     public List<ReactPackage> createAdditionalReactPackages() {
         return getPackages();
     }
+    
+    
 }

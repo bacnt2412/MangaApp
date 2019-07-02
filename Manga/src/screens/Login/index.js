@@ -18,6 +18,8 @@ import { StartApplication } from '../index';
 import Ultils from '../../utils/utils';
 import { Navigation } from 'react-native-navigation';
 import Const from '../../utils/const';
+import * as Progress from 'react-native-progress';
+import CodePush from 'react-native-code-push';
 
 class LoginScreen extends PureComponent {
   static options = {
@@ -36,16 +38,81 @@ class LoginScreen extends PureComponent {
     this.state = {
       email: '',
       password: '',
-      isLoading: false
+      isLoading: false,
+      status: 'checking',
+      progressUpdate: 0
     };
   }
 
-  componentDidMount = async () => {
-    console.log(
-      ' ############################## userData',
-      await AsynStorage.getItem('USERDATA')
-    );
+  checkCodePush = async () => {
+    console.log('Check codepush');
+    try {
+      CodePush.allowRestart();
+      await CodePush.sync(
+        {
+          updateDialog: false,
+          installMode: CodePush.InstallMode.IMMEDIATE
+        },
+        status => {
+          switch (status) {
+            case CodePush.SyncStatus.DOWNLOADING_PACKAGE:
+              this.setState({ status: 'update' });
+              break;
+            case CodePush.SyncStatus.INSTALLING_UPDATE:
+              console.log(' #################### INSTALLING_UPDATE');
+              break;
+            case CodePush.SyncStatus.UPDATE_INSTALLED:
+              CodePush.restartApp();
+              break;
+            default:
+              break;
+          }
+        },
+        ({ receivedBytes, totalBytes }) => {
+          console.log(
+            ' ################# ',
+            this.setState({
+              progressUpdate: parseInt((receivedBytes * 100) / totalBytes)
+            })
+          );
+          // this.setState({
+          //   downloadProgress: parseInt((receivedBytes * 100) / totalBytes)
+          // });
+        }
+      );
+    } catch (error) {
+      console.log('Codepush error', error);
+    }
   };
+
+  componentWillMount = async () => {
+    await this.checkCodePush();
+    let userData = await AsynStorage.getItem('USERDATA');
+    userData = JSON.parse(userData);
+    console.log(' ## userData', userData);
+    if (!userData) return this.setState({ status: 'login' });
+    let res = await Api.login({
+      email: userData.email,
+      password: userData.password
+    });
+    console.log(' ## Auto Login', res);
+
+    if (res && res.status === 200 && res.data.success) {
+      userData.token = res.data.token;
+      await AsynStorage.setItem('USERDATA', JSON.stringify(userData));
+      Ultils.userData = res.data.userData;
+      Ultils.userData.listIdMangaFollow = Ultils.userData.listIdMangaFollow
+        ? JSON.parse(Ultils.userData.listIdMangaFollow)
+        : [];
+      StartApplication();
+    } else {
+      this.setState({ status: 'login' });
+      //startLogin();
+    }
+    return false;
+  };
+
+  componentDidMount = () => {};
 
   onChangeTextEmail = text => {
     this.setState({ email: text });
@@ -90,45 +157,80 @@ class LoginScreen extends PureComponent {
   };
 
   render() {
-    const { isLoading } = this.state;
+    const { isLoading, status, progressUpdate } = this.state;
+    let content = null;
+    switch (status) {
+      case 'login':
+        content = (
+          <View style={{ flex: 1 }}>
+            <View style={styles.content_container}>
+              <TextInput
+                style={styles.email_input_text}
+                placeholder={Lang.getByKey('login_email_placeholder')}
+                onChangeText={this.onChangeTextEmail}
+              />
+              <TextInput
+                style={styles.password_input_text}
+                placeholder={Lang.getByKey('login_password_placeholder')}
+                secureTextEntry={true}
+                onChangeText={this.onChangeTextPassword}
+              />
+              <TouchableOpacity
+                disabled={isLoading}
+                style={styles.btn_login}
+                onPress={this.onLoginPress}>
+                <Text style={styles.btn_login_text}>
+                  {Lang.getByKey('login_btn_login')}
+                </Text>
+                {isLoading && (
+                  <ActivityIndicator size={'small'} color={'#fff'} />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.container_register}>
+              <Text style={styles.text_or}>---------- Hoặc ----------</Text>
+              <TouchableOpacity
+                disabled={isLoading}
+                style={styles.btn_register}
+                onPress={this.onRegisterPress}>
+                <Text style={styles.btn_register_text}>
+                  {Lang.getByKey('login_btn_register')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        );
+        break;
+      case 'update':
+        content = (
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Progress.Circle
+              progress={progressUpdate}
+              color="red"
+              size={120}
+              thickness={5}
+              showsText={true}
+              borderWidth={0}
+              allowFontScaling={true}
+              direction={'clockwise'}
+            />
+          </View>
+        );
+        break;
+      case 'checking':
+        content = (
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator size={'large'} color={'red'} />
+          </View>
+        );
+        break;
+    }
 
     return (
       <ImageBackground source={images.bg_login} style={styles.container}>
-        <SafeAreaView style={styles.safe_area_view}>
-          <View style={styles.content_container}>
-            <TextInput
-              style={styles.email_input_text}
-              placeholder={Lang.getByKey('login_email_placeholder')}
-              onChangeText={this.onChangeTextEmail}
-            />
-            <TextInput
-              style={styles.password_input_text}
-              placeholder={Lang.getByKey('login_password_placeholder')}
-              secureTextEntry={true}
-              onChangeText={this.onChangeTextPassword}
-            />
-            <TouchableOpacity
-              disabled={isLoading}
-              style={styles.btn_login}
-              onPress={this.onLoginPress}>
-              <Text style={styles.btn_login_text}>
-                {Lang.getByKey('login_btn_login')}
-              </Text>
-              {isLoading && <ActivityIndicator size={'small'} color={'#fff'} />}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.container_register}>
-            <Text style={styles.text_or}>---------- Hoặc ----------</Text>
-            <TouchableOpacity
-              disabled={isLoading}
-              style={styles.btn_register}
-              onPress={this.onRegisterPress}>
-              <Text style={styles.btn_register_text}>
-                {Lang.getByKey('login_btn_register')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
+        <SafeAreaView style={styles.safe_area_view}>{content}</SafeAreaView>
       </ImageBackground>
     );
   }
