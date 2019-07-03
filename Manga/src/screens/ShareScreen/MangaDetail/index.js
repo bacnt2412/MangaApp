@@ -10,16 +10,13 @@ import Lang from '../../../Language';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 import PhotoView from '@merryjs/photo-viewer';
-import {
-  CountView,
-  TitleWithIcon,
-  ListChapter
-} from '../../../components';
+import { CountView, TitleWithIcon, ListChapter } from '../../../components';
 import ViewMoreText from 'react-native-view-more-text';
 import styles from './styles';
 import Analytic from '../../../utils/analytic';
 import images from '../../../assets/images.js';
 import Const from '../../../utils/const';
+
 const GUTTER = 8 * 2;
 const TOOLBAR_HEIGHT = 56;
 const BACKDROP_HEIGHT = 240;
@@ -246,7 +243,10 @@ class MangaDetail extends PureComponent {
           {detail}
 
           {description}
-          <ListChapter manga={manga} componentId={this.props.componentId} />
+          <ListChapter
+            manga={manga}
+            componentIdParent={this.props.componentId}
+          />
           <Animated.View
             style={{
               position: 'absolute',

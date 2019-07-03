@@ -22,6 +22,9 @@ export default {
     'Bạn sẽ không nhận được thông báo khi ra chapter mới nữa',
   manga_follow: 'Theo dõi',
   manga_unfollow: 'Bỏ theo dõi',
+  //================================== Manga =======================================
+  chapter_previous_chapter: 'Chapter trước',
+  chapter_next_chapter: 'Chapter sau',
 
   //================================== Category ====================================
   //================================== MyProfile ====================================

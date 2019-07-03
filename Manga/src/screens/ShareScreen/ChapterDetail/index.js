@@ -1,11 +1,22 @@
 import React, { PureComponent } from 'react';
-import { View, Text, FlatList, Dimensions } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  TouchableWithoutFeedback
+} from 'react-native';
 import Lang from '../../../Language';
 import Api from '../../../services/api';
 import FastImage from 'react-native-fast-image';
 import { Loading } from '../../../components';
 import Utils from '../../../utils/utils';
+import Const from '../../../utils/const';
 import images from '../../../assets/images';
+import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/Feather';
+import PhotoView from '@merryjs/photo-viewer';
 
 class ChapterDetail extends PureComponent {
   static options = {
@@ -16,25 +27,113 @@ class ChapterDetail extends PureComponent {
         backgroundColor: '#000000'
       },
       translucent: true,
-      transparent: true
+      transparent: true,
+      leftButtons: [
+        {
+          id: 'backPress',
+          icon: images.back_icon
+        }
+      ]
     }
   };
 
   constructor(props) {
     super(props);
+    Navigation.events().bindComponent(this);
+
     this.state = {
       isFirstLoad: false,
       isLoadMore: false,
       listImage:
         props.chapter && props.chapter.listImage ? props.chapter.listImage : [],
       idChapter: props.chapter ? props.chapter._id : null,
-      isLocal: props.chapter && props.chapter.listImage ? true : false
+      isLocal: props.chapter && props.chapter.listImage ? true : false,
+      isShowHeader: true,
+      indexPhotoView: 0,
+      visiblePhotoView: false
     };
+    this.scrollY = 0;
+    this.isShowHeader = true;
   }
+
+  navigationButtonPressed({ buttonId }) {
+    switch (buttonId) {
+      case 'backPress': {
+        this.handleBackPress();
+        break;
+      }
+    }
+  }
+
+  handleBackPress = () => {
+    Navigation.popTo(this.props.componentIdParent);
+    return true;
+  };
 
   componentDidMount() {
     if (!this.state.isLocal) this.getData();
   }
+
+  pushToChapter = next => {
+    try {
+      let index = next ? this.props.index - 1 : this.props.index + 1;
+
+      let isFirst = this.props.listChapter.length - 1 === index;
+      let isLast = index === 0;
+      if (this.props.isAscending) {
+        index = !next ? this.props.index - 1 : this.props.index + 1;
+        isLast = this.props.listChapter.length - 1 === index;
+        isFirst = index === 0;
+      }
+      let item = this.props.listChapter[index];
+
+      Navigation.push(this.props.componentIdParent, {
+        component: {
+          name: Const.NAME_SCREEN.CHAPTER_DETAIL,
+          passProps: {
+            chapter: item,
+            listChapter: this.props.listChapter,
+            index: index,
+            isFirst,
+            isLast,
+            componentIdParent: this.props.componentIdParent,
+            isAscending: this.props.isAscending
+          },
+          options: {
+            topBar: {
+              title: {
+                text: item.name
+              }
+            }
+          }
+        }
+      });
+    } catch (error) {}
+  };
+
+  hideTopBar = () => {
+    Navigation.mergeOptions(this.props.componentId, {
+      topBar: {
+        visible: false,
+        drawBehind: true,
+        animate: true
+      }
+    });
+    this.setState({ isShowHeader: false });
+    this.isShowHeader = false;
+  };
+
+  showTopBar = () => {
+    Navigation.mergeOptions(this.props.componentId, {
+      topBar: {
+        visible: true,
+        drawBehind: true,
+        animate: true
+      }
+    });
+    this.setState({ isShowHeader: true });
+    this.isShowHeader = true;
+  };
 
   getData = async () => {
     this.setState({ isFirstLoad: true });
@@ -92,10 +191,16 @@ class ChapterDetail extends PureComponent {
     this.setState({ isLoadMore: false });
   };
 
-  renderItem = ({ item }) => {
+  renderItem = ({ item, index }) => {
     return (
       <View>
-        <ImageItem isLocal={this.state.isLocal} item={item} />
+        <ImageItem
+          isLocal={this.state.isLocal}
+          item={item}
+          onClick={() => {
+            this.onImageClick(index);
+          }}
+        />
       </View>
     );
   };
@@ -114,8 +219,38 @@ class ChapterDetail extends PureComponent {
       this.onMomentumScrollBegin = true;
     }
   };
+
+  nextChapter = () => {
+    this.pushToChapter(true);
+  };
+
+  previusChapter = () => {
+    this.pushToChapter();
+  };
+
+  onImageClick = index => {
+    this.setState({
+      visiblePhotoView: true,
+      indexPhotoView: index
+    });
+  };
+
   render() {
-    const { listImage, isFirstLoad, isLoadMore } = this.state;
+    const {
+      listImage,
+      isFirstLoad,
+      isLoadMore,
+      visiblePhotoView,
+      indexPhotoView
+    } = this.state;
+    let dataPhotoView = listImage.map(item => {
+      let linkImage = this.props.chapter.isLocal
+        ? 'file://' + item.link
+        : item.link;
+      linkImage = { source: { uri: linkImage } };
+      return linkImage;
+    });
+    console.log(' ################# ', dataPhotoView);
     return (
       <View style={{ flex: 1 }}>
         {isFirstLoad ? (
@@ -124,7 +259,39 @@ class ChapterDetail extends PureComponent {
             <Loading />
           </View>
         ) : null}
+
+        <PhotoView
+          visible={visiblePhotoView}
+          data={dataPhotoView}
+          hideCloseButton={true}
+          hideShareButton={true}
+          hideStatusBar={false}
+          initial={indexPhotoView}
+          onDismiss={() => this.setState({ visiblePhotoView: false })}
+        />
+
         <FlatList
+          scrollEventThrottle={160}
+          onScroll={event => {
+            if (
+              (event.nativeEvent.contentOffset.y <= this.scrollY ||
+                event.nativeEvent.contentOffset.y <= 0) &&
+              !this.isShowHeader &&
+              !this.state.isLoadMore
+            ) {
+              this.showTopBar();
+            } else {
+              if (
+                this.isShowHeader &&
+                event.nativeEvent.contentOffset.y > this.scrollY &&
+                event.nativeEvent.contentOffset.y > 0 &&
+                !this.state.isLoadMore
+              ) {
+                this.hideTopBar();
+              }
+            }
+            this.scrollY = event.nativeEvent.contentOffset.y;
+          }}
           style={{ flex: 1 }}
           data={listImage}
           removeClippedSubviews={true}
@@ -135,6 +302,65 @@ class ChapterDetail extends PureComponent {
           onEndReached={this.loadMoreData}
           onMomentumScrollBegin={this.onMomentumBegin}
         />
+        {this.isShowHeader == true ? (
+          <View
+            style={{
+              height: 40,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+            <View
+              style={{
+                flex: 1,
+                marginHorizontal: 10
+              }}>
+              {this.props.isFirst ? null : (
+                <TouchableOpacity
+                  onPress={this.previusChapter}
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center'
+                  }}>
+                  <Icon name={'chevrons-left'} size={25} />
+                  <Text>{Lang.getByKey('chapter_previous_chapter')}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'yellow',
+                borderRadius: 10
+              }}>
+              <Text>{this.props.chapter.name}</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                marginHorizontal: 10
+              }}>
+              {this.props.isLast ? null : (
+                <TouchableOpacity
+                  onPress={this.nextChapter}
+                  style={{
+                    flex: 1,
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    alignItems: 'center'
+                  }}>
+                  <Text>{Lang.getByKey('chapter_next_chapter')}</Text>
+                  <Icon name={'chevrons-right'} size={25} />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        ) : null}
       </View>
     );
   }
@@ -150,7 +376,7 @@ class ImageItem extends PureComponent {
     const { item, isLocal } = this.props;
     const { ratio, isError, isLoading } = this.state;
     const { width, height } = Dimensions.get('window');
-    const heightItem = width * this.state.ratio;
+    const heightItem = width * ratio;
     let linkImage = isLocal ? 'file://' + item.link : item.link;
     linkImage = isError ? images.no_image : { uri: linkImage };
     return (
@@ -173,24 +399,26 @@ class ImageItem extends PureComponent {
             <Loading />
           </View>
         ) : null}
-        <FastImage
-          source={linkImage}
-          style={{
-            width: width,
-            height: heightItem
-          }}
-          onLoad={evt => {
-            let ratio = evt.nativeEvent.height / evt.nativeEvent.width;
-            this.setState({ ratio });
-          }}
-          onError={error => {
-            console.log('############### onError', error);
-            this.setState({ isError: true });
-          }}
-          onLoadEnd={() => {
-            this.setState({ isLoading: false });
-          }}
-        />
+        <TouchableWithoutFeedback onPress={this.props.onClick}>
+          <FastImage
+            source={linkImage}
+            style={{
+              width: width,
+              height: heightItem
+            }}
+            onLoad={evt => {
+              let ratio = evt.nativeEvent.height / evt.nativeEvent.width;
+              this.setState({ ratio });
+            }}
+            onError={error => {
+              console.log('############### onError', error);
+              this.setState({ isError: true });
+            }}
+            onLoadEnd={() => {
+              this.setState({ isLoading: false });
+            }}
+          />
+        </TouchableWithoutFeedback>
       </View>
     );
   }

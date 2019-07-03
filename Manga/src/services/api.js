@@ -103,7 +103,7 @@ export default class Api {
   };
 
   static getListChapterByIdManga = async data => {
-    let url = Settings.SERVER_API + 'chapter/get-chapter-by-id-manga';
+    let url = Settings.SERVER_API + 'chapter/get-all-chapter-by-id-manga';
     return await this.post(url, data);
   };
 

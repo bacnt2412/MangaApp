@@ -11,6 +11,7 @@ import Const from '../../utils/const';
 import Lang from '../../Language';
 import styles from './styles';
 import { Navigation } from 'react-native-navigation';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 class ListChapter extends PureComponent {
   constructor(props) {
@@ -24,7 +25,8 @@ class ListChapter extends PureComponent {
       idManga,
       listChapter,
       page: 1,
-      isLast: false
+      isLast: false,
+      isAscending: false
     };
   }
 
@@ -90,17 +92,36 @@ class ListChapter extends PureComponent {
     console.log(' ## updateViewManga ', res);
   };
 
-  renderChapterItem = item => {
+  changeAscending = () => {
+    this.setState({ isAscending: !this.state.isAscending });
+  };
+
+  renderChapterItem = (item, index) => {
+    let indexC = index;
+    let listData = [...this.state.listChapter];
+    let isFirst = this.state.listChapter.length - 1 === indexC;
+    let isLast = indexC === 0;
+    if (this.state.isAscending) {
+      listData.reverse();
+      isFirst = indexC === 0;
+      isLast = this.state.listChapter.length - 1 === indexC;
+    }
     return (
       <TouchableOpacity
         key={item._id}
         style={styles.item_container}
         onPress={() => {
-          Navigation.push(this.props.componentId, {
+          Navigation.push(this.props.componentIdParent, {
             component: {
               name: Const.NAME_SCREEN.CHAPTER_DETAIL,
               passProps: {
-                chapter: item
+                chapter: item,
+                listChapter: listData,
+                index: indexC,
+                isFirst,
+                isLast,
+                componentIdParent: this.props.componentIdParent,
+                isAscending: this.state.isAscending
               },
               options: {
                 topBar: {
@@ -121,7 +142,7 @@ class ListChapter extends PureComponent {
   };
 
   render() {
-    const { listChapter, isFirstLoad, isLast, isLoadMore } = this.state;
+    const { listChapter, isFirstLoad, isAscending } = this.state;
     const loadingView = (
       <View
         style={{
@@ -133,31 +154,42 @@ class ListChapter extends PureComponent {
         <ActivityIndicator size={'small'} color={Const.COLOR.LOADDING} />
       </View>
     );
+    console.log(' ############### isAscending', isAscending);
+    console.log(' ############### listChapter', listChapter);
+    let listData = [...this.state.listChapter];
+
+    if (isAscending) listData.reverse();
+
     return (
       <View style={styles.container}>
         <View style={styles.title_container}>
           <Text style={styles.title_text}>
             {Lang.getByKey('manga_list_chapter')}
           </Text>
+          {isAscending ? (
+            <Icon
+              name={'sort-ascending'}
+              size={25}
+              onPress={this.changeAscending}
+              style={{ paddingHorizontal: 10 }}
+            />
+          ) : (
+            <Icon
+              name={'sort-descending'}
+              size={25}
+              onPress={this.changeAscending}
+              style={{ paddingHorizontal: 10 }}
+            />
+          )}
         </View>
         <View>
           {isFirstLoad
             ? loadingView
             : listChapter &&
-              listChapter.map(item => {
-                return this.renderChapterItem(item);
+              listData.map((item, index) => {
+                return this.renderChapterItem(item, index);
               })}
         </View>
-        {isLast || isLoadMore || this.props.manga.isLocal ? null : (
-          <Text
-            onPress={() => {
-              this.getMoreData();
-            }}
-            style={styles.view_more}>
-            {Lang.getByKey('view_more')}
-          </Text>
-        )}
-        {isLoadMore ? loadingView : null}
       </View>
     );
   }
