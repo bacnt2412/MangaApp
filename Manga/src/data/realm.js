@@ -2,6 +2,7 @@ import Realm from 'realm';
 export const MANGA_SCHEMA = 'MangaSchema';
 export const CHAPTER_SCHEMA = 'ChapterSchema';
 export const IMAGE_SCHEMA = 'ImageSchema';
+export const MANGA_READ_SCHEMA = 'MangaReadSchema';
 
 export const ChapterSchema = {
   name: CHAPTER_SCHEMA,
@@ -87,10 +88,26 @@ export const ImageSchema = {
   }
 };
 
+export const MangaReadSchema = {
+  name: MANGA_READ_SCHEMA,
+  primaryKey: '_id',
+  properties: {
+    _id: {
+      type: 'string'
+    },
+    idchapter: {
+      type: 'string'
+    },
+    islocal: {
+      type: 'bool'
+    }
+  }
+};
+
 const realmDataOptions = {
   path: 'realmMangaApp.realm',
-  schema: [MangaSchema, ChapterSchema, ImageSchema],
-  schemaVersion: 1
+  schema: [MangaSchema, ChapterSchema, ImageSchema, MangaReadSchema],
+  schemaVersion: 3
 };
 
 export const insertManga = newManga =>
@@ -154,6 +171,23 @@ export const insertListImage = (idChapter, listImage) =>
           }
         });
         resolve(listImage);
+      })
+      .catch(error => reject(error));
+  });
+
+export const insertReadChapter = data =>
+  new Promise((resolve, reject) => {
+    Realm.open(realmDataOptions)
+      .then(realm => {
+        realm.write(() => {
+          let mangaRead = realm.objectForPrimaryKey(MANGA_READ_SCHEMA, data._id);
+          if(!mangaRead){
+            realm.create(MANGA_READ_SCHEMA,data);
+          }else {
+            console.log(' ######################## ================== ',mangaRead);
+          }
+          resolve(data);
+        });
       })
       .catch(error => reject(error));
   });

@@ -16,7 +16,10 @@ import Const from '../../../utils/const';
 import images from '../../../assets/images';
 import { Navigation } from 'react-native-navigation';
 import Icon from 'react-native-vector-icons/Feather';
+import IconAntDesign from 'react-native-vector-icons/AntDesign';
+
 import PhotoView from '@merryjs/photo-viewer';
+import { insertReadChapter } from '../../../data/realm';
 
 class ChapterDetail extends PureComponent {
   static options = {
@@ -34,6 +37,10 @@ class ChapterDetail extends PureComponent {
           icon: images.back_icon
         }
       ]
+    },
+    bottomTabs: {
+      visible: false,
+      drawBehind: true
     }
   };
 
@@ -70,7 +77,21 @@ class ChapterDetail extends PureComponent {
     return true;
   };
 
+  addReadChapter = () => {
+    try {
+      const { chapter } = this.props;
+      let data = {
+        _id: chapter.idmanga,
+        idchapter: chapter._id,
+        islocal: chapter.islocal ? true : false
+      };
+      insertReadChapter(data);
+    } catch (error) {}
+  };
+
   componentDidMount() {
+    console.log('######################################## ', this.props);
+    this.addReadChapter();
     if (!this.state.isLocal) this.getData();
   }
 
@@ -310,11 +331,7 @@ class ChapterDetail extends PureComponent {
               justifyContent: 'center',
               alignItems: 'center'
             }}>
-            <View
-              style={{
-                flex: 1,
-                marginHorizontal: 10
-              }}>
+            <View>
               {this.props.isFirst ? null : (
                 <TouchableOpacity
                   onPress={this.previusChapter}
@@ -322,10 +339,10 @@ class ChapterDetail extends PureComponent {
                     flex: 1,
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    paddingHorizontal: 30
                   }}>
-                  <Icon name={'chevrons-left'} size={25} />
-                  <Text>{Lang.getByKey('chapter_previous_chapter')}</Text>
+                  <IconAntDesign name={'banckward'} size={25} color='gray'/>
                 </TouchableOpacity>
               )}
             </View>
@@ -335,16 +352,11 @@ class ChapterDetail extends PureComponent {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'yellow',
                 borderRadius: 10
               }}>
-              <Text>{this.props.chapter.name}</Text>
+              <Text style={{fontWeight: 'bold', fontSize: 16}} >{this.props.chapter.name}</Text>
             </View>
-            <View
-              style={{
-                flex: 1,
-                marginHorizontal: 10
-              }}>
+            <View>
               {this.props.isLast ? null : (
                 <TouchableOpacity
                   onPress={this.nextChapter}
@@ -352,10 +364,10 @@ class ChapterDetail extends PureComponent {
                     flex: 1,
                     flexDirection: 'row',
                     justifyContent: 'flex-end',
-                    alignItems: 'center'
+                    alignItems: 'center',
+                    paddingHorizontal: 30,
                   }}>
-                  <Text>{Lang.getByKey('chapter_next_chapter')}</Text>
-                  <Icon name={'chevrons-right'} size={25} />
+                  <IconAntDesign name={'forward'} size={25} color='gray' />
                 </TouchableOpacity>
               )}
             </View>
